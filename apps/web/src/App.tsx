@@ -1,13 +1,11 @@
-import { AppShell } from '@astryxdesign/core/AppShell'
-import { Button } from '@astryxdesign/core/Button'
-import { Card } from '@astryxdesign/core/Card'
-import { Grid } from '@astryxdesign/core/Grid'
-import { Heading } from '@astryxdesign/core/Heading'
-import { HStack } from '@astryxdesign/core/HStack'
-import { Layout } from '@astryxdesign/core/Layout'
-import { Section } from '@astryxdesign/core/Section'
-import { Text } from '@astryxdesign/core/Text'
-import { VStack } from '@astryxdesign/core/VStack'
+import { Button } from '@/components/ui/button'
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card'
 
 const metrics = [
   { label: 'Open roles', value: '28', detail: '6 awaiting review' },
@@ -23,72 +21,69 @@ const roles = [
 
 function App() {
   return (
-    <AppShell contentPadding={4} height="auto" variant="section">
-      <Layout
-        contentWidth={960}
-        content={
-          <VStack gap={6}>
-            <HStack gap={3} align="center" justify="between" wrap="wrap">
-              <VStack gap={1}>
-                <Heading level={1}>Job portal</Heading>
-                <Text color="secondary">
-                  Track roles, candidates, and interviews from one hiring view.
-                </Text>
-              </VStack>
-              <Button label="Post a job" variant="primary" />
-            </HStack>
+    <main className="min-h-svh bg-background px-6 py-8 text-foreground md:px-10">
+      <section className="mx-auto flex max-w-5xl flex-col gap-8">
+        <header className="flex flex-wrap items-center justify-between gap-4">
+          <div className="space-y-1">
+            <h1 className="font-heading text-3xl font-semibold tracking-tight">
+              Job portal
+            </h1>
+            <p className="text-muted-foreground">
+              Track roles, candidates, and interviews from one hiring view.
+            </p>
+          </div>
+          <Button>Post a job</Button>
+        </header>
 
-            <Grid columns={{ minWidth: 220, max: 3 }} gap={4}>
-              {metrics.map((metric) => (
-                <Card key={metric.label}>
-                  <VStack gap={2}>
-                    <Text type="label" color="secondary">
-                      {metric.label}
-                    </Text>
-                    <Heading level={2} type="display-3">
-                      {metric.value}
-                    </Heading>
-                    <Text type="supporting">{metric.detail}</Text>
-                  </VStack>
-                </Card>
+        <section className="grid gap-4 md:grid-cols-3">
+          {metrics.map((metric) => (
+            <Card key={metric.label}>
+              <CardHeader>
+                <CardDescription>{metric.label}</CardDescription>
+                <CardTitle className="text-3xl">{metric.value}</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-sm text-muted-foreground">{metric.detail}</p>
+              </CardContent>
+            </Card>
+          ))}
+        </section>
+
+        <Card>
+          <CardHeader className="border-b">
+            <div className="flex flex-wrap items-center justify-between gap-3">
+              <div className="space-y-1">
+                <CardTitle>Priority roles</CardTitle>
+                <CardDescription>
+                  Roles with the highest hiring activity.
+                </CardDescription>
+              </div>
+              <Button variant="outline" size="sm">
+                Review pipeline
+              </Button>
+            </div>
+          </CardHeader>
+          <CardContent className="p-0">
+            <ul className="divide-y">
+              {roles.map((role) => (
+                <li
+                  key={role.title}
+                  className="flex items-center justify-between gap-4 px-4 py-4"
+                >
+                  <div className="min-w-0">
+                    <p className="truncate font-medium">{role.title}</p>
+                    <p className="text-sm text-muted-foreground">{role.team}</p>
+                  </div>
+                  <span className="shrink-0 rounded-full bg-secondary px-2.5 py-1 text-xs font-medium text-secondary-foreground">
+                    {role.status}
+                  </span>
+                </li>
               ))}
-            </Grid>
-
-            <Section padding={0}>
-              <VStack gap={0}>
-                <HStack gap={3} padding={4} align="center" justify="between">
-                  <VStack gap={1}>
-                    <Heading level={2}>Priority roles</Heading>
-                    <Text type="supporting">
-                      Roles with the highest hiring activity.
-                    </Text>
-                  </VStack>
-                  <Button label="Review pipeline" variant="secondary" size="sm" />
-                </HStack>
-
-                {roles.map((role) => (
-                  <HStack
-                    key={role.title}
-                    gap={3}
-                    padding={4}
-                    align="center"
-                    justify="between"
-                  >
-                    <VStack gap={1}>
-                      <Text weight="semibold">{role.title}</Text>
-                      <Text type="supporting">{role.team}</Text>
-                    </VStack>
-                    <Text type="label" color="accent">
-                      {role.status}
-                    </Text>
-                  </HStack>
-                ))}
-              </VStack>
-            </Section>
-          </VStack>
-        }
-      />
-    </AppShell>
+            </ul>
+          </CardContent>
+        </Card>
+      </section>
+    </main>
   )
 }
 
