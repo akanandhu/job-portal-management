@@ -10,14 +10,20 @@
     "type": "git",
     "url": "git+https://github.com/akanandhu/job-portal-management.git"
   },
-  "workspaces": ["apps/*", "packages/*"],
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
   "license": "ISC",
   "author": "",
   "type": "commonjs",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev:web" : "npm run dev --workspace=web",
-    "dev:api" : "npm run dev --workspace=api"
+    "dev:web": "npm run dev --workspace=web",
+    "dev:api": "npm run dev --workspace=api"
+  },
+  "devDependencies": {
+    "@types/bcrypt": "^6.0.0"
   }
 }
