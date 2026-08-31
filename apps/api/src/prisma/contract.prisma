@@ -1,0 +1,102 @@
+// use prisma-next
+
+enum UserRole {
+  USER
+  ADMIN
+}
+
+enum JobCategory {
+  ENGINEERING
+  DESIGN
+  MARKETING
+  SALES
+  FINANCE
+  HUMAN_RESOURCES
+  CUSTOMER_SUPPORT
+  OPERATIONS
+}
+
+enum JobStatus {
+  DRAFT
+  PUBLISHED
+  CLOSED
+}
+
+enum ExperienceLevel {
+  ENTRY
+  MID
+  SENIOR
+}
+
+enum ApplicationStatus {
+  APPLIED
+  REVIEWING
+  REJECTED
+  ACCEPTED
+}
+
+model User {
+  id           String         @id @default(uuid())
+  email        String         @unique
+  name         String
+  passwordHash String
+  role         UserRole       @default(USER)
+
+  applications Application[]
+  refreshTokens RefreshToken[]
+
+  createdAt    TimestamptzString @default(now())
+  updatedAt    temporal.updatedAtString()
+}
+
+model Job {
+  id              String          @id @default(uuid())
+  title           String
+  description     String
+  company         String
+  location        String
+  category        JobCategory
+  experienceLevel ExperienceLevel
+  status          JobStatus       @default(DRAFT)
+
+  applications    Application[]
+
+  createdAt       TimestamptzString @default(now())
+  updatedAt       temporal.updatedAtString()
+
+  @@index([category])
+  @@index([experienceLevel])
+  @@index([status, createdAt])
+}
+
+model Application {
+  id        String            @id @default(uuid())
+
+  user      User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    String
+
+  job       Job               @relation(fields: [jobId], references: [id], onDelete: Cascade)
+  jobId     String
+
+  status    ApplicationStatus @default(APPLIED)
+
+  createdAt TimestamptzString @default(now())
+  updatedAt temporal.updatedAtString()
+
+  @@unique([userId, jobId])
+  @@index([jobId])
+}
+
+model RefreshToken {
+  id        String      @id @default(uuid())
+
+  tokenHash String   @unique
+
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    String
+
+  expiresAt TimestamptzString
+  revokedAt TimestamptzString?
+
+  createdAt TimestamptzString @default(now())
+}
