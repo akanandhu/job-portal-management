@@ -1,0 +1,16 @@
+import type { NextFunction, Request, Response } from "express";
+import type { UserRoleI } from "../modules/auth/auth.types";
+
+export function requireRole(role: UserRoleI) {
+  return function (req: Request, res: Response, next: NextFunction) {
+    if (!req.user) {
+      return res.status(401).json({ message: "Authentication required" });
+    }
+
+    if(req.user.role !== role) {
+      return res.status(403).json({ message: "Forbidden: Insufficient role" });
+    }
+
+    next();
+  };
+}

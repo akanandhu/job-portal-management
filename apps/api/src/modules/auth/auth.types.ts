@@ -1,9 +1,11 @@
 export type AccessTokenPayloadI = {
   userId: string;
-  role: "USER" | "ADMIN";
+  role: UserRoleI;
 };
 
 export type VerifyAccessTokenReturnTypeI = {
   id: string;
-  role: "USER" | "ADMIN";
+  role: UserRoleI;
 };
+
+export type UserRoleI = "USER" | "ADMIN";
