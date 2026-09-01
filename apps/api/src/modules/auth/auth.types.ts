@@ -9,3 +9,9 @@ export type VerifyAccessTokenReturnTypeI = {
 };
 
 export type UserRoleI = "USER" | "ADMIN";
+
+export type CreateRefreshTokenI = {
+  tokenHash: string;
+  userId: string;
+  expiresAt: string;
+}
