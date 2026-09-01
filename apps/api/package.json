@@ -23,6 +23,7 @@
     "@prisma/cli-engine": "^0.2.3",
     "@types/cors": "^2.8.19",
     "@types/express": "^5.0.6",
+    "@types/jsonwebtoken": "^9.0.10",
     "@types/node": "^24.13.3",
     "prisma": "^8.0.0-rc.10",
     "tsx": "^4.23.13"
