@@ -1,5 +1,5 @@
 import type { NextFunction, Request, Response } from "express";
-import { verifyAccessToken } from "../modules/auth/auth.service";
+import { verifyAccessToken } from "../modules/auth/token.service";
 
 export function authenticate(req: Request, res: Response, next: NextFunction) {
     const authHeader = req.headers.authorization;
