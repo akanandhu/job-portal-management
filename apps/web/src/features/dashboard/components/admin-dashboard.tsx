@@ -1,5 +1,7 @@
 import { BriefcaseBusiness, ClipboardList } from "lucide-react";
+import { useState } from "react";
 import { Navigate, useNavigate, useSearchParams } from "react-router";
+import type { ApplicationStatusI } from "@job-portal/contracts/applications";
 
 import { AdminDashboardContent } from "@/features/dashboard/components/admin-dashboard-content";
 import { DashboardFilters } from "@/features/dashboard/components/dashboard-filters";
@@ -27,6 +29,7 @@ const navItems: DashboardNavItemI[] = [
 
 export function AdminDashboard() {
   const navigate = useNavigate();
+  const [applications, setApplications] = useState(adminApplications);
   const [searchParams, setSearchParams] = useSearchParams();
   const sectionParam = searchParams.get("section") ?? defaultSection;
   const activeNav = hasItem(navItems, sectionParam)
@@ -39,7 +42,7 @@ export function AdminDashboard() {
   const activeTab = hasItem(currentTabs, tabParam) ? tabParam : defaultTab;
   const view = getAdminDashboardView({
     activeNav,
-    applications: adminApplications,
+    applications,
     jobs: adminJobs,
     searchParams,
   });
@@ -143,6 +146,19 @@ export function AdminDashboard() {
     navigate("/login");
   };
 
+  const handleChangeApplicationStatus = (
+    applicationId: string,
+    status: ApplicationStatusI,
+  ) => {
+    setApplications((currentApplications) =>
+      currentApplications.map((application) =>
+        application.id === applicationId
+          ? { ...application, status }
+          : application,
+      ),
+    );
+  };
+
   if (!hasValidParams) {
     const nextParams = new URLSearchParams(searchParams);
     nextParams.set("section", activeNav);
@@ -166,8 +182,9 @@ export function AdminDashboard() {
         onTabChange={handleTabChange}
       />
       <AdminDashboardContent
-        applications={adminApplications}
+        applications={applications}
         jobs={adminJobs}
+        onChangeApplicationStatus={handleChangeApplicationStatus}
         onAddJob={handleAddJob}
         onBackToApplications={handleBackToApplications}
         onBackToJobs={handleBackToJobs}

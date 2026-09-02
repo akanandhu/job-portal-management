@@ -4,6 +4,9 @@ import { JobDetail } from "@/features/dashboard/components/job-detail";
 import { JobForm } from "@/features/dashboard/components/job-form";
 import { JobList } from "@/features/dashboard/components/job-list";
 import type {
+  ApplicationStatusI,
+} from "@job-portal/contracts/applications";
+import type {
   AdminApplicationI,
   AdminJobI,
 } from "@/features/dashboard/data/dashboard-data";
@@ -12,6 +15,10 @@ import type { AdminDashboardViewI } from "@/features/dashboard/utils/admin-dashb
 type AdminDashboardContentPropsI = {
   applications: AdminApplicationI[];
   jobs: AdminJobI[];
+  onChangeApplicationStatus: (
+    applicationId: string,
+    status: ApplicationStatusI,
+  ) => void;
   onAddJob: () => void;
   onBackToApplications: () => void;
   onBackToJobs: () => void;
@@ -24,6 +31,7 @@ type AdminDashboardContentPropsI = {
 export function AdminDashboardContent({
   applications,
   jobs,
+  onChangeApplicationStatus,
   onAddJob,
   onBackToApplications,
   onBackToJobs,
@@ -41,6 +49,7 @@ export function AdminDashboardContent({
           )}
           job={view.job}
           onBack={onBackToJobs}
+          onChangeApplicationStatus={onChangeApplicationStatus}
           onEdit={onEditJob}
           onViewApplication={onViewApplication}
         />
@@ -71,6 +80,7 @@ export function AdminDashboardContent({
           application={view.application}
           company={view.job.company}
           jobTitle={view.job.title}
+          onChangeStatus={onChangeApplicationStatus}
           onBack={onBackToApplications}
         />
       );
@@ -80,6 +90,7 @@ export function AdminDashboardContent({
         <ApplicationList
           applications={applications}
           jobs={jobs}
+          onChangeApplicationStatus={onChangeApplicationStatus}
           onViewApplication={onViewApplication}
         />
       );

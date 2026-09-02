@@ -16,8 +16,10 @@ type ConfirmDialogPropsI = {
   confirmLabel?: string;
   description: string;
   onConfirm: () => void;
+  onOpenChange?: (open: boolean) => void;
+  open?: boolean;
   title: string;
-  trigger: (props: { onClick: () => void }) => React.ReactNode;
+  trigger?: (props: { onClick: () => void }) => React.ReactNode;
 };
 
 function ConfirmDialog({
@@ -25,14 +27,18 @@ function ConfirmDialog({
   confirmLabel = "Confirm",
   description,
   onConfirm,
+  onOpenChange,
+  open: controlledOpen,
   title,
   trigger,
 }: ConfirmDialogPropsI) {
-  const [open, setOpen] = useState(false);
+  const [uncontrolledOpen, setUncontrolledOpen] = useState(false);
+  const open = controlledOpen ?? uncontrolledOpen;
+  const setOpen = onOpenChange ?? setUncontrolledOpen;
 
   return (
     <>
-      {trigger({ onClick: () => setOpen(true) })}
+      {trigger?.({ onClick: () => setOpen(true) })}
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogContent>
           <DialogHeader>
