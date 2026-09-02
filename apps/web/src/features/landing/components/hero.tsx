@@ -1,4 +1,4 @@
-import { ArrowRight, Briefcase, CheckCircle2, MapPin, Search, Sparkles } from 'lucide-react'
+import { ArrowRight, Briefcase, MapPin, Search, Sparkles } from 'lucide-react'
 
 import { Button } from '@/components/ui/button'
 import {
@@ -10,16 +10,19 @@ import {
 } from '@/components/ui/card'
 
 const productSteps = [
-  'Create your profile and upload a resume',
-  'Browse open roles and filter by skills, location, or type',
-  'Apply directly and track every application in one place',
+  {
+    title: 'Build your profile',
+    description: 'Add your skills, and experience once.',
+  },
+  {
+    title: 'Apply to roles',
+    description: 'Find open listings that fit and apply in a click.',
+  },
+  {
+    title: 'Wait for shortlisting',
+    description: "We'll reach out to you when we think you're a good fit.",
+  },
 ]
-
-const stats = [
-  ['482', 'active listings'],
-  ['1,204', 'applications sent'],
-  ['96', 'companies hiring'],
-] as const
 
 const tags = ['Remote', 'Full-time', 'Posted 2 days ago']
 
@@ -60,29 +63,13 @@ export function Hero() {
 
         <Card className="w-full max-w-2xl border-2 bg-background/95 shadow-2xl shadow-black/5">
           <CardHeader className="space-y-1.5 border-b pb-6">
-              <CardTitle className="text-2xl">Open positions</CardTitle>
+            <CardTitle className="text-2xl">Open positions</CardTitle>
             <CardDescription>
               A live look at roles you can apply to right now.
             </CardDescription>
           </CardHeader>
 
           <CardContent className="space-y-6 p-6">
-            <div className="grid grid-cols-3 gap-4">
-              {stats.map(([value, label]) => (
-                <div
-                  key={label}
-                  className="flex flex-col items-center justify-center gap-1 rounded-xl bg-muted px-3 py-5 text-center"
-                >
-                  <p className="font-heading text-2xl font-semibold leading-none">
-                    {value}
-                  </p>
-                  <p className="text-sm leading-tight text-muted-foreground">
-                    {label}
-                  </p>
-                </div>
-              ))}
-            </div>
-
             <div className="space-y-4 rounded-xl border bg-card p-5">
               <div className="flex items-start justify-between gap-4">
                 <div className="space-y-1">
@@ -109,11 +96,27 @@ export function Hero() {
               </div>
             </div>
 
-            <div className="space-y-3">
-              {productSteps.map((step) => (
-                <div key={step} className="flex items-start gap-3 text-sm">
-                  <CheckCircle2 className="mt-0.5 size-5 shrink-0 text-primary" />
-                  <span className="leading-snug">{step}</span>
+            <div className="space-y-1">
+              <h3 className="font-heading text-base font-medium">How it works</h3>
+              <p className="text-sm text-muted-foreground">
+                Three steps from signing up to your first offer.
+              </p>
+            </div>
+
+            <div className="space-y-4">
+              {productSteps.map((step, index) => (
+                <div key={step.title} className="flex items-start gap-3">
+                  <span className="flex size-6 shrink-0 items-center justify-center rounded-full bg-primary/10 text-sm font-medium text-primary">
+                    {index + 1}
+                  </span>
+                  <div className="space-y-0.5">
+                    <p className="text-sm font-medium leading-snug">
+                      {step.title}
+                    </p>
+                    <p className="text-sm leading-snug text-muted-foreground">
+                      {step.description}
+                    </p>
+                  </div>
                 </div>
               ))}
             </div>
