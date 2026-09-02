@@ -54,7 +54,7 @@ export const adminJobs: AdminJobI[] = [
     skills: ["React", "TypeScript", "Node.js"],
     status: "PUBLISHED",
     isFeatured: false,
-    applicationsCount: 24,
+    applicationsCount: 101,
     logo: "BX",
     postedAt: "5d ago",
   },
@@ -128,7 +128,7 @@ export const adminJobs: AdminJobI[] = [
   },
 ];
 
-export const adminApplications: AdminApplicationI[] = [
+const baseApplications: AdminApplicationI[] = [
   {
     id: "1",
     candidate: "Ananthakrishnan",
@@ -171,4 +171,56 @@ export const adminApplications: AdminApplicationI[] = [
     noticePeriodDays: 0,
     skills: ["JavaScript", "SQL", "APIs"],
   },
+];
+
+const generatedCandidateNames = [
+  "Aarav Sharma",
+  "Diya Nair",
+  "Ishaan Patel",
+  "Kavya Menon",
+  "Rohan Das",
+  "Sneha Iyer",
+  "Arjun Rao",
+  "Nisha Verma",
+  "Vikram Singh",
+  "Pooja Pillai",
+];
+
+const generatedSkills = [
+  ["React", "TypeScript", "Node.js"],
+  ["PostgreSQL", "Express", "APIs"],
+  ["Testing", "Redux", "Vite"],
+  ["Figma", "Research", "Design Systems"],
+];
+
+const generatedApplications: AdminApplicationI[] = Array.from(
+  { length: 100 },
+  (_, index) => {
+    const id = index + 4;
+
+    return {
+      id: String(id),
+      candidate: `${generatedCandidateNames[index % generatedCandidateNames.length]} ${id}`,
+      jobId: "2",
+      status: index % 4 === 0 ? "REVIEWING" : index % 5 === 0 ? "ACCEPTED" : "APPLIED",
+      appliedAt: `${(index % 9) + 1}d ago`,
+      yearsOfExperience: index % 8,
+      education:
+        index % 3 === 0
+          ? "B.Tech Computer Science"
+          : index % 3 === 1
+            ? "MCA"
+            : "B.Sc Information Technology",
+      currentCompany: index % 4 === 0 ? null : `Company ${index + 1}`,
+      currentRole: index % 4 === 0 ? null : "Software Engineer",
+      expectedSalary: 450000 + index * 12000,
+      noticePeriodDays: [0, 15, 30, 45, 60][index % 5],
+      skills: generatedSkills[index % generatedSkills.length],
+    };
+  },
+);
+
+export const adminApplications: AdminApplicationI[] = [
+  ...baseApplications,
+  ...generatedApplications,
 ];

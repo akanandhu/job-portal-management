@@ -79,22 +79,22 @@ export function DashboardShell({
   );
 
   return (
-    <main className="min-h-svh bg-background text-foreground">
+    <main className="min-h-svh bg-background text-foreground lg:h-svh lg:overflow-hidden">
       <div
         className={cn(
-          "grid min-h-svh transition-[grid-template-columns] duration-200 lg:grid-cols-[280px_minmax(0,1fr)_0px]",
+          "grid min-h-svh transition-[grid-template-columns] duration-200 lg:h-full lg:min-h-0 lg:grid-cols-[280px_minmax(0,1fr)_0px]",
           showFilters && "lg:grid-cols-[280px_minmax(0,1fr)_360px]",
         )}
       >
-        <aside className="hidden bg-background px-5 py-5 lg:block lg:border-r">
-          <div className="flex h-full flex-col gap-8">
+        <aside className="hidden bg-background lg:block lg:h-svh lg:overflow-y-auto lg:border-r lg:px-5 lg:py-5">
+          <div className="flex min-h-full flex-col gap-8">
             <BrandLogo />
             {renderNavItems()}
             {renderAdminCard()}
           </div>
         </aside>
 
-        <section className="min-w-0 px-5 py-4 lg:px-8">
+        <section className="min-w-0 px-5 py-4 lg:h-svh lg:overflow-y-auto lg:px-8">
           <div className="mb-3 flex items-center justify-between lg:hidden">
             <Button
               type="button"
@@ -161,7 +161,7 @@ export function DashboardShell({
             "fixed inset-y-0 right-0 z-50 w-[min(22rem,calc(100vw-2rem))] overflow-y-auto border-l bg-background px-5 py-6 shadow-xl transition-transform duration-200 lg:static lg:z-auto lg:w-auto lg:border-t-0 lg:px-6 lg:shadow-none",
             showFilters && filtersOpen ? "translate-x-0" : "translate-x-full",
             showFilters
-              ? "lg:translate-x-0"
+              ? "lg:h-svh lg:translate-x-0"
               : "pointer-events-none lg:translate-x-full lg:overflow-hidden lg:border-l-0 lg:px-0",
           )}
         >
