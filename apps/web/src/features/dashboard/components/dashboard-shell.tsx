@@ -1,4 +1,4 @@
-import { Filter, LogOut, X } from "lucide-react";
+import { Filter, LogOut, Menu, X } from "lucide-react";
 import { useState } from "react";
 
 import { BrandLogo } from "@/components/brand/brand-logo";
@@ -16,70 +16,89 @@ export function DashboardShell({
   onNavChange,
 }: DashboardShellPropsI) {
   const [filtersOpen, setFiltersOpen] = useState(false);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+
+  const renderNavItems = (onSelect?: () => void) => (
+    <nav className="grid gap-2">
+      {navItems.map((item) => {
+        const Icon = item.icon;
+        const isActive = activeNav === item.id;
+
+        return (
+          <Button
+            key={item.id}
+            type="button"
+            variant="ghost"
+            className={cn(
+              "h-11 justify-start gap-3 px-3 text-base font-medium",
+              isActive && "bg-muted text-foreground",
+            )}
+            onClick={() => {
+              onNavChange(item.id);
+              onSelect?.();
+            }}
+          >
+            <Icon className="size-5" />
+            {item.label}
+          </Button>
+        );
+      })}
+    </nav>
+  );
+
+  const renderAdminCard = () => (
+    <div className="mt-auto rounded-xl border bg-muted/40 p-4">
+      <div className="flex items-center gap-3">
+        <div className="flex size-10 items-center justify-center rounded-full bg-primary text-sm font-semibold text-primary-foreground">
+          A
+        </div>
+        <div className="min-w-0 flex-1">
+          <p className="font-medium">Admin</p>
+          <p className="text-sm text-muted-foreground">TNP Portal</p>
+        </div>
+      </div>
+      <ConfirmDialog
+        title="Log out?"
+        description="You will be returned to the login screen."
+        confirmLabel="Log out"
+        onConfirm={onLogout}
+        trigger={({ onClick }) => (
+          <Button
+            type="button"
+            variant="outline"
+            className="mt-4 w-full justify-start"
+            onClick={onClick}
+          >
+            <LogOut className="size-4" />
+            Logout
+          </Button>
+        )}
+      />
+    </div>
+  );
 
   return (
     <main className="min-h-svh bg-background text-foreground">
       <div className="grid min-h-svh lg:grid-cols-[280px_minmax(0,1fr)_360px]">
-        <aside className="border-b bg-background px-5 py-5 lg:border-r lg:border-b-0">
+        <aside className="hidden bg-background px-5 py-5 lg:block lg:border-r">
           <div className="flex h-full flex-col gap-8">
             <BrandLogo />
-
-            <nav className="flex gap-2 overflow-x-auto lg:grid lg:overflow-visible">
-              {navItems.map((item) => {
-                const Icon = item.icon;
-                const isActive = activeNav === item.id;
-
-                return (
-                  <Button
-                    key={item.id}
-                    type="button"
-                    variant="ghost"
-                    className={cn(
-                      "h-11 shrink-0 justify-start gap-3 px-3 text-base font-medium",
-                      isActive && "bg-muted text-foreground",
-                    )}
-                    onClick={() => onNavChange(item.id)}
-                  >
-                    <Icon className="size-5" />
-                    {item.label}
-                  </Button>
-                );
-              })}
-            </nav>
-
-            <div className="mt-auto rounded-xl border bg-muted/40 p-4">
-              <div className="flex items-center gap-3">
-                <div className="flex size-10 items-center justify-center rounded-full bg-primary text-sm font-semibold text-primary-foreground">
-                  A
-                </div>
-                <div className="min-w-0 flex-1">
-                  <p className="font-medium">Admin</p>
-                  <p className="text-sm text-muted-foreground">TNP Portal</p>
-                </div>
-              </div>
-              <ConfirmDialog
-                title="Log out?"
-                description="You will be returned to the login screen."
-                confirmLabel="Log out"
-                onConfirm={onLogout}
-                trigger={({ onClick }) => (
-                  <Button
-                    type="button"
-                    variant="outline"
-                    className="mt-4 w-full justify-start"
-                    onClick={onClick}
-                  >
-                    <LogOut className="size-4" />
-                    Logout
-                  </Button>
-                )}
-              />
-            </div>
+            {renderNavItems()}
+            {renderAdminCard()}
           </div>
         </aside>
 
         <section className="min-w-0 px-5 py-4 lg:px-8">
-          <div className="mb-3 flex justify-end lg:hidden">
+          <div className="mb-3 flex items-center justify-between lg:hidden">
+            <Button
+              type="button"
+              variant="outline"
+              size="icon"
+              aria-label="Open sidebar"
+              onClick={() => setSidebarOpen(true)}
+            >
+              <Menu className="size-4" />
+            </Button>
             <Button
               type="button"
               variant="outline"
@@ -93,14 +112,39 @@ export function DashboardShell({
           {children}
         </section>
 
-        {filtersOpen && (
+        {(filtersOpen || sidebarOpen) && (
           <button
             type="button"
             className="fixed inset-0 z-40 bg-black/10 backdrop-blur-xs lg:hidden"
-            aria-label="Close filters"
-            onClick={() => setFiltersOpen(false)}
+            aria-label="Close dashboard drawer"
+            onClick={() => {
+              setFiltersOpen(false);
+              setSidebarOpen(false);
+            }}
           />
         )}
+
+        <aside
+          className={cn(
+            "fixed inset-y-0 left-0 z-50 flex w-[min(20rem,calc(100vw-2rem))] flex-col gap-8 overflow-y-auto border-r bg-background px-5 py-5 shadow-xl transition-transform duration-200 lg:hidden",
+            sidebarOpen ? "translate-x-0" : "-translate-x-full",
+          )}
+        >
+          <div className="flex items-center justify-between">
+            <BrandLogo />
+            <Button
+              type="button"
+              variant="ghost"
+              size="icon"
+              aria-label="Close sidebar"
+              onClick={() => setSidebarOpen(false)}
+            >
+              <X className="size-4" />
+            </Button>
+          </div>
+          {renderNavItems(() => setSidebarOpen(false))}
+          {renderAdminCard()}
+        </aside>
 
         <aside
           className={cn(
