@@ -1,0 +1,21 @@
+{
+  "name": "@job-portal/contracts",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts",
+    "./applications": "./src/applications.ts",
+    "./jobs": "./src/jobs.ts",
+    "./profile": "./src/profile.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc -p tsconfig.json --noEmit"
+  },
+  "dependencies": {
+    "zod": "^4.5.4"
+  },
+  "devDependencies": {
+    "typescript": "~6.0.2"
+  }
+}
