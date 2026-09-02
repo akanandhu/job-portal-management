@@ -78,6 +78,7 @@ model Job {
   category        JobCategory
   experienceLevel ExperienceLevel
   status          JobStatus       @default(DRAFT)
+  isFeatured      Boolean         @default(false)
 
   applications    Application[]
 
@@ -87,6 +88,7 @@ model Job {
   @@index([category])
   @@index([experienceLevel])
   @@index([status, createdAt])
+  @@index([isFeatured, status, createdAt])
 }
 
 model Application {

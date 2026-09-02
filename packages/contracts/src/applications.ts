@@ -1,4 +1,10 @@
 import { z } from "zod";
+import {
+  DEFAULT_LIMIT,
+  DEFAULT_PAGE,
+  MAX_LIMIT,
+  positiveIntegerSchema,
+} from "./query";
 
 export const applicationStatuses = [
   "APPLIED",
@@ -23,6 +29,13 @@ export const updateApplicationStatusSchema = z.object({
   status: z.enum(applicationStatuses),
 });
 
+export const listAllApplicationsQuerySchema = z.object({
+  page: positiveIntegerSchema(DEFAULT_PAGE),
+  limit: positiveIntegerSchema(DEFAULT_LIMIT).transform((limit) =>
+    Math.min(limit, MAX_LIMIT),
+  ),
+});
+
 export type ApplicationStatusI = (typeof applicationStatuses)[number];
 export type ApplyToJobParamsI = z.infer<typeof applyToJobParamsSchema>;
 export type ApplicationIdParamsI = z.infer<typeof applicationIdParamsSchema>;
@@ -31,6 +44,9 @@ export type ListJobApplicationsParamsI = z.infer<
 >;
 export type UpdateApplicationStatusInputI = z.infer<
   typeof updateApplicationStatusSchema
+>;
+export type ListAllApplicationsQueryI = z.infer<
+  typeof listAllApplicationsQuerySchema
 >;
 
 export type ApplicationSnapshotInputI = {

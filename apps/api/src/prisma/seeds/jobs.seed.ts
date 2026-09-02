@@ -11,6 +11,7 @@ export async function seedJobs() {
       category: "DESIGN" as const,
       experienceLevel: "MID" as const,
       status: "PUBLISHED" as const,
+      isFeatured: true,
     },
     {
       id: "10000000-0000-4000-8000-000000000002",
@@ -21,6 +22,7 @@ export async function seedJobs() {
       category: "ENGINEERING" as const,
       experienceLevel: "SENIOR" as const,
       status: "PUBLISHED" as const,
+      isFeatured: true,
     },
     {
       id: "10000000-0000-4000-8000-000000000003",
@@ -31,6 +33,7 @@ export async function seedJobs() {
       category: "MARKETING" as const,
       experienceLevel: "ENTRY" as const,
       status: "PUBLISHED" as const,
+      isFeatured: false,
     },
   ];
 

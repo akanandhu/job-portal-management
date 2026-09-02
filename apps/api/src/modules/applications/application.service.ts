@@ -3,16 +3,19 @@ import { findJobById } from "../jobs/job.repository";
 import { findCandidateProfileByUserId } from "../profile/profile.repository";
 import {
   createApplication,
+  countAllApplications,
   findApplicationById,
   findApplicationByUserAndJob,
   findApplicationsByJobId,
   findApplicationsByUserId,
+  listAllApplications as findAllApplications,
   updateApplicationStatus,
 } from "./application.repository";
 import type { ApplicationStatusI } from "./application.types";
 import {
   applicationIdParamsSchema,
   applyToJobParamsSchema,
+  listAllApplicationsQuerySchema,
   listJobApplicationsParamsSchema,
   updateApplicationStatusSchema,
 } from "./application.validation";
@@ -106,6 +109,33 @@ export async function applyToJob(
 
 export async function listMyApplications(userId: string) {
   return await findApplicationsByUserId(userId);
+}
+
+export async function listAllApplications(query: Record<string, unknown>) {
+  const parsedQuery = parseWithZodValidation(
+    () => listAllApplicationsQuerySchema.parse(query),
+    (message) => new ApplicationValidationError(message),
+    {
+      fallbackMessage: "Invalid application request",
+      fallbackPath: "query",
+    },
+  );
+
+  const [applications, countResult] = await Promise.all([
+    findAllApplications(parsedQuery),
+    countAllApplications(),
+  ]);
+  const total = countResult.total;
+
+  return {
+    data: applications,
+    meta: {
+      page: parsedQuery.page,
+      limit: parsedQuery.limit,
+      total,
+      totalPages: Math.ceil(total / parsedQuery.limit),
+    },
+  };
 }
 
 export async function listJobApplications(params: Record<string, unknown>) {

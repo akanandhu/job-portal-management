@@ -7,6 +7,7 @@ export {
 export type {
   CreateJobInputI,
   ExperienceLevelI,
+  FeaturedJobsQueryI,
   JobCategoryI,
   JobStatusI,
   ListJobsQueryI,

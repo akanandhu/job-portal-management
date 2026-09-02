@@ -1,4 +1,11 @@
 import { z } from "zod";
+import {
+  DEFAULT_LIMIT,
+  DEFAULT_PAGE,
+  MAX_LIMIT,
+  positiveIntegerSchema,
+  queryValueSchema,
+} from "./query";
 
 export const jobCategories = [
   "ENGINEERING",
@@ -14,15 +21,7 @@ export const jobCategories = [
 export const experienceLevels = ["ENTRY", "MID", "SENIOR"] as const;
 export const jobStatuses = ["DRAFT", "PUBLISHED", "CLOSED"] as const;
 
-const DEFAULT_PAGE = 1;
-const DEFAULT_LIMIT = 10;
-const MAX_LIMIT = 50;
-
-const queryValueSchema = <Schema extends z.ZodType>(schema: Schema) =>
-  z.preprocess((value) => (Array.isArray(value) ? value[0] : value), schema);
-
-const positiveIntegerSchema = (defaultValue: number) =>
-  queryValueSchema(z.coerce.number().int().positive().default(defaultValue));
+const DEFAULT_FEATURED_LIMIT = 6;
 
 export const listJobsQuerySchema = z.object({
   page: positiveIntegerSchema(DEFAULT_PAGE),
@@ -31,6 +30,12 @@ export const listJobsQuerySchema = z.object({
   ),
   category: queryValueSchema(z.enum(jobCategories).optional()),
   experienceLevel: queryValueSchema(z.enum(experienceLevels).optional()),
+});
+
+export const featuredJobsQuerySchema = z.object({
+  limit: positiveIntegerSchema(DEFAULT_FEATURED_LIMIT).transform((limit) =>
+    Math.min(limit, MAX_LIMIT),
+  ),
 });
 
 export const jobIdParamsSchema = z.object({
@@ -45,6 +50,7 @@ export const createJobSchema = z.object({
   category: z.enum(jobCategories),
   experienceLevel: z.enum(experienceLevels),
   status: z.enum(jobStatuses).default("DRAFT"),
+  isFeatured: z.boolean().default(false),
 });
 
 export const updateJobSchema = createJobSchema
@@ -56,6 +62,7 @@ export const updateJobSchema = createJobSchema
 export type JobCategoryI = (typeof jobCategories)[number];
 export type ExperienceLevelI = (typeof experienceLevels)[number];
 export type JobStatusI = (typeof jobStatuses)[number];
+export type FeaturedJobsQueryI = z.infer<typeof featuredJobsQuerySchema>;
 export type ListJobsQueryI = z.infer<typeof listJobsQuerySchema>;
 export type CreateJobInputI = z.infer<typeof createJobSchema>;
 export type UpdateJobInputI = Partial<CreateJobInputI>;

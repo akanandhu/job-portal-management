@@ -519,6 +519,13 @@
                   "kind": "scalar"
                 }
               },
+              "isFeatured": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/bool@1",
+                  "kind": "scalar"
+                }
+              },
               "location": {
                 "nullable": false,
                 "type": {
@@ -590,6 +597,9 @@
                 },
                 "id": {
                   "column": "id"
+                },
+                "isFeatured": {
+                  "column": "isFeatured"
                 },
                 "location": {
                   "column": "location"
@@ -1177,6 +1187,15 @@
                   "nativeType": "text",
                   "nullable": false
                 },
+                "isFeatured": {
+                  "codecId": "pg/bool@1",
+                  "default": {
+                    "kind": "literal",
+                    "value": false
+                  },
+                  "nativeType": "bool",
+                  "nullable": false
+                },
                 "location": {
                   "codecId": "pg/text@1",
                   "nativeType": "text",
@@ -1224,6 +1243,16 @@
                   ],
                   "name": "job_experienceLevel_idx_88bcaa5e",
                   "prefix": "job_experienceLevel_idx",
+                  "unique": false
+                },
+                {
+                  "columns": [
+                    "isFeatured",
+                    "status",
+                    "createdAt"
+                  ],
+                  "name": "job_isFeatured_status_createdAt_idx_7db32ec7",
+                  "prefix": "job_isFeatured_status_createdAt_idx",
                   "unique": false
                 },
                 {
@@ -1449,7 +1478,7 @@
         "kind": "postgres-schema"
       }
     },
-    "storageHash": "eec986ef470247de29e868a602e998e8899ddd5292bac55aa071522df9ca31f2"
+    "storageHash": "e00643b1440dc408036df7bdf94946a3df9e7631607856d979be26bbc89ca3de"
   },
   "execution": {
     "executionHash": "2a46a1697980a4854f9c9cd7515802a76bcf2e79a304bffcbc281c52de9773b6",

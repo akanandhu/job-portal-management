@@ -5,6 +5,8 @@ import {
   getJob,
   JobNotFoundError,
   JobQueryValidationError,
+  listFeaturedJobs,
+  listJobCategories,
   listJobs,
   updateAdminJob,
 } from "./job.service";
@@ -36,6 +38,26 @@ export async function getJobController(req: Request, res: Response) {
     const job = await getJob(req.params);
 
     return res.status(200).json({ data: job });
+  } catch (error) {
+    return handleJobError(error, res);
+  }
+}
+
+export async function listFeaturedJobsController(req: Request, res: Response) {
+  try {
+    const jobs = await listFeaturedJobs(req.query);
+
+    return res.status(200).json(jobs);
+  } catch (error) {
+    return handleJobError(error, res);
+  }
+}
+
+export async function listJobCategoriesController(_req: Request, res: Response) {
+  try {
+    const categories = await listJobCategories();
+
+    return res.status(200).json(categories);
   } catch (error) {
     return handleJobError(error, res);
   }

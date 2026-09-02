@@ -9,6 +9,8 @@ import {
   createJobController,
   deleteJobController,
   getJobController,
+  listFeaturedJobsController,
+  listJobCategoriesController,
   listJobsController,
   updateJobController,
 } from "./job.controller";
@@ -16,6 +18,8 @@ import {
 const router = Router();
 
 router.get("/", listJobsController);
+router.get("/featured", listFeaturedJobsController);
+router.get("/categories", listJobCategoriesController);
 router.post(
   "/:jobId/apply",
   authenticate,
