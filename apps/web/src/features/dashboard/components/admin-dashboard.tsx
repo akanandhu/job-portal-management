@@ -1,39 +1,29 @@
 import { BriefcaseBusiness, ClipboardList } from "lucide-react";
 import { Navigate, useNavigate, useSearchParams } from "react-router";
 
-import { applicationStatuses } from "@job-portal/contracts/applications";
-import { ApplicationList } from "@/features/dashboard/components/application-list";
+import { AdminDashboardContent } from "@/features/dashboard/components/admin-dashboard-content";
 import { DashboardFilters } from "@/features/dashboard/components/dashboard-filters";
 import { DashboardShell } from "@/features/dashboard/components/dashboard-shell";
 import { DashboardTabs } from "@/features/dashboard/components/dashboard-tabs";
-import { JobList } from "@/features/dashboard/components/job-list";
-import type { DashboardNavItemI, DashboardTabI } from "@/types/dashboard";
+import {
+  adminApplications,
+  adminJobs,
+} from "@/features/dashboard/data/dashboard-data";
+import {
+  defaultApplicationTab,
+  defaultJobTab,
+  defaultSection,
+  getAdminDashboardView,
+  getDashboardTabs,
+  getDefaultTab,
+  hasItem,
+} from "@/features/dashboard/utils/admin-dashboard-view";
+import type { DashboardNavItemI } from "@/types/dashboard";
 
 const navItems: DashboardNavItemI[] = [
   { id: "jobs", label: "Jobs", icon: BriefcaseBusiness },
   { id: "applications", label: "Applications", icon: ClipboardList },
 ];
-
-const jobTabs: DashboardTabI[] = [{ id: "all-jobs", label: "All Jobs" }];
-
-const formatOptionLabel = (value: string) =>
-  value
-    .toLowerCase()
-    .split("_")
-    .map((part) => part.slice(0, 1).toUpperCase() + part.slice(1))
-    .join(" ");
-
-const applicationTabs: DashboardTabI[] = applicationStatuses.map((status) => ({
-  id: status,
-  label: formatOptionLabel(status),
-}));
-
-const defaultSection = "jobs";
-const defaultJobTab = "all-jobs";
-const defaultApplicationTab = applicationStatuses[0];
-
-const hasItem = <Item extends { id: string }>(items: Item[], id: string) =>
-  items.some((item) => item.id === id);
 
 export function AdminDashboard() {
   const navigate = useNavigate();
@@ -43,28 +33,110 @@ export function AdminDashboard() {
     ? sectionParam
     : defaultSection;
 
-  const isJobsView = activeNav === "jobs";
-  const currentTabs = isJobsView ? jobTabs : applicationTabs;
-  const defaultTab = isJobsView ? defaultJobTab : defaultApplicationTab;
+  const currentTabs = getDashboardTabs(activeNav);
+  const defaultTab = getDefaultTab(activeNav);
   const tabParam = searchParams.get("tab") ?? defaultTab;
   const activeTab = hasItem(currentTabs, tabParam) ? tabParam : defaultTab;
+  const view = getAdminDashboardView({
+    activeNav,
+    applications: adminApplications,
+    jobs: adminJobs,
+    searchParams,
+  });
   const hasValidParams = sectionParam === activeNav && tabParam === activeTab;
 
-  const handleNavChange = (nextSection: string) => {
+  const updateParams = (updates: Record<string, string | undefined>) => {
     const nextParams = new URLSearchParams(searchParams);
-    nextParams.set("section", nextSection);
-    nextParams.set(
-      "tab",
-      nextSection === "jobs" ? defaultJobTab : defaultApplicationTab,
-    );
+
+    for (const [key, value] of Object.entries(updates)) {
+      if (value === undefined) {
+        nextParams.delete(key);
+      } else {
+        nextParams.set(key, value);
+      }
+    }
+
     setSearchParams(nextParams);
   };
 
+  const handleNavChange = (nextSection: string) => {
+    updateParams({
+      section: nextSection,
+      tab: nextSection === "jobs" ? defaultJobTab : defaultApplicationTab,
+      jobId: undefined,
+      applicationId: undefined,
+      mode: undefined,
+    });
+  };
+
   const handleTabChange = (nextTab: string) => {
-    const nextParams = new URLSearchParams(searchParams);
-    nextParams.set("section", activeNav);
-    nextParams.set("tab", nextTab);
-    setSearchParams(nextParams);
+    updateParams({
+      section: activeNav,
+      tab: nextTab,
+      jobId: undefined,
+      applicationId: undefined,
+      mode: undefined,
+    });
+  };
+
+  const handleAddJob = () => {
+    updateParams({
+      section: "jobs",
+      tab: defaultJobTab,
+      mode: "add",
+      jobId: undefined,
+      applicationId: undefined,
+    });
+  };
+
+  const handleEditJob = (jobId: string) => {
+    updateParams({
+      section: "jobs",
+      tab: defaultJobTab,
+      mode: "edit",
+      jobId,
+      applicationId: undefined,
+    });
+  };
+
+  const handleViewJob = (jobId: string) => {
+    updateParams({
+      section: "jobs",
+      tab: defaultJobTab,
+      jobId,
+      mode: undefined,
+      applicationId: undefined,
+    });
+  };
+
+  const handleBackToJobs = () => {
+    updateParams({
+      section: "jobs",
+      tab: defaultJobTab,
+      jobId: undefined,
+      mode: undefined,
+      applicationId: undefined,
+    });
+  };
+
+  const handleViewApplication = (applicationId: string) => {
+    updateParams({
+      section: "applications",
+      tab: defaultApplicationTab,
+      applicationId,
+      jobId: undefined,
+      mode: undefined,
+    });
+  };
+
+  const handleBackToApplications = () => {
+    updateParams({
+      section: "applications",
+      tab: activeTab,
+      applicationId: undefined,
+      jobId: undefined,
+      mode: undefined,
+    });
   };
 
   const handleLogout = () => {
@@ -92,7 +164,17 @@ export function AdminDashboard() {
         tabs={currentTabs}
         onTabChange={handleTabChange}
       />
-      {isJobsView ? <JobList /> : <ApplicationList />}
+      <AdminDashboardContent
+        applications={adminApplications}
+        jobs={adminJobs}
+        onAddJob={handleAddJob}
+        onBackToApplications={handleBackToApplications}
+        onBackToJobs={handleBackToJobs}
+        onEditJob={handleEditJob}
+        onViewApplication={handleViewApplication}
+        onViewJob={handleViewJob}
+        view={view}
+      />
     </DashboardShell>
   );
 }

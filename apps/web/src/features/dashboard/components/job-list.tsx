@@ -1,81 +1,27 @@
 import { Button } from "@/components/ui/button";
-import { BriefcaseBusiness, Plus } from "lucide-react";
+import { BriefcaseBusiness, Pencil, Plus } from "lucide-react";
+import type { AdminJobI } from "../data/dashboard-data";
 
-type JobItemI = {
-  id: string;
-  title: string;
-  company: string;
-  location: string;
-  workplaceType: string;
-  experience: string;
-  postedAt: string;
-  logo: string;
+type JobListPropsI = {
+  jobs: AdminJobI[];
+  onAddJob: () => void;
+  onEditJob: (jobId: string) => void;
+  onViewJob: (jobId: string) => void;
 };
 
-const jobs: JobItemI[] = [
-  {
-    id: "1",
-    title: "Product Designer",
-    company: "Landeed",
-    location: "Hyderabad, India",
-    workplaceType: "In-Office",
-    experience: "1+ years",
-    postedAt: "2d ago",
-    logo: "LA",
-  },
-  {
-    id: "2",
-    title: "Software Engineer",
-    company: "Baxter",
-    location: "Bangalore, India",
-    workplaceType: "In-Office",
-    experience: "0-3 years",
-    postedAt: "5d ago",
-    logo: "BX",
-  },
-  {
-    id: "3",
-    title: "Senior Software Engineer I - Mobile Developer",
-    company: "Talkdesk",
-    location: "Bengaluru, India",
-    workplaceType: "In-Office",
-    experience: "6+ years",
-    postedAt: "5d ago",
-    logo: "TD",
-  },
-  {
-    id: "4",
-    title: "Software Engineer",
-    company: "GE Healthcare",
-    location: "Bengaluru, India",
-    workplaceType: "Hybrid",
-    experience: "2+ years",
-    postedAt: "6d ago",
-    logo: "GE",
-  },
-  {
-    id: "5",
-    title: "Application Developer",
-    company: "Barclays",
-    location: "Pune, India",
-    workplaceType: "In-Office",
-    experience: "0-2 years",
-    postedAt: "6d ago",
-    logo: "BA",
-  },
-  {
-    id: "6",
-    title: "Front-End Integration Engineer",
-    company: "NVIDIA",
-    location: "Bengaluru, India",
-    workplaceType: "Remote",
-    experience: "2+ years",
-    postedAt: "7d ago",
-    logo: "NV",
-  },
-];
+const formatOptionLabel = (value: string) =>
+  value
+    .toLowerCase()
+    .split("_")
+    .map((part) => part.slice(0, 1).toUpperCase() + part.slice(1))
+    .join(" ");
 
-export function JobList() {
+export function JobList({
+  jobs,
+  onAddJob,
+  onEditJob,
+  onViewJob,
+}: JobListPropsI) {
   return (
     <div>
       <div className="flex flex-col gap-4 py-5 sm:flex-row sm:items-center sm:justify-between">
@@ -85,7 +31,7 @@ export function JobList() {
             Manage active job posts and candidate visibility.
           </p>
         </div>
-        <Button className="w-full sm:w-fit">
+        <Button className="w-full sm:w-fit" onClick={onAddJob}>
           <Plus className="size-4" />
           Add job
         </Button>
@@ -95,7 +41,16 @@ export function JobList() {
         {jobs.map((job) => (
           <article
             key={job.id}
-            className="flex gap-4 py-5 transition-colors hover:bg-muted/30"
+            role="button"
+            tabIndex={0}
+            className="flex cursor-pointer gap-4 py-5 transition-colors hover:bg-muted/30 focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-ring/50"
+            onClick={() => onViewJob(job.id)}
+            onKeyDown={(event) => {
+              if (event.key === "Enter" || event.key === " ") {
+                event.preventDefault();
+                onViewJob(job.id);
+              }
+            }}
           >
             <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-primary/10 text-sm font-semibold text-primary ring-1 ring-primary/15">
               {job.logo}
@@ -108,12 +63,27 @@ export function JobList() {
                 </span>
               </h2>
               <p className="mt-1 text-sm text-muted-foreground break-words">
-                {job.workplaceType} ({job.location}) • {job.experience}
+                {formatOptionLabel(job.workplaceType)} ({job.location}) •{" "}
+                {formatOptionLabel(job.experienceLevel)}
               </p>
             </div>
-            <div className="hidden items-start gap-2 text-sm text-muted-foreground sm:flex">
+            <div className="hidden items-start gap-2 pt-1 text-sm text-muted-foreground sm:flex">
               <BriefcaseBusiness className="mt-0.5 size-4" />
-              {job.postedAt}
+              {job.applicationsCount}
+            </div>
+            <div className="flex shrink-0 items-start gap-1">
+              <Button
+                type="button"
+                variant="ghost"
+                size="icon"
+                aria-label={`Edit ${job.title}`}
+                onClick={(event) => {
+                  event.stopPropagation();
+                  onEditJob(job.id);
+                }}
+              >
+                <Pencil className="size-4" />
+              </Button>
             </div>
           </article>
         ))}

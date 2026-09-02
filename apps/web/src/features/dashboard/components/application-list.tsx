@@ -1,40 +1,22 @@
-type ApplicationItemI = {
-  id: string;
-  candidate: string;
-  role: string;
-  company: string;
-  appliedAt: string;
-  experience: string;
+import { ChevronRight } from "lucide-react";
+
+import { Button } from "@/components/ui/button";
+import type {
+  AdminApplicationI,
+  AdminJobI,
+} from "@/features/dashboard/data/dashboard-data";
+
+type ApplicationListPropsI = {
+  applications: AdminApplicationI[];
+  jobs: AdminJobI[];
+  onViewApplication: (applicationId: string) => void;
 };
 
-const applications: ApplicationItemI[] = [
-  {
-    id: "1",
-    candidate: "Ananthakrishnan",
-    role: "Software Engineer",
-    company: "Baxter",
-    appliedAt: "Today",
-    experience: "2 years",
-  },
-  {
-    id: "2",
-    candidate: "Meera Nair",
-    role: "Product Designer",
-    company: "Landeed",
-    appliedAt: "1d ago",
-    experience: "3 years",
-  },
-  {
-    id: "3",
-    candidate: "Rahul Menon",
-    role: "Application Developer",
-    company: "Barclays",
-    appliedAt: "2d ago",
-    experience: "1 year",
-  },
-];
-
-export function ApplicationList() {
+export function ApplicationList({
+  applications,
+  jobs,
+  onViewApplication,
+}: ApplicationListPropsI) {
   return (
     <div>
       <div className="py-5">
@@ -48,7 +30,7 @@ export function ApplicationList() {
         {applications.map((application) => (
           <article
             key={application.id}
-            className="flex gap-4 py-5 transition-colors hover:bg-muted/30"
+            className="flex items-start gap-4 py-5 transition-colors hover:bg-muted/30"
           >
             <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-secondary text-sm font-semibold text-secondary-foreground ring-1 ring-border">
               {application.candidate.slice(0, 1)}
@@ -58,13 +40,23 @@ export function ApplicationList() {
                 {application.candidate}
               </h2>
               <p className="mt-1 text-sm text-muted-foreground">
-                {application.role} at {application.company} •{" "}
-                {application.experience}
+                {jobs.find((job) => job.id === application.jobId)?.title} at{" "}
+                {jobs.find((job) => job.id === application.jobId)?.company} •{" "}
+                {application.yearsOfExperience} years
               </p>
             </div>
             <p className="hidden text-sm text-muted-foreground sm:block">
               {application.appliedAt}
             </p>
+            <Button
+              type="button"
+              variant="ghost"
+              size="icon"
+              aria-label={`View ${application.candidate} application`}
+              onClick={() => onViewApplication(application.id)}
+            >
+              <ChevronRight className="size-4" />
+            </Button>
           </article>
         ))}
       </div>
