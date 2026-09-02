@@ -195,7 +195,8 @@
                 }
               },
               "skills": {
-                "nullable": true,
+                "many": true,
+                "nullable": false,
                 "type": {
                   "codecId": "pg/text@1",
                   "kind": "scalar"
@@ -373,6 +374,7 @@
                 }
               },
               "skills": {
+                "many": true,
                 "nullable": false,
                 "type": {
                   "codecId": "pg/text@1",
@@ -838,6 +840,11 @@
             "application": {
               "checks": [
                 {
+                  "expression": "array_position(\"skills\", NULL) IS NULL",
+                  "name": "application_skills_elem_not_null_79c19a4f",
+                  "prefix": "application_skills_elem_not_null"
+                },
+                {
                   "expression": "\"status\" IN ('APPLIED', 'REVIEWING', 'REJECTED', 'ACCEPTED')",
                   "name": "application_status_check_2e856a86",
                   "prefix": "application_status_check"
@@ -890,8 +897,13 @@
                 },
                 "skills": {
                   "codecId": "pg/text@1",
+                  "default": {
+                    "kind": "literal",
+                    "value": []
+                  },
+                  "many": true,
                   "nativeType": "text",
-                  "nullable": true
+                  "nullable": false
                 },
                 "status": {
                   "codecId": "pg/text@1",
@@ -993,6 +1005,13 @@
               ]
             },
             "candidateProfile": {
+              "checks": [
+                {
+                  "expression": "array_position(\"skills\", NULL) IS NULL",
+                  "name": "candidateProfile_skills_elem_not_null_79c19a4f",
+                  "prefix": "candidateProfile_skills_elem_not_null"
+                }
+              ],
               "columns": {
                 "createdAt": {
                   "codecId": "pg/timestamptz-string@1",
@@ -1040,6 +1059,7 @@
                 },
                 "skills": {
                   "codecId": "pg/text@1",
+                  "many": true,
                   "nativeType": "text",
                   "nullable": false
                 },
@@ -1429,7 +1449,7 @@
         "kind": "postgres-schema"
       }
     },
-    "storageHash": "3c226e41b464abd212795f9510b6d24875e1f861d047442474dec004bfca6bb2"
+    "storageHash": "eec986ef470247de29e868a602e998e8899ddd5292bac55aa071522df9ca31f2"
   },
   "execution": {
     "executionHash": "2a46a1697980a4854f9c9cd7515802a76bcf2e79a304bffcbc281c52de9773b6",

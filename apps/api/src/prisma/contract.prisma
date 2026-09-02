@@ -63,7 +63,7 @@ model CandidateProfile {
   currentRole       String?
   expectedSalary    Int
   noticePeriodDays  Int
-  skills            String
+  skills            String[]
 
   createdAt         TimestamptzString @default(now())
   updatedAt         temporal.updatedAtString()
@@ -104,7 +104,7 @@ model Application {
   currentRole       String?
   expectedSalary    Int?
   noticePeriodDays  Int?
-  skills            String?
+  skills            String[] @default([])
 
   status    ApplicationStatus @default(APPLIED)
 

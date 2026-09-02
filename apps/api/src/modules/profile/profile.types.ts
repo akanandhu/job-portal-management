@@ -6,5 +6,5 @@ export type CandidateProfileInputI = {
   currentRole: string | null;
   expectedSalary: number;
   noticePeriodDays: number;
-  skills: string;
+  skills: string[];
 };

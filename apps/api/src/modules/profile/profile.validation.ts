@@ -8,5 +8,5 @@ export const candidateProfileSchema = z.object({
   currentRole: z.string().trim().min(1).nullable(),
   expectedSalary: z.coerce.number().int().min(0),
   noticePeriodDays: z.coerce.number().int().min(0),
-  skills: z.string().trim().min(1),
+  skills: z.array(z.string().trim().min(1)).min(1),
 });

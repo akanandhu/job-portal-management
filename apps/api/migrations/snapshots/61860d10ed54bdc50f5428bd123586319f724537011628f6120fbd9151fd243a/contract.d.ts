@@ -33,7 +33,7 @@ import type {
 } from '@prisma/orm-postgres/contract/types';
 
 export type StorageHash =
-  StorageHashBase<'4f19e5f590b89ccf29603838521eb96febf7e1007ed5e413c1273329c06278d0'>;
+  StorageHashBase<'61860d10ed54bdc50f5428bd123586319f724537011628f6120fbd9151fd243a'>;
 export type ExecutionHash =
   ExecutionHashBase<'2a46a1697980a4854f9c9cd7515802a76bcf2e79a304bffcbc281c52de9773b6'>;
 export type ProfileHash =
@@ -259,7 +259,7 @@ export type FieldOutputTypes = {
       readonly currentRole: CodecTypes['pg/text@1']['output'] | null;
       readonly expectedSalary: CodecTypes['pg/int4@1']['output'];
       readonly noticePeriodDays: CodecTypes['pg/int4@1']['output'];
-      readonly skills: CodecTypes['pg/text@1']['output'];
+      readonly skills: ReadonlyArray<CodecTypes['pg/text@1']['output']>;
       readonly createdAt: CodecTypes['pg/timestamptz-string@1']['output'];
       readonly updatedAt: CodecTypes['pg/timestamptz-string@1']['output'];
     };
@@ -322,7 +322,7 @@ export type FieldInputTypes = {
       readonly currentRole: CodecTypes['pg/text@1']['input'] | null;
       readonly expectedSalary: CodecTypes['pg/int4@1']['input'];
       readonly noticePeriodDays: CodecTypes['pg/int4@1']['input'];
-      readonly skills: CodecTypes['pg/text@1']['input'];
+      readonly skills: ReadonlyArray<CodecTypes['pg/text@1']['input']>;
       readonly createdAt: CodecTypes['pg/timestamptz-string@1']['input'];
       readonly updatedAt: CodecTypes['pg/timestamptz-string@1']['input'];
     };
@@ -384,7 +384,7 @@ export type StorageColumnTypes = {
       readonly id: CodecTypes['pg/text@1']['output'];
       readonly noticePeriodDays: CodecTypes['pg/int4@1']['output'];
       readonly phone: CodecTypes['pg/text@1']['output'];
-      readonly skills: CodecTypes['pg/text@1']['output'];
+      readonly skills: ReadonlyArray<CodecTypes['pg/text@1']['output']>;
       readonly updatedAt: CodecTypes['pg/timestamptz-string@1']['output'];
       readonly userId: CodecTypes['pg/text@1']['output'];
       readonly yearsOfExperience: CodecTypes['pg/int4@1']['output'];
@@ -447,7 +447,7 @@ export type StorageColumnInputTypes = {
       readonly id: CodecTypes['pg/text@1']['input'];
       readonly noticePeriodDays: CodecTypes['pg/int4@1']['input'];
       readonly phone: CodecTypes['pg/text@1']['input'];
-      readonly skills: CodecTypes['pg/text@1']['input'];
+      readonly skills: ReadonlyArray<CodecTypes['pg/text@1']['input']>;
       readonly updatedAt: CodecTypes['pg/timestamptz-string@1']['input'];
       readonly userId: CodecTypes['pg/text@1']['input'];
       readonly yearsOfExperience: CodecTypes['pg/int4@1']['input'];
@@ -1027,6 +1027,7 @@ type ContractBase = Omit<
               readonly skills: {
                 readonly nullable: false;
                 readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
+                readonly many: true;
               };
               readonly createdAt: {
                 readonly nullable: false;

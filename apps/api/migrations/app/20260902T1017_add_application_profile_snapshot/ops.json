@@ -236,7 +236,7 @@
     "execute": [
       {
         "description": "add column \"skills\"",
-        "sql": "ALTER TABLE \"public\".\"application\" ADD COLUMN \"skills\" text"
+        "sql": "ALTER TABLE \"public\".\"application\" ADD COLUMN \"skills\" text[] DEFAULT '{}' NOT NULL"
       }
     ],
     "postcheck": [
@@ -289,6 +289,48 @@
           "public",
           "application",
           "yearsOfExperience"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "checkConstraint.application.application_skills_elem_not_null_79c19a4f",
+    "label": "Add check constraint \"application_skills_elem_not_null_79c19a4f\" on \"application\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "checkConstraint",
+        "name": "application_skills_elem_not_null_79c19a4f",
+        "table": "application"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure constraint \"application_skills_elem_not_null_79c19a4f\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "application_skills_elem_not_null_79c19a4f",
+          "public",
+          "\"public\".\"application\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add check constraint \"application_skills_elem_not_null_79c19a4f\"",
+        "sql": "ALTER TABLE \"public\".\"application\" ADD CONSTRAINT \"application_skills_elem_not_null_79c19a4f\" CHECK (array_position(\"skills\", NULL) IS NULL)"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify constraint \"application_skills_elem_not_null_79c19a4f\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "application_skills_elem_not_null_79c19a4f",
+          "public",
+          "\"public\".\"application\""
         ]
       }
     ]

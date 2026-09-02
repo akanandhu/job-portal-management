@@ -7,5 +7,5 @@ export type ApplicationSnapshotInputI = {
   currentRole: string | null;
   expectedSalary: number;
   noticePeriodDays: number;
-  skills: string;
+  skills: readonly string[];
 };
