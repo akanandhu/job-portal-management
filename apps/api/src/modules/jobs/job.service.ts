@@ -18,51 +18,35 @@ import {
   listJobsQuerySchema,
   updateJobSchema,
 } from "./job.validation";
-import { ZodError } from "zod";
+import { parseWithZodValidation } from "../../lib/validation";
 
 export class JobQueryValidationError extends Error {}
 export class JobNotFoundError extends Error {}
 
-function parseWithJobValidation<Output>(
-  parser: () => Output,
-): Output {
-  try {
-    return parser();
-  } catch (error) {
-    if (error instanceof ZodError) {
-      throw new JobQueryValidationError(getValidationMessage(error));
-    }
-
-    throw error;
-  }
-}
-
-function getValidationMessage(error: ZodError) {
-  const issue = error.issues[0];
-
-  if (!issue) {
-    return "Invalid jobs query";
-  }
-
-  const fieldName = issue.path.join(".") || "query";
-
-  return `${fieldName}: ${issue.message}`;
-}
+const parseJobSchema = <Output>(parser: () => Output) =>
+  parseWithZodValidation(
+    parser,
+    (message) => new JobQueryValidationError(message),
+    {
+      fallbackMessage: "Invalid jobs request",
+      fallbackPath: "job",
+    },
+  );
 
 export function parseListJobsQuery(query: Record<string, unknown>): ListJobsQueryI {
-  return parseWithJobValidation(() => listJobsQuerySchema.parse(query));
+  return parseJobSchema(() => listJobsQuerySchema.parse(query));
 }
 
 function parseJobId(params: Record<string, unknown>) {
-  return parseWithJobValidation(() => jobIdParamsSchema.parse(params).id);
+  return parseJobSchema(() => jobIdParamsSchema.parse(params).id);
 }
 
 function parseCreateJobBody(body: unknown): CreateJobInputI {
-  return parseWithJobValidation(() => createJobSchema.parse(body));
+  return parseJobSchema(() => createJobSchema.parse(body));
 }
 
 function parseUpdateJobBody(body: unknown): UpdateJobInputI {
-  return parseWithJobValidation(() => {
+  return parseJobSchema(() => {
     const parsedBody = updateJobSchema.parse(body);
     const updateData: UpdateJobInputI = {};
 

@@ -11,6 +11,7 @@
     "seed": "tsx src/prisma/seeds/index.ts"
   },
   "dependencies": {
+    "@job-portal/contracts": "*",
     "@prisma/client": "^7.10.0",
     "@prisma/orm-postgres": "^8.0.0-rc.8",
     "bcrypt": "^6.0.0",

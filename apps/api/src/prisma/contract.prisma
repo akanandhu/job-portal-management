@@ -44,9 +44,29 @@ model User {
 
   applications Application[]
   refreshTokens RefreshToken[]
+  candidateProfile CandidateProfile?
 
   createdAt    TimestamptzString @default(now())
   updatedAt    temporal.updatedAtString()
+}
+
+model CandidateProfile {
+  id                String @id @default(uuid())
+
+  user              User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId            String @unique
+
+  phone             String
+  education         String
+  yearsOfExperience Int
+  currentCompany    String?
+  currentRole       String?
+  expectedSalary    Int
+  noticePeriodDays  Int
+  skills            String[]
+
+  createdAt         TimestamptzString @default(now())
+  updatedAt         temporal.updatedAtString()
 }
 
 model Job {
@@ -77,6 +97,14 @@ model Application {
 
   job       Job               @relation(fields: [jobId], references: [id], onDelete: Cascade)
   jobId     String
+
+  yearsOfExperience Int?
+  education         String?
+  currentCompany    String?
+  currentRole       String?
+  expectedSalary    Int?
+  noticePeriodDays  Int?
+  skills            String[] @default([])
 
   status    ApplicationStatus @default(APPLIED)
 

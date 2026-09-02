@@ -8,6 +8,10 @@
       "model": "Application",
       "namespace": "public"
     },
+    "candidateProfile": {
+      "model": "CandidateProfile",
+      "namespace": "public"
+    },
     "job": {
       "model": "Job",
       "namespace": "public"
@@ -141,6 +145,34 @@
                   "kind": "scalar"
                 }
               },
+              "currentCompany": {
+                "nullable": true,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
+              "currentRole": {
+                "nullable": true,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
+              "education": {
+                "nullable": true,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
+              "expectedSalary": {
+                "nullable": true,
+                "type": {
+                  "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              },
               "id": {
                 "nullable": false,
                 "type": {
@@ -149,6 +181,21 @@
                 }
               },
               "jobId": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
+              "noticePeriodDays": {
+                "nullable": true,
+                "type": {
+                  "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              },
+              "skills": {
+                "many": true,
                 "nullable": false,
                 "type": {
                   "codecId": "pg/text@1",
@@ -179,6 +226,13 @@
                 "nullable": false,
                 "type": {
                   "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
+              "yearsOfExperience": {
+                "nullable": true,
+                "type": {
+                  "codecId": "pg/int4@1",
                   "kind": "scalar"
                 }
               }
@@ -220,11 +274,29 @@
                 "createdAt": {
                   "column": "createdAt"
                 },
+                "currentCompany": {
+                  "column": "currentCompany"
+                },
+                "currentRole": {
+                  "column": "currentRole"
+                },
+                "education": {
+                  "column": "education"
+                },
+                "expectedSalary": {
+                  "column": "expectedSalary"
+                },
                 "id": {
                   "column": "id"
                 },
                 "jobId": {
                   "column": "jobId"
+                },
+                "noticePeriodDays": {
+                  "column": "noticePeriodDays"
+                },
+                "skills": {
+                  "column": "skills"
                 },
                 "status": {
                   "column": "status"
@@ -234,10 +306,161 @@
                 },
                 "userId": {
                   "column": "userId"
+                },
+                "yearsOfExperience": {
+                  "column": "yearsOfExperience"
                 }
               },
               "namespaceId": "public",
               "table": "application"
+            }
+          },
+          "CandidateProfile": {
+            "fields": {
+              "createdAt": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/timestamptz-string@1",
+                  "kind": "scalar"
+                }
+              },
+              "currentCompany": {
+                "nullable": true,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
+              "currentRole": {
+                "nullable": true,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
+              "education": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
+              "expectedSalary": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              },
+              "id": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
+              "noticePeriodDays": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              },
+              "phone": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
+              "skills": {
+                "many": true,
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
+              "updatedAt": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/timestamptz-string@1",
+                  "kind": "scalar"
+                }
+              },
+              "userId": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
+              "yearsOfExperience": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              }
+            },
+            "relations": {
+              "user": {
+                "cardinality": "N:1",
+                "on": {
+                  "localFields": [
+                    "userId"
+                  ],
+                  "targetFields": [
+                    "id"
+                  ]
+                },
+                "to": {
+                  "model": "User",
+                  "namespace": "public"
+                }
+              }
+            },
+            "storage": {
+              "fields": {
+                "createdAt": {
+                  "column": "createdAt"
+                },
+                "currentCompany": {
+                  "column": "currentCompany"
+                },
+                "currentRole": {
+                  "column": "currentRole"
+                },
+                "education": {
+                  "column": "education"
+                },
+                "expectedSalary": {
+                  "column": "expectedSalary"
+                },
+                "id": {
+                  "column": "id"
+                },
+                "noticePeriodDays": {
+                  "column": "noticePeriodDays"
+                },
+                "phone": {
+                  "column": "phone"
+                },
+                "skills": {
+                  "column": "skills"
+                },
+                "updatedAt": {
+                  "column": "updatedAt"
+                },
+                "userId": {
+                  "column": "userId"
+                },
+                "yearsOfExperience": {
+                  "column": "yearsOfExperience"
+                }
+              },
+              "namespaceId": "public",
+              "table": "candidateProfile"
             }
           },
           "Job": {
@@ -546,6 +769,21 @@
                   "namespace": "public"
                 }
               },
+              "candidateProfile": {
+                "cardinality": "1:1",
+                "on": {
+                  "localFields": [
+                    "id"
+                  ],
+                  "targetFields": [
+                    "userId"
+                  ]
+                },
+                "to": {
+                  "model": "CandidateProfile",
+                  "namespace": "public"
+                }
+              },
               "refreshTokens": {
                 "cardinality": "1:N",
                 "on": {
@@ -602,6 +840,11 @@
             "application": {
               "checks": [
                 {
+                  "expression": "array_position(\"skills\", NULL) IS NULL",
+                  "name": "application_skills_elem_not_null_79c19a4f",
+                  "prefix": "application_skills_elem_not_null"
+                },
+                {
                   "expression": "\"status\" IN ('APPLIED', 'REVIEWING', 'REJECTED', 'ACCEPTED')",
                   "name": "application_status_check_2e856a86",
                   "prefix": "application_status_check"
@@ -617,6 +860,26 @@
                   "nativeType": "timestamptz",
                   "nullable": false
                 },
+                "currentCompany": {
+                  "codecId": "pg/text@1",
+                  "nativeType": "text",
+                  "nullable": true
+                },
+                "currentRole": {
+                  "codecId": "pg/text@1",
+                  "nativeType": "text",
+                  "nullable": true
+                },
+                "education": {
+                  "codecId": "pg/text@1",
+                  "nativeType": "text",
+                  "nullable": true
+                },
+                "expectedSalary": {
+                  "codecId": "pg/int4@1",
+                  "nativeType": "int4",
+                  "nullable": true
+                },
                 "id": {
                   "codecId": "pg/text@1",
                   "nativeType": "text",
@@ -624,6 +887,21 @@
                 },
                 "jobId": {
                   "codecId": "pg/text@1",
+                  "nativeType": "text",
+                  "nullable": false
+                },
+                "noticePeriodDays": {
+                  "codecId": "pg/int4@1",
+                  "nativeType": "int4",
+                  "nullable": true
+                },
+                "skills": {
+                  "codecId": "pg/text@1",
+                  "default": {
+                    "kind": "literal",
+                    "value": []
+                  },
+                  "many": true,
                   "nativeType": "text",
                   "nullable": false
                 },
@@ -651,6 +929,11 @@
                   "codecId": "pg/text@1",
                   "nativeType": "text",
                   "nullable": false
+                },
+                "yearsOfExperience": {
+                  "codecId": "pg/int4@1",
+                  "nativeType": "int4",
+                  "nullable": true
                 }
               },
               "foreignKeys": [
@@ -717,6 +1000,114 @@
                   "columns": [
                     "userId",
                     "jobId"
+                  ]
+                }
+              ]
+            },
+            "candidateProfile": {
+              "checks": [
+                {
+                  "expression": "array_position(\"skills\", NULL) IS NULL",
+                  "name": "candidateProfile_skills_elem_not_null_79c19a4f",
+                  "prefix": "candidateProfile_skills_elem_not_null"
+                }
+              ],
+              "columns": {
+                "createdAt": {
+                  "codecId": "pg/timestamptz-string@1",
+                  "default": {
+                    "expression": "now()",
+                    "kind": "function"
+                  },
+                  "nativeType": "timestamptz",
+                  "nullable": false
+                },
+                "currentCompany": {
+                  "codecId": "pg/text@1",
+                  "nativeType": "text",
+                  "nullable": true
+                },
+                "currentRole": {
+                  "codecId": "pg/text@1",
+                  "nativeType": "text",
+                  "nullable": true
+                },
+                "education": {
+                  "codecId": "pg/text@1",
+                  "nativeType": "text",
+                  "nullable": false
+                },
+                "expectedSalary": {
+                  "codecId": "pg/int4@1",
+                  "nativeType": "int4",
+                  "nullable": false
+                },
+                "id": {
+                  "codecId": "pg/text@1",
+                  "nativeType": "text",
+                  "nullable": false
+                },
+                "noticePeriodDays": {
+                  "codecId": "pg/int4@1",
+                  "nativeType": "int4",
+                  "nullable": false
+                },
+                "phone": {
+                  "codecId": "pg/text@1",
+                  "nativeType": "text",
+                  "nullable": false
+                },
+                "skills": {
+                  "codecId": "pg/text@1",
+                  "many": true,
+                  "nativeType": "text",
+                  "nullable": false
+                },
+                "updatedAt": {
+                  "codecId": "pg/timestamptz-string@1",
+                  "nativeType": "timestamptz",
+                  "nullable": false
+                },
+                "userId": {
+                  "codecId": "pg/text@1",
+                  "nativeType": "text",
+                  "nullable": false
+                },
+                "yearsOfExperience": {
+                  "codecId": "pg/int4@1",
+                  "nativeType": "int4",
+                  "nullable": false
+                }
+              },
+              "foreignKeys": [
+                {
+                  "onDelete": "cascade",
+                  "source": {
+                    "columns": [
+                      "userId"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "candidateProfile"
+                  },
+                  "target": {
+                    "columns": [
+                      "id"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "user"
+                  }
+                }
+              ],
+              "indexes": [],
+              "primaryKey": {
+                "columns": [
+                  "id"
+                ]
+              },
+              "uniques": [
+                {
+                  "columns": [
+                    "userId"
                   ]
                 }
               ]
@@ -1058,10 +1449,10 @@
         "kind": "postgres-schema"
       }
     },
-    "storageHash": "19a1051dbde03517400660e5256c54cb5ef79a1d08f7137588a3fd09b131b617"
+    "storageHash": "eec986ef470247de29e868a602e998e8899ddd5292bac55aa071522df9ca31f2"
   },
   "execution": {
-    "executionHash": "184fabf68ac43a40b7668097c434e90be49043c3b1de2840f4a22d61e7101f99",
+    "executionHash": "2a46a1697980a4854f9c9cd7515802a76bcf2e79a304bffcbc281c52de9773b6",
     "mutations": {
       "defaults": [
         {
@@ -1088,6 +1479,32 @@
             "column": "updatedAt",
             "namespace": "public",
             "table": "application"
+          }
+        },
+        {
+          "onCreate": {
+            "id": "uuidv4",
+            "kind": "generator"
+          },
+          "ref": {
+            "column": "id",
+            "namespace": "public",
+            "table": "candidateProfile"
+          }
+        },
+        {
+          "onCreate": {
+            "id": "timestampNow",
+            "kind": "generator"
+          },
+          "onUpdate": {
+            "id": "timestampNow",
+            "kind": "generator"
+          },
+          "ref": {
+            "column": "updatedAt",
+            "namespace": "public",
+            "table": "candidateProfile"
           }
         },
         {

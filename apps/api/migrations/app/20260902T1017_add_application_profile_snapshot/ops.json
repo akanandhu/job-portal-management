@@ -1,0 +1,338 @@
+[
+  {
+    "id": "column.public.application.currentCompany",
+    "label": "Add column \"currentCompany\" to \"application\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "currentCompany",
+        "table": "application"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"currentCompany\" is missing",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "application",
+          "currentCompany"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add column \"currentCompany\"",
+        "sql": "ALTER TABLE \"public\".\"application\" ADD COLUMN \"currentCompany\" text"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"currentCompany\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "application",
+          "currentCompany"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "column.public.application.currentRole",
+    "label": "Add column \"currentRole\" to \"application\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "currentRole",
+        "table": "application"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"currentRole\" is missing",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "application",
+          "currentRole"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add column \"currentRole\"",
+        "sql": "ALTER TABLE \"public\".\"application\" ADD COLUMN \"currentRole\" text"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"currentRole\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "application",
+          "currentRole"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "column.public.application.education",
+    "label": "Add column \"education\" to \"application\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "education",
+        "table": "application"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"education\" is missing",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "application",
+          "education"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add column \"education\"",
+        "sql": "ALTER TABLE \"public\".\"application\" ADD COLUMN \"education\" text"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"education\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "application",
+          "education"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "column.public.application.expectedSalary",
+    "label": "Add column \"expectedSalary\" to \"application\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "expectedSalary",
+        "table": "application"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"expectedSalary\" is missing",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "application",
+          "expectedSalary"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add column \"expectedSalary\"",
+        "sql": "ALTER TABLE \"public\".\"application\" ADD COLUMN \"expectedSalary\" int4"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"expectedSalary\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "application",
+          "expectedSalary"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "column.public.application.noticePeriodDays",
+    "label": "Add column \"noticePeriodDays\" to \"application\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "noticePeriodDays",
+        "table": "application"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"noticePeriodDays\" is missing",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "application",
+          "noticePeriodDays"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add column \"noticePeriodDays\"",
+        "sql": "ALTER TABLE \"public\".\"application\" ADD COLUMN \"noticePeriodDays\" int4"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"noticePeriodDays\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "application",
+          "noticePeriodDays"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "column.public.application.skills",
+    "label": "Add column \"skills\" to \"application\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "skills",
+        "table": "application"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"skills\" is missing",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "application",
+          "skills"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add column \"skills\"",
+        "sql": "ALTER TABLE \"public\".\"application\" ADD COLUMN \"skills\" text[] DEFAULT '{}' NOT NULL"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"skills\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "application",
+          "skills"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "column.public.application.yearsOfExperience",
+    "label": "Add column \"yearsOfExperience\" to \"application\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "yearsOfExperience",
+        "table": "application"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"yearsOfExperience\" is missing",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "application",
+          "yearsOfExperience"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add column \"yearsOfExperience\"",
+        "sql": "ALTER TABLE \"public\".\"application\" ADD COLUMN \"yearsOfExperience\" int4"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"yearsOfExperience\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "application",
+          "yearsOfExperience"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "checkConstraint.application.application_skills_elem_not_null_79c19a4f",
+    "label": "Add check constraint \"application_skills_elem_not_null_79c19a4f\" on \"application\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "checkConstraint",
+        "name": "application_skills_elem_not_null_79c19a4f",
+        "table": "application"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure constraint \"application_skills_elem_not_null_79c19a4f\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "application_skills_elem_not_null_79c19a4f",
+          "public",
+          "\"public\".\"application\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add check constraint \"application_skills_elem_not_null_79c19a4f\"",
+        "sql": "ALTER TABLE \"public\".\"application\" ADD CONSTRAINT \"application_skills_elem_not_null_79c19a4f\" CHECK (array_position(\"skills\", NULL) IS NULL)"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify constraint \"application_skills_elem_not_null_79c19a4f\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "application_skills_elem_not_null_79c19a4f",
+          "public",
+          "\"public\".\"application\""
+        ]
+      }
+    ]
+  }
+]

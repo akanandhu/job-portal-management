@@ -33,7 +33,7 @@ import type {
 } from '@prisma/orm-postgres/contract/types';
 
 export type StorageHash =
-  StorageHashBase<'eec986ef470247de29e868a602e998e8899ddd5292bac55aa071522df9ca31f2'>;
+  StorageHashBase<'61860d10ed54bdc50f5428bd123586319f724537011628f6120fbd9151fd243a'>;
 export type ExecutionHash =
   ExecutionHashBase<'2a46a1697980a4854f9c9cd7515802a76bcf2e79a304bffcbc281c52de9773b6'>;
 export type ProfileHash =
@@ -245,13 +245,6 @@ export type FieldOutputTypes = {
       readonly id: CodecTypes['pg/text@1']['output'];
       readonly userId: CodecTypes['pg/text@1']['output'];
       readonly jobId: CodecTypes['pg/text@1']['output'];
-      readonly yearsOfExperience: CodecTypes['pg/int4@1']['output'] | null;
-      readonly education: CodecTypes['pg/text@1']['output'] | null;
-      readonly currentCompany: CodecTypes['pg/text@1']['output'] | null;
-      readonly currentRole: CodecTypes['pg/text@1']['output'] | null;
-      readonly expectedSalary: CodecTypes['pg/int4@1']['output'] | null;
-      readonly noticePeriodDays: CodecTypes['pg/int4@1']['output'] | null;
-      readonly skills: ReadonlyArray<CodecTypes['pg/text@1']['output']>;
       readonly status: 'APPLIED' | 'REVIEWING' | 'REJECTED' | 'ACCEPTED';
       readonly createdAt: CodecTypes['pg/timestamptz-string@1']['output'];
       readonly updatedAt: CodecTypes['pg/timestamptz-string@1']['output'];
@@ -315,13 +308,6 @@ export type FieldInputTypes = {
       readonly id: CodecTypes['pg/text@1']['input'];
       readonly userId: CodecTypes['pg/text@1']['input'];
       readonly jobId: CodecTypes['pg/text@1']['input'];
-      readonly yearsOfExperience: CodecTypes['pg/int4@1']['input'] | null;
-      readonly education: CodecTypes['pg/text@1']['input'] | null;
-      readonly currentCompany: CodecTypes['pg/text@1']['input'] | null;
-      readonly currentRole: CodecTypes['pg/text@1']['input'] | null;
-      readonly expectedSalary: CodecTypes['pg/int4@1']['input'] | null;
-      readonly noticePeriodDays: CodecTypes['pg/int4@1']['input'] | null;
-      readonly skills: ReadonlyArray<CodecTypes['pg/text@1']['input']>;
       readonly status: 'APPLIED' | 'REVIEWING' | 'REJECTED' | 'ACCEPTED';
       readonly createdAt: CodecTypes['pg/timestamptz-string@1']['input'];
       readonly updatedAt: CodecTypes['pg/timestamptz-string@1']['input'];
@@ -383,18 +369,11 @@ export type StorageColumnTypes = {
   readonly public: {
     readonly application: {
       readonly createdAt: CodecTypes['pg/timestamptz-string@1']['output'];
-      readonly currentCompany: CodecTypes['pg/text@1']['output'] | null;
-      readonly currentRole: CodecTypes['pg/text@1']['output'] | null;
-      readonly education: CodecTypes['pg/text@1']['output'] | null;
-      readonly expectedSalary: CodecTypes['pg/int4@1']['output'] | null;
       readonly id: CodecTypes['pg/text@1']['output'];
       readonly jobId: CodecTypes['pg/text@1']['output'];
-      readonly noticePeriodDays: CodecTypes['pg/int4@1']['output'] | null;
-      readonly skills: ReadonlyArray<CodecTypes['pg/text@1']['output']>;
       readonly status: 'APPLIED' | 'REVIEWING' | 'REJECTED' | 'ACCEPTED';
       readonly updatedAt: CodecTypes['pg/timestamptz-string@1']['output'];
       readonly userId: CodecTypes['pg/text@1']['output'];
-      readonly yearsOfExperience: CodecTypes['pg/int4@1']['output'] | null;
     };
     readonly candidateProfile: {
       readonly createdAt: CodecTypes['pg/timestamptz-string@1']['output'];
@@ -453,18 +432,11 @@ export type StorageColumnInputTypes = {
   readonly public: {
     readonly application: {
       readonly createdAt: CodecTypes['pg/timestamptz-string@1']['input'];
-      readonly currentCompany: CodecTypes['pg/text@1']['input'] | null;
-      readonly currentRole: CodecTypes['pg/text@1']['input'] | null;
-      readonly education: CodecTypes['pg/text@1']['input'] | null;
-      readonly expectedSalary: CodecTypes['pg/int4@1']['input'] | null;
       readonly id: CodecTypes['pg/text@1']['input'];
       readonly jobId: CodecTypes['pg/text@1']['input'];
-      readonly noticePeriodDays: CodecTypes['pg/int4@1']['input'] | null;
-      readonly skills: ReadonlyArray<CodecTypes['pg/text@1']['input']>;
       readonly status: 'APPLIED' | 'REVIEWING' | 'REJECTED' | 'ACCEPTED';
       readonly updatedAt: CodecTypes['pg/timestamptz-string@1']['input'];
       readonly userId: CodecTypes['pg/text@1']['input'];
-      readonly yearsOfExperience: CodecTypes['pg/int4@1']['input'] | null;
     };
     readonly candidateProfile: {
       readonly createdAt: CodecTypes['pg/timestamptz-string@1']['input'];
@@ -553,45 +525,6 @@ type ContractBase = Omit<
                   readonly nativeType: 'text';
                   readonly codecId: 'pg/text@1';
                   readonly nullable: false;
-                };
-                readonly yearsOfExperience: {
-                  readonly nativeType: 'int4';
-                  readonly codecId: 'pg/int4@1';
-                  readonly nullable: true;
-                };
-                readonly education: {
-                  readonly nativeType: 'text';
-                  readonly codecId: 'pg/text@1';
-                  readonly nullable: true;
-                };
-                readonly currentCompany: {
-                  readonly nativeType: 'text';
-                  readonly codecId: 'pg/text@1';
-                  readonly nullable: true;
-                };
-                readonly currentRole: {
-                  readonly nativeType: 'text';
-                  readonly codecId: 'pg/text@1';
-                  readonly nullable: true;
-                };
-                readonly expectedSalary: {
-                  readonly nativeType: 'int4';
-                  readonly codecId: 'pg/int4@1';
-                  readonly nullable: true;
-                };
-                readonly noticePeriodDays: {
-                  readonly nativeType: 'int4';
-                  readonly codecId: 'pg/int4@1';
-                  readonly nullable: true;
-                };
-                readonly skills: {
-                  readonly nativeType: 'text';
-                  readonly codecId: 'pg/text@1';
-                  readonly nullable: false;
-                  readonly default: {
-                    readonly kind: 'literal';
-                    readonly value: DefaultLiteralValue<'pg/text@1', readonly []>;
-                  };
                 };
                 readonly status: {
                   readonly nativeType: 'text';
@@ -1003,35 +936,6 @@ type ContractBase = Omit<
                 readonly nullable: false;
                 readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
               };
-              readonly yearsOfExperience: {
-                readonly nullable: true;
-                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/int4@1' };
-              };
-              readonly education: {
-                readonly nullable: true;
-                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
-              };
-              readonly currentCompany: {
-                readonly nullable: true;
-                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
-              };
-              readonly currentRole: {
-                readonly nullable: true;
-                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
-              };
-              readonly expectedSalary: {
-                readonly nullable: true;
-                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/int4@1' };
-              };
-              readonly noticePeriodDays: {
-                readonly nullable: true;
-                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/int4@1' };
-              };
-              readonly skills: {
-                readonly nullable: false;
-                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
-                readonly many: true;
-              };
               readonly status: {
                 readonly nullable: false;
                 readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
@@ -1076,13 +980,6 @@ type ContractBase = Omit<
                 readonly id: { readonly column: 'id' };
                 readonly userId: { readonly column: 'userId' };
                 readonly jobId: { readonly column: 'jobId' };
-                readonly yearsOfExperience: { readonly column: 'yearsOfExperience' };
-                readonly education: { readonly column: 'education' };
-                readonly currentCompany: { readonly column: 'currentCompany' };
-                readonly currentRole: { readonly column: 'currentRole' };
-                readonly expectedSalary: { readonly column: 'expectedSalary' };
-                readonly noticePeriodDays: { readonly column: 'noticePeriodDays' };
-                readonly skills: { readonly column: 'skills' };
                 readonly status: { readonly column: 'status' };
                 readonly createdAt: { readonly column: 'createdAt' };
                 readonly updatedAt: { readonly column: 'updatedAt' };
