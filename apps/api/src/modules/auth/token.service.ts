@@ -1,8 +1,5 @@
 import type { SignOptions } from "jsonwebtoken";
-import type {
-  AccessTokenPayloadI,
-  VerifyAccessTokenReturnTypeI,
-} from "./auth.types";
+import type { AccessTokenPayloadI } from "./auth.types";
 import jwt from "jsonwebtoken";
 import crypto from "node:crypto";
 
@@ -29,7 +26,7 @@ export function verifyAccessToken(token: string) {
     );
   }
 
-  return jwt.verify(token, secret) as VerifyAccessTokenReturnTypeI;
+  return jwt.verify(token, secret) as AccessTokenPayloadI;
 }
 
 export function generateRefreshToken() {
