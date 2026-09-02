@@ -9,7 +9,6 @@ import {
   CardTitle,
 } from '@/components/ui/card'
 
-const proofAvatars = ['AK', 'ML', 'SR', 'TN', 'CP', 'JW']
 
 const productSteps = [
   'Create a proof-first professional profile',
@@ -55,22 +54,6 @@ export function Hero() {
                 <ArrowRight className="size-4" />
               </Button>
             </div>
-          </div>
-
-          <div className="flex flex-wrap items-center gap-4">
-            <div className="flex -space-x-3">
-              {proofAvatars.map((avatar) => (
-                <span
-                  key={avatar}
-                  className="grid size-11 place-items-center rounded-full border-2 border-background bg-card text-xs font-semibold shadow-sm"
-                >
-                  {avatar}
-                </span>
-              ))}
-            </div>
-            <p className="text-sm font-medium text-muted-foreground">
-              Join 12,000+ peers sharing work and opportunities.
-            </p>
           </div>
         </section>
 
