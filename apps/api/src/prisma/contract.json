@@ -145,6 +145,34 @@
                   "kind": "scalar"
                 }
               },
+              "currentCompany": {
+                "nullable": true,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
+              "currentRole": {
+                "nullable": true,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
+              "education": {
+                "nullable": true,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
+              "expectedSalary": {
+                "nullable": true,
+                "type": {
+                  "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              },
               "id": {
                 "nullable": false,
                 "type": {
@@ -154,6 +182,20 @@
               },
               "jobId": {
                 "nullable": false,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
+              "noticePeriodDays": {
+                "nullable": true,
+                "type": {
+                  "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              },
+              "skills": {
+                "nullable": true,
                 "type": {
                   "codecId": "pg/text@1",
                   "kind": "scalar"
@@ -183,6 +225,13 @@
                 "nullable": false,
                 "type": {
                   "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
+              "yearsOfExperience": {
+                "nullable": true,
+                "type": {
+                  "codecId": "pg/int4@1",
                   "kind": "scalar"
                 }
               }
@@ -224,11 +273,29 @@
                 "createdAt": {
                   "column": "createdAt"
                 },
+                "currentCompany": {
+                  "column": "currentCompany"
+                },
+                "currentRole": {
+                  "column": "currentRole"
+                },
+                "education": {
+                  "column": "education"
+                },
+                "expectedSalary": {
+                  "column": "expectedSalary"
+                },
                 "id": {
                   "column": "id"
                 },
                 "jobId": {
                   "column": "jobId"
+                },
+                "noticePeriodDays": {
+                  "column": "noticePeriodDays"
+                },
+                "skills": {
+                  "column": "skills"
                 },
                 "status": {
                   "column": "status"
@@ -238,6 +305,9 @@
                 },
                 "userId": {
                   "column": "userId"
+                },
+                "yearsOfExperience": {
+                  "column": "yearsOfExperience"
                 }
               },
               "namespaceId": "public",
@@ -783,6 +853,26 @@
                   "nativeType": "timestamptz",
                   "nullable": false
                 },
+                "currentCompany": {
+                  "codecId": "pg/text@1",
+                  "nativeType": "text",
+                  "nullable": true
+                },
+                "currentRole": {
+                  "codecId": "pg/text@1",
+                  "nativeType": "text",
+                  "nullable": true
+                },
+                "education": {
+                  "codecId": "pg/text@1",
+                  "nativeType": "text",
+                  "nullable": true
+                },
+                "expectedSalary": {
+                  "codecId": "pg/int4@1",
+                  "nativeType": "int4",
+                  "nullable": true
+                },
                 "id": {
                   "codecId": "pg/text@1",
                   "nativeType": "text",
@@ -792,6 +882,16 @@
                   "codecId": "pg/text@1",
                   "nativeType": "text",
                   "nullable": false
+                },
+                "noticePeriodDays": {
+                  "codecId": "pg/int4@1",
+                  "nativeType": "int4",
+                  "nullable": true
+                },
+                "skills": {
+                  "codecId": "pg/text@1",
+                  "nativeType": "text",
+                  "nullable": true
                 },
                 "status": {
                   "codecId": "pg/text@1",
@@ -817,6 +917,11 @@
                   "codecId": "pg/text@1",
                   "nativeType": "text",
                   "nullable": false
+                },
+                "yearsOfExperience": {
+                  "codecId": "pg/int4@1",
+                  "nativeType": "int4",
+                  "nullable": true
                 }
               },
               "foreignKeys": [
@@ -1324,7 +1429,7 @@
         "kind": "postgres-schema"
       }
     },
-    "storageHash": "4f19e5f590b89ccf29603838521eb96febf7e1007ed5e413c1273329c06278d0"
+    "storageHash": "3c226e41b464abd212795f9510b6d24875e1f861d047442474dec004bfca6bb2"
   },
   "execution": {
     "executionHash": "2a46a1697980a4854f9c9cd7515802a76bcf2e79a304bffcbc281c52de9773b6",

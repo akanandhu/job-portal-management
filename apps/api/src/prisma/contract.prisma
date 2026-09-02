@@ -98,6 +98,14 @@ model Application {
   job       Job               @relation(fields: [jobId], references: [id], onDelete: Cascade)
   jobId     String
 
+  yearsOfExperience Int?
+  education         String?
+  currentCompany    String?
+  currentRole       String?
+  expectedSalary    Int?
+  noticePeriodDays  Int?
+  skills            String?
+
   status    ApplicationStatus @default(APPLIED)
 
   createdAt TimestamptzString @default(now())

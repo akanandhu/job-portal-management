@@ -1,5 +1,6 @@
 import express from "express";
 import cors from "cors";
+import applicationRoutes from "./modules/applications/application.routes";
 import authRoutes from "./modules/auth/auth.routes"
 import jobRoutes from "./modules/jobs/job.routes";
 import profileRoutes from "./modules/profile/profile.routes";
@@ -13,6 +14,7 @@ app.use(cookieParser());
 
 app.use("/auth", authRoutes);
 app.use("/jobs", jobRoutes);
+app.use("/applications", applicationRoutes);
 app.use("/profile", profileRoutes);
 
 app.get("/health", (_req, res) => {
