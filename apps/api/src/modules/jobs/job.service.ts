@@ -1,8 +1,10 @@
 import {
   countJobs,
+  countPublishedJobsByCategory,
   createJob,
   deleteJob,
   findJobById,
+  findFeaturedJobs,
   findJobs,
   findPublishedJobById,
   updateJob,
@@ -14,6 +16,7 @@ import type {
 } from "./job.types";
 import {
   createJobSchema,
+  featuredJobsQuerySchema,
   jobIdParamsSchema,
   listJobsQuerySchema,
   updateJobSchema,
@@ -35,6 +38,10 @@ const parseJobSchema = <Output>(parser: () => Output) =>
 
 export function parseListJobsQuery(query: Record<string, unknown>): ListJobsQueryI {
   return parseJobSchema(() => listJobsQuerySchema.parse(query));
+}
+
+function parseFeaturedJobsQuery(query: Record<string, unknown>) {
+  return parseJobSchema(() => featuredJobsQuerySchema.parse(query));
 }
 
 function parseJobId(params: Record<string, unknown>) {
@@ -66,6 +73,10 @@ function parseUpdateJobBody(body: unknown): UpdateJobInputI {
       updateData.location = parsedBody.location;
     }
 
+    if (parsedBody.workplaceType !== undefined) {
+      updateData.workplaceType = parsedBody.workplaceType;
+    }
+
     if (parsedBody.category !== undefined) {
       updateData.category = parsedBody.category;
     }
@@ -74,8 +85,16 @@ function parseUpdateJobBody(body: unknown): UpdateJobInputI {
       updateData.experienceLevel = parsedBody.experienceLevel;
     }
 
+    if (parsedBody.skills !== undefined) {
+      updateData.skills = parsedBody.skills;
+    }
+
     if (parsedBody.status !== undefined) {
       updateData.status = parsedBody.status;
+    }
+
+    if (parsedBody.isFeatured !== undefined) {
+      updateData.isFeatured = parsedBody.isFeatured;
     }
 
     return updateData;
@@ -98,6 +117,31 @@ export async function listJobs(query: Record<string, unknown>) {
       total,
       totalPages: Math.ceil(total / parsedQuery.limit),
     },
+  };
+}
+
+export async function listFeaturedJobs(query: Record<string, unknown>) {
+  const parsedQuery = parseFeaturedJobsQuery(query);
+  const jobs = await findFeaturedJobs(parsedQuery);
+
+  return {
+    data: jobs,
+  };
+}
+
+export async function listJobCategories() {
+  const categories = await countPublishedJobsByCategory();
+
+  return {
+    data: categories
+      .map((category) => ({
+        category: category.category,
+        count: category.count,
+      }))
+      .sort(
+        (left, right) =>
+          right.count - left.count || left.category.localeCompare(right.category),
+      ),
   };
 }
 

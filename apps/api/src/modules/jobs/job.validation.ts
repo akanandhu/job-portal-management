@@ -1,5 +1,6 @@
 export {
   createJobSchema,
+  featuredJobsQuerySchema,
   jobIdParamsSchema,
   listJobsQuerySchema,
   updateJobSchema,

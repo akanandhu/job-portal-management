@@ -1,6 +1,7 @@
 import { db } from "../../prisma/db";
 import type {
   CreateJobInputI,
+  FeaturedJobsQueryI,
   ListJobsQueryI,
   UpdateJobInputI,
 } from "./job.types";
@@ -37,6 +38,26 @@ export async function countJobs(query: ListJobsQueryI) {
   return await applyJobFilters(query).aggregate((aggregate) => ({
     total: aggregate.count(),
   }));
+}
+
+export async function findFeaturedJobs(query: FeaturedJobsQueryI) {
+  return await db.orm.public.Job.where({
+    status: "PUBLISHED" as const,
+    isFeatured: true,
+  })
+    .orderBy([(job) => job.createdAt.desc(), (job) => job.id.desc()])
+    .limit(query.limit)
+    .all();
+}
+
+export async function countPublishedJobsByCategory() {
+  return await db.orm.public.Job.where({
+    status: "PUBLISHED" as const,
+  })
+    .groupBy("category")
+    .aggregate((aggregate) => ({
+      count: aggregate.count(),
+    }));
 }
 
 export async function findPublishedJobById(id: string) {

@@ -2,6 +2,7 @@ import { Router } from "express";
 import { authenticate } from "../../middleware/authenticate";
 import { requireRole } from "../../middleware/require-role";
 import {
+  listAllApplicationsController,
   listMyApplicationsController,
   updateApplicationStatusController,
 } from "./application.controller";
@@ -13,6 +14,12 @@ router.get(
   authenticate,
   requireRole("USER"),
   listMyApplicationsController,
+);
+router.get(
+  "/all",
+  authenticate,
+  requireRole("ADMIN"),
+  listAllApplicationsController,
 );
 router.patch(
   "/:id/status",

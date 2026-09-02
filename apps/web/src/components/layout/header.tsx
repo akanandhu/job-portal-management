@@ -1,7 +1,13 @@
-import { ArrowRight } from 'lucide-react'
+import { ArrowRight } from "lucide-react";
 
-import { BrandLogo } from '@/components/brand/brand-logo'
-import { Button } from '@/components/ui/button'
+import { BrandLogo } from "@/components/brand/brand-logo";
+import { Button } from "@/components/ui/button";
+
+const navLinks = [
+  { href: "#featured", label: "Featured jobs" },
+  { href: "#categories", label: "Categories" },
+  { href: "#product", label: "Product" },
+];
 
 export function Header() {
   return (
@@ -9,12 +15,15 @@ export function Header() {
       <nav className="mx-auto flex h-16 max-w-7xl items-center justify-between px-6 md:px-10">
         <BrandLogo />
         <div className="hidden items-center gap-7 text-sm font-medium text-muted-foreground md:flex">
-          <a href="#featured" className="transition hover:text-foreground">
-            Featured jobs
-          </a>
-          <a href="#categories" className="transition hover:text-foreground">
-            Categories
-          </a>
+          {navLinks.map((link) => (
+            <a
+              key={link.href}
+              href={link.href}
+              className="transition hover:text-foreground"
+            >
+              {link.label}
+            </a>
+          ))}
           <a href="#product" className="transition hover:text-foreground">
             Product
           </a>
@@ -24,11 +33,11 @@ export function Header() {
             Sign in
           </Button>
           <Button>
-            Join waitlist
+            Register
             <ArrowRight className="size-4" />
           </Button>
         </div>
       </nav>
     </header>
-  )
+  );
 }

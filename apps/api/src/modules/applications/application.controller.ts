@@ -6,6 +6,7 @@ import {
   ApplicationValidationError,
   applyToJob,
   changeApplicationStatus,
+  listAllApplications,
   listJobApplications,
   listMyApplications,
 } from "./application.service";
@@ -64,6 +65,16 @@ export async function listMyApplicationsController(req: Request, res: Response) 
     const applications = await listMyApplications(userId);
 
     return res.status(200).json({ data: applications });
+  } catch (error) {
+    return handleApplicationError(error, res);
+  }
+}
+
+export async function listAllApplicationsController(req: Request, res: Response) {
+  try {
+    const applications = await listAllApplications(req.query);
+
+    return res.status(200).json(applications);
   } catch (error) {
     return handleApplicationError(error, res);
   }

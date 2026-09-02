@@ -8,9 +8,12 @@ export async function seedJobs() {
       description: "Create visual designs for digital products.",
       company: "Acme Technologies",
       location: "Kochi",
+      workplaceType: "HYBRID" as const,
       category: "DESIGN" as const,
       experienceLevel: "MID" as const,
+      skills: ["Figma", "UI Design", "Prototyping"],
       status: "PUBLISHED" as const,
+      isFeatured: true,
     },
     {
       id: "10000000-0000-4000-8000-000000000002",
@@ -18,9 +21,12 @@ export async function seedJobs() {
       description: "Develop and maintain server-side applications.",
       company: "Acme Technologies",
       location: "Kochi",
+      workplaceType: "ON_SITE" as const,
       category: "ENGINEERING" as const,
       experienceLevel: "SENIOR" as const,
+      skills: ["Node.js", "TypeScript", "PostgreSQL"],
       status: "PUBLISHED" as const,
+      isFeatured: true,
     },
     {
       id: "10000000-0000-4000-8000-000000000003",
@@ -28,9 +34,12 @@ export async function seedJobs() {
       description: "Plan and execute marketing campaigns.",
       company: "Acme Technologies",
       location: "Kochi",
+      workplaceType: "REMOTE" as const,
       category: "MARKETING" as const,
       experienceLevel: "ENTRY" as const,
+      skills: ["SEO", "Content Marketing", "Analytics"],
       status: "PUBLISHED" as const,
+      isFeatured: false,
     },
   ];
 
