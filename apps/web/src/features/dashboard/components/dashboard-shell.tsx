@@ -21,7 +21,7 @@ export function DashboardShell({
           <div className="flex h-full flex-col gap-8">
             <BrandLogo />
 
-            <nav className="grid gap-2">
+            <nav className="flex gap-2 overflow-x-auto lg:grid lg:overflow-visible">
               {navItems.map((item) => {
                 const Icon = item.icon;
                 const isActive = activeNav === item.id;
@@ -32,7 +32,7 @@ export function DashboardShell({
                     type="button"
                     variant="ghost"
                     className={cn(
-                      "h-11 justify-start gap-3 px-3 text-base font-medium",
+                      "h-11 shrink-0 justify-start gap-3 px-3 text-base font-medium",
                       isActive && "bg-muted text-foreground",
                     )}
                     onClick={() => onNavChange(item.id)}

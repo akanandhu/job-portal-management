@@ -78,14 +78,14 @@ const jobs: JobItemI[] = [
 export function JobList() {
   return (
     <div>
-      <div className="flex items-center justify-between gap-4 py-5">
-        <div>
+      <div className="flex flex-col gap-4 py-5 sm:flex-row sm:items-center sm:justify-between">
+        <div className="min-w-0">
           <h1 className="text-xl font-semibold">All jobs</h1>
           <p className="text-sm text-muted-foreground">
             Manage active job posts and candidate visibility.
           </p>
         </div>
-        <Button>
+        <Button className="w-full sm:w-fit">
           <Plus className="size-4" />
           Add job
         </Button>
@@ -107,7 +107,7 @@ export function JobList() {
                   at {job.company}
                 </span>
               </h2>
-              <p className="mt-1 text-sm text-muted-foreground">
+              <p className="mt-1 text-sm text-muted-foreground break-words">
                 {job.workplaceType} ({job.location}) • {job.experience}
               </p>
             </div>
