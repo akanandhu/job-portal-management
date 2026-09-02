@@ -41,7 +41,7 @@
     "execute": [
       {
         "description": "create table \"application\"",
-        "sql": "CREATE TABLE \"public\".\"application\" (\n  \"createdAt\" timestamptz DEFAULT (now()) NOT NULL,\n  \"id\" text NOT NULL,\n  \"jobId\" text NOT NULL,\n  \"status\" text DEFAULT 'APPLIED' NOT NULL,\n  \"updatedAt\" timestamptz NOT NULL,\n  \"userId\" text NOT NULL,\n  PRIMARY KEY (\"id\"),\n  CONSTRAINT \"application_status_check_2e856a86\" CHECK (\"status\" IN ('APPLIED', 'REVIEWING', 'REJECTED', 'ACCEPTED'))\n)",
+        "sql": "CREATE TABLE \"public\".\"application\" (\n  \"createdAt\" timestamptz DEFAULT (now()) NOT NULL,\n  \"currentCompany\" text,\n  \"currentRole\" text,\n  \"education\" text,\n  \"expectedSalary\" int4,\n  \"id\" text NOT NULL,\n  \"jobId\" text NOT NULL,\n  \"noticePeriodDays\" int4,\n  \"skills\" text[] DEFAULT '{}' NOT NULL,\n  \"status\" text DEFAULT 'APPLIED' NOT NULL,\n  \"updatedAt\" timestamptz NOT NULL,\n  \"userId\" text NOT NULL,\n  \"yearsOfExperience\" int4,\n  PRIMARY KEY (\"id\"),\n  CONSTRAINT \"application_skills_elem_not_null_79c19a4f\" CHECK (array_position(\"skills\", NULL) IS NULL),\n  CONSTRAINT \"application_status_check_2e856a86\" CHECK (\"status\" IN ('APPLIED', 'REVIEWING', 'REJECTED', 'ACCEPTED'))\n)",
         "params": []
       }
     ],
@@ -51,6 +51,45 @@
         "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
         "params": [
           "\"public\".\"application\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "table.candidateProfile",
+    "label": "Create table \"candidateProfile\"",
+    "summary": "Creates table \"candidateProfile\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "candidateProfile"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure table \"candidateProfile\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"candidateProfile\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create table \"candidateProfile\"",
+        "sql": "CREATE TABLE \"public\".\"candidateProfile\" (\n  \"createdAt\" timestamptz DEFAULT (now()) NOT NULL,\n  \"currentCompany\" text,\n  \"currentRole\" text,\n  \"education\" text NOT NULL,\n  \"expectedSalary\" int4 NOT NULL,\n  \"id\" text NOT NULL,\n  \"noticePeriodDays\" int4 NOT NULL,\n  \"phone\" text NOT NULL,\n  \"skills\" text[] NOT NULL,\n  \"updatedAt\" timestamptz NOT NULL,\n  \"userId\" text NOT NULL,\n  \"yearsOfExperience\" int4 NOT NULL,\n  PRIMARY KEY (\"id\"),\n  CONSTRAINT \"candidateProfile_skills_elem_not_null_79c19a4f\" CHECK (array_position(\"skills\", NULL) IS NULL)\n)",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify table \"candidateProfile\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"candidateProfile\""
         ]
       }
     ]
@@ -80,7 +119,7 @@
     "execute": [
       {
         "description": "create table \"job\"",
-        "sql": "CREATE TABLE \"public\".\"job\" (\n  \"category\" text NOT NULL,\n  \"company\" text NOT NULL,\n  \"createdAt\" timestamptz DEFAULT (now()) NOT NULL,\n  \"description\" text NOT NULL,\n  \"experienceLevel\" text NOT NULL,\n  \"id\" text NOT NULL,\n  \"location\" text NOT NULL,\n  \"status\" text DEFAULT 'DRAFT' NOT NULL,\n  \"title\" text NOT NULL,\n  \"updatedAt\" timestamptz NOT NULL,\n  PRIMARY KEY (\"id\"),\n  CONSTRAINT \"job_category_check_1a5e163e\" CHECK (\"category\" IN ('ENGINEERING', 'DESIGN', 'MARKETING', 'SALES', 'FINANCE', 'HUMAN_RESOURCES', 'CUSTOMER_SUPPORT', 'OPERATIONS')),\n  CONSTRAINT \"job_experienceLevel_check_d08da914\" CHECK (\"experienceLevel\" IN ('ENTRY', 'MID', 'SENIOR')),\n  CONSTRAINT \"job_status_check_9e246da7\" CHECK (\"status\" IN ('DRAFT', 'PUBLISHED', 'CLOSED'))\n)",
+        "sql": "CREATE TABLE \"public\".\"job\" (\n  \"category\" text NOT NULL,\n  \"company\" text NOT NULL,\n  \"createdAt\" timestamptz DEFAULT (now()) NOT NULL,\n  \"description\" text NOT NULL,\n  \"experienceLevel\" text NOT NULL,\n  \"id\" text NOT NULL,\n  \"isFeatured\" bool DEFAULT false NOT NULL,\n  \"location\" text NOT NULL,\n  \"skills\" text[] DEFAULT '{}' NOT NULL,\n  \"status\" text DEFAULT 'DRAFT' NOT NULL,\n  \"title\" text NOT NULL,\n  \"updatedAt\" timestamptz NOT NULL,\n  \"workplaceType\" text NOT NULL,\n  PRIMARY KEY (\"id\"),\n  CONSTRAINT \"job_category_check_1a5e163e\" CHECK (\"category\" IN ('ENGINEERING', 'DESIGN', 'MARKETING', 'SALES', 'FINANCE', 'HUMAN_RESOURCES', 'CUSTOMER_SUPPORT', 'OPERATIONS')),\n  CONSTRAINT \"job_experienceLevel_check_d08da914\" CHECK (\"experienceLevel\" IN ('ENTRY', 'MID', 'SENIOR')),\n  CONSTRAINT \"job_skills_elem_not_null_79c19a4f\" CHECK (array_position(\"skills\", NULL) IS NULL),\n  CONSTRAINT \"job_status_check_9e246da7\" CHECK (\"status\" IN ('DRAFT', 'PUBLISHED', 'CLOSED')),\n  CONSTRAINT \"job_workplaceType_check_42d92d0c\" CHECK (\"workplaceType\" IN ('ON_SITE', 'REMOTE', 'HYBRID'))\n)",
         "params": []
       }
     ],
@@ -210,6 +249,48 @@
           "application_userId_jobId_key",
           "public",
           "\"public\".\"application\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "unique.candidateProfile.candidateProfile_userId_key",
+    "label": "Add unique constraint on \"candidateProfile\" (userId)",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "unique",
+        "name": "candidateProfile_userId_key",
+        "table": "candidateProfile"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure constraint \"candidateProfile_userId_key\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "candidateProfile_userId_key",
+          "public",
+          "\"public\".\"candidateProfile\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add unique constraint \"candidateProfile_userId_key\"",
+        "sql": "ALTER TABLE \"public\".\"candidateProfile\" ADD CONSTRAINT \"candidateProfile_userId_key\" UNIQUE (\"userId\")"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify constraint \"candidateProfile_userId_key\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "candidateProfile_userId_key",
+          "public",
+          "\"public\".\"candidateProfile\""
         ]
       }
     ]
@@ -455,6 +536,45 @@
     ]
   },
   {
+    "id": "index.job.job_isFeatured_status_createdAt_idx_7db32ec7",
+    "label": "Create index \"job_isFeatured_status_createdAt_idx_7db32ec7\" on \"job\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "job_isFeatured_status_createdAt_idx_7db32ec7",
+        "table": "job"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"job_isFeatured_status_createdAt_idx_7db32ec7\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"job_isFeatured_status_createdAt_idx_7db32ec7\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"job_isFeatured_status_createdAt_idx_7db32ec7\"",
+        "sql": "CREATE INDEX \"job_isFeatured_status_createdAt_idx_7db32ec7\" ON \"public\".\"job\" (\"isFeatured\", \"status\", \"createdAt\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"job_isFeatured_status_createdAt_idx_7db32ec7\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"job_isFeatured_status_createdAt_idx_7db32ec7\""
+        ]
+      }
+    ]
+  },
+  {
     "id": "index.job.job_status_createdAt_idx_58610442",
     "label": "Create index \"job_status_createdAt_idx_58610442\" on \"job\"",
     "operationClass": "additive",
@@ -612,6 +732,48 @@
           "application_jobId_fkey",
           "public",
           "\"public\".\"application\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.candidateProfile.candidateProfile_userId_fkey",
+    "label": "Add foreign key \"candidateProfile_userId_fkey\" on \"candidateProfile\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "candidateProfile_userId_fkey",
+        "table": "candidateProfile"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"candidateProfile_userId_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "candidateProfile_userId_fkey",
+          "public",
+          "\"public\".\"candidateProfile\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"candidateProfile_userId_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"candidateProfile\"\nADD CONSTRAINT \"candidateProfile_userId_fkey\"\nFOREIGN KEY (\"userId\")\nREFERENCES \"public\".\"user\" (\"id\")\nON DELETE CASCADE"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"candidateProfile_userId_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "candidateProfile_userId_fkey",
+          "public",
+          "\"public\".\"candidateProfile\""
         ]
       }
     ]

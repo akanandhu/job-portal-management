@@ -2,6 +2,7 @@ export {
   experienceLevels,
   jobCategories,
   jobStatuses,
+  workplaceTypes,
 } from "@job-portal/contracts/jobs";
 
 export type {
@@ -12,4 +13,5 @@ export type {
   JobStatusI,
   ListJobsQueryI,
   UpdateJobInputI,
+  WorkplaceTypeI,
 } from "@job-portal/contracts/jobs";

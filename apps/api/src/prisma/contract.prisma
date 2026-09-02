@@ -28,6 +28,12 @@ enum ExperienceLevel {
   SENIOR
 }
 
+enum WorkplaceType {
+  ON_SITE
+  REMOTE
+  HYBRID
+}
+
 enum ApplicationStatus {
   APPLIED
   REVIEWING
@@ -75,8 +81,10 @@ model Job {
   description     String
   company         String
   location        String
+  workplaceType   WorkplaceType
   category        JobCategory
   experienceLevel ExperienceLevel
+  skills          String[]        @default([])
   status          JobStatus       @default(DRAFT)
   isFeatured      Boolean         @default(false)
 

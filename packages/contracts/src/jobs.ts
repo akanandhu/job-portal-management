@@ -20,6 +20,7 @@ export const jobCategories = [
 
 export const experienceLevels = ["ENTRY", "MID", "SENIOR"] as const;
 export const jobStatuses = ["DRAFT", "PUBLISHED", "CLOSED"] as const;
+export const workplaceTypes = ["ON_SITE", "REMOTE", "HYBRID"] as const;
 
 const DEFAULT_FEATURED_LIMIT = 6;
 
@@ -47,8 +48,10 @@ export const createJobSchema = z.object({
   description: z.string().trim().min(1),
   company: z.string().trim().min(1),
   location: z.string().trim().min(1),
+  workplaceType: z.enum(workplaceTypes),
   category: z.enum(jobCategories),
   experienceLevel: z.enum(experienceLevels),
+  skills: z.array(z.string().trim().min(1)).min(1),
   status: z.enum(jobStatuses).default("DRAFT"),
   isFeatured: z.boolean().default(false),
 });
@@ -62,6 +65,7 @@ export const updateJobSchema = createJobSchema
 export type JobCategoryI = (typeof jobCategories)[number];
 export type ExperienceLevelI = (typeof experienceLevels)[number];
 export type JobStatusI = (typeof jobStatuses)[number];
+export type WorkplaceTypeI = (typeof workplaceTypes)[number];
 export type FeaturedJobsQueryI = z.infer<typeof featuredJobsQuerySchema>;
 export type ListJobsQueryI = z.infer<typeof listJobsQuerySchema>;
 export type CreateJobInputI = z.infer<typeof createJobSchema>;

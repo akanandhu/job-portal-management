@@ -73,12 +73,20 @@ function parseUpdateJobBody(body: unknown): UpdateJobInputI {
       updateData.location = parsedBody.location;
     }
 
+    if (parsedBody.workplaceType !== undefined) {
+      updateData.workplaceType = parsedBody.workplaceType;
+    }
+
     if (parsedBody.category !== undefined) {
       updateData.category = parsedBody.category;
     }
 
     if (parsedBody.experienceLevel !== undefined) {
       updateData.experienceLevel = parsedBody.experienceLevel;
+    }
+
+    if (parsedBody.skills !== undefined) {
+      updateData.skills = parsedBody.skills;
     }
 
     if (parsedBody.status !== undefined) {

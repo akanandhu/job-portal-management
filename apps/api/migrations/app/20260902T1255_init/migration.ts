@@ -1,6 +1,6 @@
 #!/usr/bin/env -S node
-import type { Contract as End } from '../../snapshots/19a1051dbde03517400660e5256c54cb5ef79a1d08f7137588a3fd09b131b617/contract';
-import endContract from '../../snapshots/19a1051dbde03517400660e5256c54cb5ef79a1d08f7137588a3fd09b131b617/contract.json' with { type: 'json' };
+import type { Contract as End } from '../../snapshots/4d022ac0cb0f4bf62c4e0be712f34f1171c238c4505050d1f1e0d133e117f771/contract';
+import endContract from '../../snapshots/4d022ac0cb0f4bf62c4e0be712f34f1171c238c4505050d1f1e0d133e117f771/contract.json' with { type: 'json' };
 import {
   Migration,
   MigrationCLI,
@@ -26,8 +26,18 @@ export default class M extends Migration<never, End> {
             default: fn('now()'),
             codecRef: { codecId: 'pg/timestamptz-string@1' },
           }),
+          col('currentCompany', 'text', { codecRef: { codecId: 'pg/text@1' } }),
+          col('currentRole', 'text', { codecRef: { codecId: 'pg/text@1' } }),
+          col('education', 'text', { codecRef: { codecId: 'pg/text@1' } }),
+          col('expectedSalary', 'int4', { codecRef: { codecId: 'pg/int4@1' } }),
           col('id', 'text', { notNull: true, codecRef: { codecId: 'pg/text@1' } }),
           col('jobId', 'text', { notNull: true, codecRef: { codecId: 'pg/text@1' } }),
+          col('noticePeriodDays', 'int4', { codecRef: { codecId: 'pg/int4@1' } }),
+          col('skills', 'text[]', {
+            notNull: true,
+            default: lit([]),
+            codecRef: { codecId: 'pg/text@1', many: true },
+          }),
           col('status', 'text', {
             notNull: true,
             default: lit('APPLIED'),
@@ -38,12 +48,52 @@ export default class M extends Migration<never, End> {
             codecRef: { codecId: 'pg/timestamptz-string@1' },
           }),
           col('userId', 'text', { notNull: true, codecRef: { codecId: 'pg/text@1' } }),
+          col('yearsOfExperience', 'int4', { codecRef: { codecId: 'pg/int4@1' } }),
         ],
         constraints: [
           primaryKey(['id']),
           checkExpression(
+            'application_skills_elem_not_null_79c19a4f',
+            'array_position("skills", NULL) IS NULL',
+          ),
+          checkExpression(
             'application_status_check_2e856a86',
             "\"status\" IN ('APPLIED', 'REVIEWING', 'REJECTED', 'ACCEPTED')",
+          ),
+        ],
+      }),
+      this.createTable({
+        schema: 'public',
+        table: 'candidateProfile',
+        columns: [
+          col('createdAt', 'timestamptz', {
+            notNull: true,
+            default: fn('now()'),
+            codecRef: { codecId: 'pg/timestamptz-string@1' },
+          }),
+          col('currentCompany', 'text', { codecRef: { codecId: 'pg/text@1' } }),
+          col('currentRole', 'text', { codecRef: { codecId: 'pg/text@1' } }),
+          col('education', 'text', { notNull: true, codecRef: { codecId: 'pg/text@1' } }),
+          col('expectedSalary', 'int4', { notNull: true, codecRef: { codecId: 'pg/int4@1' } }),
+          col('id', 'text', { notNull: true, codecRef: { codecId: 'pg/text@1' } }),
+          col('noticePeriodDays', 'int4', { notNull: true, codecRef: { codecId: 'pg/int4@1' } }),
+          col('phone', 'text', { notNull: true, codecRef: { codecId: 'pg/text@1' } }),
+          col('skills', 'text[]', {
+            notNull: true,
+            codecRef: { codecId: 'pg/text@1', many: true },
+          }),
+          col('updatedAt', 'timestamptz', {
+            notNull: true,
+            codecRef: { codecId: 'pg/timestamptz-string@1' },
+          }),
+          col('userId', 'text', { notNull: true, codecRef: { codecId: 'pg/text@1' } }),
+          col('yearsOfExperience', 'int4', { notNull: true, codecRef: { codecId: 'pg/int4@1' } }),
+        ],
+        constraints: [
+          primaryKey(['id']),
+          checkExpression(
+            'candidateProfile_skills_elem_not_null_79c19a4f',
+            'array_position("skills", NULL) IS NULL',
           ),
         ],
       }),
@@ -61,7 +111,17 @@ export default class M extends Migration<never, End> {
           col('description', 'text', { notNull: true, codecRef: { codecId: 'pg/text@1' } }),
           col('experienceLevel', 'text', { notNull: true, codecRef: { codecId: 'pg/text@1' } }),
           col('id', 'text', { notNull: true, codecRef: { codecId: 'pg/text@1' } }),
+          col('isFeatured', 'bool', {
+            notNull: true,
+            default: lit(false),
+            codecRef: { codecId: 'pg/bool@1' },
+          }),
           col('location', 'text', { notNull: true, codecRef: { codecId: 'pg/text@1' } }),
+          col('skills', 'text[]', {
+            notNull: true,
+            default: lit([]),
+            codecRef: { codecId: 'pg/text@1', many: true },
+          }),
           col('status', 'text', {
             notNull: true,
             default: lit('DRAFT'),
@@ -72,6 +132,7 @@ export default class M extends Migration<never, End> {
             notNull: true,
             codecRef: { codecId: 'pg/timestamptz-string@1' },
           }),
+          col('workplaceType', 'text', { notNull: true, codecRef: { codecId: 'pg/text@1' } }),
         ],
         constraints: [
           primaryKey(['id']),
@@ -84,8 +145,16 @@ export default class M extends Migration<never, End> {
             "\"experienceLevel\" IN ('ENTRY', 'MID', 'SENIOR')",
           ),
           checkExpression(
+            'job_skills_elem_not_null_79c19a4f',
+            'array_position("skills", NULL) IS NULL',
+          ),
+          checkExpression(
             'job_status_check_9e246da7',
             "\"status\" IN ('DRAFT', 'PUBLISHED', 'CLOSED')",
+          ),
+          checkExpression(
+            'job_workplaceType_check_42d92d0c',
+            "\"workplaceType\" IN ('ON_SITE', 'REMOTE', 'HYBRID')",
           ),
         ],
       }),
@@ -145,6 +214,12 @@ export default class M extends Migration<never, End> {
       }),
       this.addUnique({
         schema: 'public',
+        table: 'candidateProfile',
+        constraint: 'candidateProfile_userId_key',
+        columns: ['userId'],
+      }),
+      this.addUnique({
+        schema: 'public',
         table: 'refreshToken',
         constraint: 'refreshToken_tokenHash_key',
         columns: ['tokenHash'],
@@ -182,6 +257,12 @@ export default class M extends Migration<never, End> {
       this.createIndex({
         schema: 'public',
         table: 'job',
+        index: 'job_isFeatured_status_createdAt_idx_7db32ec7',
+        columns: ['isFeatured', 'status', 'createdAt'],
+      }),
+      this.createIndex({
+        schema: 'public',
+        table: 'job',
         index: 'job_status_createdAt_idx_58610442',
         columns: ['status', 'createdAt'],
       }),
@@ -208,6 +289,16 @@ export default class M extends Migration<never, End> {
           name: 'application_jobId_fkey',
           columns: ['jobId'],
           references: { schema: 'public', table: 'job', columns: ['id'] },
+          onDelete: 'cascade',
+        },
+      }),
+      this.addForeignKey({
+        schema: 'public',
+        table: 'candidateProfile',
+        foreignKey: {
+          name: 'candidateProfile_userId_fkey',
+          columns: ['userId'],
+          references: { schema: 'public', table: 'user', columns: ['id'] },
           onDelete: 'cascade',
         },
       }),

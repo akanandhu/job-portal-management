@@ -133,6 +133,23 @@
                 "value": "ADMIN"
               }
             ]
+          },
+          "WorkplaceType": {
+            "codecId": "pg/text@1",
+            "members": [
+              {
+                "name": "ON_SITE",
+                "value": "ON_SITE"
+              },
+              {
+                "name": "REMOTE",
+                "value": "REMOTE"
+              },
+              {
+                "name": "HYBRID",
+                "value": "HYBRID"
+              }
+            ]
           }
         },
         "models": {
@@ -533,6 +550,14 @@
                   "kind": "scalar"
                 }
               },
+              "skills": {
+                "many": true,
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
               "status": {
                 "nullable": false,
                 "type": {
@@ -558,6 +583,19 @@
                 "type": {
                   "codecId": "pg/timestamptz-string@1",
                   "kind": "scalar"
+                }
+              },
+              "workplaceType": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                },
+                "valueSet": {
+                  "entityKind": "enum",
+                  "entityName": "WorkplaceType",
+                  "namespaceId": "public",
+                  "plane": "domain"
                 }
               }
             },
@@ -604,6 +642,9 @@
                 "location": {
                   "column": "location"
                 },
+                "skills": {
+                  "column": "skills"
+                },
                 "status": {
                   "column": "status"
                 },
@@ -612,6 +653,9 @@
                 },
                 "updatedAt": {
                   "column": "updatedAt"
+                },
+                "workplaceType": {
+                  "column": "workplaceType"
                 }
               },
               "namespaceId": "public",
@@ -1135,9 +1179,19 @@
                   "prefix": "job_experienceLevel_check"
                 },
                 {
+                  "expression": "array_position(\"skills\", NULL) IS NULL",
+                  "name": "job_skills_elem_not_null_79c19a4f",
+                  "prefix": "job_skills_elem_not_null"
+                },
+                {
                   "expression": "\"status\" IN ('DRAFT', 'PUBLISHED', 'CLOSED')",
                   "name": "job_status_check_9e246da7",
                   "prefix": "job_status_check"
+                },
+                {
+                  "expression": "\"workplaceType\" IN ('ON_SITE', 'REMOTE', 'HYBRID')",
+                  "name": "job_workplaceType_check_42d92d0c",
+                  "prefix": "job_workplaceType_check"
                 }
               ],
               "columns": {
@@ -1201,6 +1255,16 @@
                   "nativeType": "text",
                   "nullable": false
                 },
+                "skills": {
+                  "codecId": "pg/text@1",
+                  "default": {
+                    "kind": "literal",
+                    "value": []
+                  },
+                  "many": true,
+                  "nativeType": "text",
+                  "nullable": false
+                },
                 "status": {
                   "codecId": "pg/text@1",
                   "default": {
@@ -1225,6 +1289,17 @@
                   "codecId": "pg/timestamptz-string@1",
                   "nativeType": "timestamptz",
                   "nullable": false
+                },
+                "workplaceType": {
+                  "codecId": "pg/text@1",
+                  "nativeType": "text",
+                  "nullable": false,
+                  "valueSet": {
+                    "entityKind": "valueSet",
+                    "entityName": "WorkplaceType",
+                    "namespaceId": "public",
+                    "plane": "storage"
+                  }
                 }
               },
               "foreignKeys": [],
@@ -1471,6 +1546,14 @@
                 "USER",
                 "ADMIN"
               ]
+            },
+            "WorkplaceType": {
+              "kind": "valueSet",
+              "values": [
+                "ON_SITE",
+                "REMOTE",
+                "HYBRID"
+              ]
             }
           }
         },
@@ -1478,7 +1561,7 @@
         "kind": "postgres-schema"
       }
     },
-    "storageHash": "e00643b1440dc408036df7bdf94946a3df9e7631607856d979be26bbc89ca3de"
+    "storageHash": "4d022ac0cb0f4bf62c4e0be712f34f1171c238c4505050d1f1e0d133e117f771"
   },
   "execution": {
     "executionHash": "2a46a1697980a4854f9c9cd7515802a76bcf2e79a304bffcbc281c52de9773b6",

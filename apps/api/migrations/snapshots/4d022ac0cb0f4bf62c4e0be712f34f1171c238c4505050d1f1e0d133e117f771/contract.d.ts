@@ -33,7 +33,7 @@ import type {
 } from '@prisma/orm-postgres/contract/types';
 
 export type StorageHash =
-  StorageHashBase<'eec986ef470247de29e868a602e998e8899ddd5292bac55aa071522df9ca31f2'>;
+  StorageHashBase<'4d022ac0cb0f4bf62c4e0be712f34f1171c238c4505050d1f1e0d133e117f771'>;
 export type ExecutionHash =
   ExecutionHashBase<'2a46a1697980a4854f9c9cd7515802a76bcf2e79a304bffcbc281c52de9773b6'>;
 export type ProfileHash =
@@ -276,6 +276,7 @@ export type FieldOutputTypes = {
       readonly description: CodecTypes['pg/text@1']['output'];
       readonly company: CodecTypes['pg/text@1']['output'];
       readonly location: CodecTypes['pg/text@1']['output'];
+      readonly workplaceType: 'ON_SITE' | 'REMOTE' | 'HYBRID';
       readonly category:
         | 'ENGINEERING'
         | 'DESIGN'
@@ -286,7 +287,9 @@ export type FieldOutputTypes = {
         | 'CUSTOMER_SUPPORT'
         | 'OPERATIONS';
       readonly experienceLevel: 'ENTRY' | 'MID' | 'SENIOR';
+      readonly skills: ReadonlyArray<CodecTypes['pg/text@1']['output']>;
       readonly status: 'DRAFT' | 'PUBLISHED' | 'CLOSED';
+      readonly isFeatured: CodecTypes['pg/bool@1']['output'];
       readonly createdAt: CodecTypes['pg/timestamptz-string@1']['output'];
       readonly updatedAt: CodecTypes['pg/timestamptz-string@1']['output'];
     };
@@ -346,6 +349,7 @@ export type FieldInputTypes = {
       readonly description: CodecTypes['pg/text@1']['input'];
       readonly company: CodecTypes['pg/text@1']['input'];
       readonly location: CodecTypes['pg/text@1']['input'];
+      readonly workplaceType: 'ON_SITE' | 'REMOTE' | 'HYBRID';
       readonly category:
         | 'ENGINEERING'
         | 'DESIGN'
@@ -356,7 +360,9 @@ export type FieldInputTypes = {
         | 'CUSTOMER_SUPPORT'
         | 'OPERATIONS';
       readonly experienceLevel: 'ENTRY' | 'MID' | 'SENIOR';
+      readonly skills: ReadonlyArray<CodecTypes['pg/text@1']['input']>;
       readonly status: 'DRAFT' | 'PUBLISHED' | 'CLOSED';
+      readonly isFeatured: CodecTypes['pg/bool@1']['input'];
       readonly createdAt: CodecTypes['pg/timestamptz-string@1']['input'];
       readonly updatedAt: CodecTypes['pg/timestamptz-string@1']['input'];
     };
@@ -425,10 +431,13 @@ export type StorageColumnTypes = {
       readonly description: CodecTypes['pg/text@1']['output'];
       readonly experienceLevel: 'ENTRY' | 'MID' | 'SENIOR';
       readonly id: CodecTypes['pg/text@1']['output'];
+      readonly isFeatured: CodecTypes['pg/bool@1']['output'];
       readonly location: CodecTypes['pg/text@1']['output'];
+      readonly skills: ReadonlyArray<CodecTypes['pg/text@1']['output']>;
       readonly status: 'DRAFT' | 'PUBLISHED' | 'CLOSED';
       readonly title: CodecTypes['pg/text@1']['output'];
       readonly updatedAt: CodecTypes['pg/timestamptz-string@1']['output'];
+      readonly workplaceType: 'ON_SITE' | 'REMOTE' | 'HYBRID';
     };
     readonly refreshToken: {
       readonly createdAt: CodecTypes['pg/timestamptz-string@1']['output'];
@@ -495,10 +504,13 @@ export type StorageColumnInputTypes = {
       readonly description: CodecTypes['pg/text@1']['input'];
       readonly experienceLevel: 'ENTRY' | 'MID' | 'SENIOR';
       readonly id: CodecTypes['pg/text@1']['input'];
+      readonly isFeatured: CodecTypes['pg/bool@1']['input'];
       readonly location: CodecTypes['pg/text@1']['input'];
+      readonly skills: ReadonlyArray<CodecTypes['pg/text@1']['input']>;
       readonly status: 'DRAFT' | 'PUBLISHED' | 'CLOSED';
       readonly title: CodecTypes['pg/text@1']['input'];
       readonly updatedAt: CodecTypes['pg/timestamptz-string@1']['input'];
+      readonly workplaceType: 'ON_SITE' | 'REMOTE' | 'HYBRID';
     };
     readonly refreshToken: {
       readonly createdAt: CodecTypes['pg/timestamptz-string@1']['input'];
@@ -766,6 +778,11 @@ type ContractBase = Omit<
                   readonly codecId: 'pg/text@1';
                   readonly nullable: false;
                 };
+                readonly workplaceType: {
+                  readonly nativeType: 'text';
+                  readonly codecId: 'pg/text@1';
+                  readonly nullable: false;
+                };
                 readonly category: {
                   readonly nativeType: 'text';
                   readonly codecId: 'pg/text@1';
@@ -776,6 +793,15 @@ type ContractBase = Omit<
                   readonly codecId: 'pg/text@1';
                   readonly nullable: false;
                 };
+                readonly skills: {
+                  readonly nativeType: 'text';
+                  readonly codecId: 'pg/text@1';
+                  readonly nullable: false;
+                  readonly default: {
+                    readonly kind: 'literal';
+                    readonly value: DefaultLiteralValue<'pg/text@1', readonly []>;
+                  };
+                };
                 readonly status: {
                   readonly nativeType: 'text';
                   readonly codecId: 'pg/text@1';
@@ -783,6 +809,15 @@ type ContractBase = Omit<
                   readonly default: {
                     readonly kind: 'literal';
                     readonly value: DefaultLiteralValue<'pg/text@1', 'DRAFT'>;
+                  };
+                };
+                readonly isFeatured: {
+                  readonly nativeType: 'bool';
+                  readonly codecId: 'pg/bool@1';
+                  readonly nullable: false;
+                  readonly default: {
+                    readonly kind: 'literal';
+                    readonly value: DefaultLiteralValue<'pg/bool@1', false>;
                   };
                 };
                 readonly createdAt: {
@@ -816,6 +851,12 @@ type ContractBase = Omit<
                   readonly name: 'job_status_createdAt_idx_58610442';
                   readonly prefix: 'job_status_createdAt_idx';
                   readonly columns: readonly ['status', 'createdAt'];
+                  readonly unique: false;
+                },
+                {
+                  readonly name: 'job_isFeatured_status_createdAt_idx_7db32ec7';
+                  readonly prefix: 'job_isFeatured_status_createdAt_idx';
+                  readonly columns: readonly ['isFeatured', 'status', 'createdAt'];
                   readonly unique: false;
                 },
               ];
@@ -958,6 +999,10 @@ type ContractBase = Omit<
             readonly UserRole: {
               readonly kind: 'valueSet';
               readonly values: readonly ['USER', 'ADMIN'];
+            };
+            readonly WorkplaceType: {
+              readonly kind: 'valueSet';
+              readonly values: readonly ['ON_SITE', 'REMOTE', 'HYBRID'];
             };
           };
         };
@@ -1198,6 +1243,10 @@ type ContractBase = Omit<
                 readonly nullable: false;
                 readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
               };
+              readonly workplaceType: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
+              };
               readonly category: {
                 readonly nullable: false;
                 readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
@@ -1206,9 +1255,18 @@ type ContractBase = Omit<
                 readonly nullable: false;
                 readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
               };
+              readonly skills: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
+                readonly many: true;
+              };
               readonly status: {
                 readonly nullable: false;
                 readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
+              };
+              readonly isFeatured: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/bool@1' };
               };
               readonly createdAt: {
                 readonly nullable: false;
@@ -1247,9 +1305,12 @@ type ContractBase = Omit<
                 readonly description: { readonly column: 'description' };
                 readonly company: { readonly column: 'company' };
                 readonly location: { readonly column: 'location' };
+                readonly workplaceType: { readonly column: 'workplaceType' };
                 readonly category: { readonly column: 'category' };
                 readonly experienceLevel: { readonly column: 'experienceLevel' };
+                readonly skills: { readonly column: 'skills' };
                 readonly status: { readonly column: 'status' };
+                readonly isFeatured: { readonly column: 'isFeatured' };
                 readonly createdAt: { readonly column: 'createdAt' };
                 readonly updatedAt: { readonly column: 'updatedAt' };
               };
@@ -1436,6 +1497,14 @@ type ContractBase = Omit<
               { readonly name: 'ENTRY'; readonly value: 'ENTRY' },
               { readonly name: 'MID'; readonly value: 'MID' },
               { readonly name: 'SENIOR'; readonly value: 'SENIOR' },
+            ];
+          };
+          readonly WorkplaceType: {
+            readonly codecId: 'pg/text@1';
+            readonly members: readonly [
+              { readonly name: 'ON_SITE'; readonly value: 'ON_SITE' },
+              { readonly name: 'REMOTE'; readonly value: 'REMOTE' },
+              { readonly name: 'HYBRID'; readonly value: 'HYBRID' },
             ];
           };
           readonly ApplicationStatus: {
