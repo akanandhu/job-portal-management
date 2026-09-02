@@ -13,6 +13,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { candidateProfileSchema } from "@job-portal/contracts/profile";
 import type { CandidateProfileInputI } from "@job-portal/contracts/profile";
 import { Controller, useForm } from "react-hook-form";
+import { useNavigate } from "react-router";
 import type { z } from "zod";
 
 type CandidateProfileFormValuesI = z.input<typeof candidateProfileSchema>;
@@ -44,7 +45,13 @@ export function CandidateProfileForm() {
     resolver: zodResolver(candidateProfileSchema),
   });
 
+  const navigate = useNavigate();
+
   const onSubmit = () => undefined;
+
+  const onBack = () => {
+    navigate("/register");
+  };
 
   return (
     <Card>
@@ -190,8 +197,8 @@ export function CandidateProfileForm() {
           </div>
 
           <div className="flex flex-col gap-3 border-t pt-6 sm:flex-row sm:justify-end">
-            <Button type="button" variant="outline" size="lg">
-              Skip for now
+            <Button onClick={onBack} type="button" variant="outline" size="lg">
+              Back to Register
             </Button>
             <Button type="submit" size="lg">
               Save profile
