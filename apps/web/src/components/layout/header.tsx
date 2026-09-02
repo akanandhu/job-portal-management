@@ -24,13 +24,10 @@ export function Header() {
               {link.label}
             </a>
           ))}
-          <a href="#product" className="transition hover:text-foreground">
-            Product
-          </a>
         </div>
         <div className="flex items-center gap-2">
           <Button variant="ghost" className="hidden sm:inline-flex">
-            Sign in
+            Sign In
           </Button>
           <Button>
             Register
