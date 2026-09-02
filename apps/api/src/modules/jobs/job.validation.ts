@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { experienceLevels, jobCategories } from "./job.types";
+import { experienceLevels, jobCategories, jobStatuses } from "./job.types";
 
 const DEFAULT_PAGE = 1;
 const DEFAULT_LIMIT = 10;
@@ -19,3 +19,23 @@ export const listJobsQuerySchema = z.object({
   category: queryValueSchema(z.enum(jobCategories).optional()),
   experienceLevel: queryValueSchema(z.enum(experienceLevels).optional()),
 });
+
+export const jobIdParamsSchema = z.object({
+  id: z.string().uuid(),
+});
+
+export const createJobSchema = z.object({
+  title: z.string().trim().min(1),
+  description: z.string().trim().min(1),
+  company: z.string().trim().min(1),
+  location: z.string().trim().min(1),
+  category: z.enum(jobCategories),
+  experienceLevel: z.enum(experienceLevels),
+  status: z.enum(jobStatuses).default("DRAFT"),
+});
+
+export const updateJobSchema = createJobSchema
+  .partial()
+  .refine((value) => Object.keys(value).length > 0, {
+    message: "At least one field is required",
+  });

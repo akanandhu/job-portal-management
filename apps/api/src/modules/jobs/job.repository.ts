@@ -1,5 +1,9 @@
 import { db } from "../../prisma/db";
-import type { ListJobsQueryI } from "./job.types";
+import type {
+  CreateJobInputI,
+  ListJobsQueryI,
+  UpdateJobInputI,
+} from "./job.types";
 
 function applyJobFilters(query: ListJobsQueryI) {
   let jobsQuery = db.orm.public.Job.where({
@@ -33,4 +37,33 @@ export async function countJobs(query: ListJobsQueryI) {
   return await applyJobFilters(query).aggregate((aggregate) => ({
     total: aggregate.count(),
   }));
+}
+
+export async function findPublishedJobById(id: string) {
+  return await db.orm.public.Job.where({
+    id,
+    status: "PUBLISHED" as const,
+  }).first();
+}
+
+export async function findJobById(id: string) {
+  return await db.orm.public.Job.where({
+    id,
+  }).first();
+}
+
+export async function createJob(data: CreateJobInputI) {
+  return await db.orm.public.Job.create(data);
+}
+
+export async function updateJob(id: string, data: UpdateJobInputI) {
+  return await db.orm.public.Job.where({
+    id,
+  }).update(data);
+}
+
+export async function deleteJob(id: string) {
+  return await db.orm.public.Job.where({
+    id,
+  }).delete();
 }
