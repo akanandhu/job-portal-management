@@ -4,6 +4,7 @@ import type {
   VerifyAccessTokenReturnTypeI,
 } from "./auth.types";
 import jwt from "jsonwebtoken";
+import crypto from "node:crypto";
 
 export function generateAccessToken(payload: AccessTokenPayloadI) {
   const secret = process.env.JWT_ACCESS_SECRET;
@@ -29,4 +30,12 @@ export function verifyAccessToken(token: string) {
   }
 
   return jwt.verify(token, secret) as VerifyAccessTokenReturnTypeI;
+}
+
+export function generateRefreshToken() {
+  return crypto.randomBytes(64).toString("hex");
+}
+
+export function hashRefreshToken(token: string) {
+  return crypto.createHash("sha256").update(token).digest("hex");
 }
