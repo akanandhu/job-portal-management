@@ -3,6 +3,7 @@ import {
   findRefreshTokenByHash,
   findUserByEmail,
   findUserById,
+  revokeRefreshToken,
 } from "./auth.repository";
 import bcrypt from "bcrypt";
 import {
@@ -88,4 +89,16 @@ export async function refreshAccessToken(refreshToken: string) {
     user: { id: user.id, email: user.email, name: user.name, role: user.role },
     accessToken,
   };
+}
+
+export async function logoutUser(refreshToken: string) {
+  const tokenHash = hashRefreshToken(refreshToken);
+
+  const storedToken = await findRefreshTokenByHash(tokenHash);
+
+  if (!storedToken || storedToken.revokedAt) {
+    return;
+  }
+
+  await revokeRefreshToken(tokenHash);
 }

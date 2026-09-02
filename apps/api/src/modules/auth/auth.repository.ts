@@ -22,3 +22,11 @@ export async function findRefreshTokenByHash(tokenHash: string) {
     tokenHash,
   }).first();
 }
+
+export async function revokeRefreshToken(tokenHash: string) {
+  return db.orm.public.RefreshToken.where({
+    tokenHash,
+  }).update({
+    revokedAt: new Date().toISOString(),
+  });
+}

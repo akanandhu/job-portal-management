@@ -1,5 +1,5 @@
 import type { Request, Response } from "express";
-import { loginUser, refreshAccessToken } from "./auth.service";
+import { loginUser, logoutUser, refreshAccessToken } from "./auth.service";
 
 export async function loginController(req: Request, res: Response) {
   try {
@@ -44,8 +44,35 @@ export async function refreshAccessTokenController(
       .status(200)
       .json({ message: "Access token refreshed successfully", ...result });
   } catch (error) {
+    res.clearCookie("refreshToken", {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "strict",
+      path: "/auth",
+    });
     return res
       .status(401)
       .json({ message: "Invalid or expired refresh token" });
+  }
+}
+
+export async function logoutController(req: Request, res: Response) {
+  try {
+    const refreshToken = req.cookies?.refreshToken;
+
+    if (refreshToken) {
+      await logoutUser(refreshToken);
+    }
+
+    res.clearCookie("refreshToken", {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "strict",
+      path: "/auth",
+    });
+
+    return res.status(200).json({ message: "Logout successful" });
+  } catch (error) {
+    return res.status(500).json({ message: "An error occurred during logout" });
   }
 }
