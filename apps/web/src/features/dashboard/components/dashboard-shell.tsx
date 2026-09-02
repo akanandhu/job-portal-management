@@ -1,4 +1,5 @@
-import { LogOut } from "lucide-react";
+import { Filter, LogOut, X } from "lucide-react";
+import { useState } from "react";
 
 import { BrandLogo } from "@/components/brand/brand-logo";
 import { Button } from "@/components/ui/button";
@@ -14,6 +15,8 @@ export function DashboardShell({
   onLogout,
   onNavChange,
 }: DashboardShellPropsI) {
+  const [filtersOpen, setFiltersOpen] = useState(false);
+
   return (
     <main className="min-h-svh bg-background text-foreground">
       <div className="grid min-h-svh lg:grid-cols-[280px_minmax(0,1fr)_360px]">
@@ -75,9 +78,47 @@ export function DashboardShell({
           </div>
         </aside>
 
-        <section className="min-w-0 px-5 py-4 lg:px-8">{children}</section>
+        <section className="min-w-0 px-5 py-4 lg:px-8">
+          <div className="mb-3 flex justify-end lg:hidden">
+            <Button
+              type="button"
+              variant="outline"
+              size="icon"
+              aria-label="Open filters"
+              onClick={() => setFiltersOpen(true)}
+            >
+              <Filter className="size-4" />
+            </Button>
+          </div>
+          {children}
+        </section>
 
-        <aside className="border-t bg-background px-5 py-6 lg:border-t-0 lg:border-l lg:px-6">
+        {filtersOpen && (
+          <button
+            type="button"
+            className="fixed inset-0 z-40 bg-black/10 backdrop-blur-xs lg:hidden"
+            aria-label="Close filters"
+            onClick={() => setFiltersOpen(false)}
+          />
+        )}
+
+        <aside
+          className={cn(
+            "fixed inset-y-0 right-0 z-50 w-[min(22rem,calc(100vw-2rem))] overflow-y-auto border-l bg-background px-5 py-6 shadow-xl transition-transform duration-200 lg:static lg:z-auto lg:w-auto lg:translate-x-0 lg:border-t-0 lg:px-6 lg:shadow-none",
+            filtersOpen ? "translate-x-0" : "translate-x-full",
+          )}
+        >
+          <div className="mb-5 flex justify-end lg:hidden">
+            <Button
+              type="button"
+              variant="ghost"
+              size="icon"
+              aria-label="Close filters"
+              onClick={() => setFiltersOpen(false)}
+            >
+              <X className="size-4" />
+            </Button>
+          </div>
           {filters}
         </aside>
       </div>
