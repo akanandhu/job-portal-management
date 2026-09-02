@@ -158,6 +158,7 @@ export function AdminDashboard() {
       navItems={navItems}
       onLogout={handleLogout}
       onNavChange={handleNavChange}
+      showFilters={view.type.endsWith(".list")}
     >
       <DashboardTabs
         activeTab={activeTab}

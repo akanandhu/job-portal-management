@@ -14,6 +14,7 @@ export function DashboardShell({
   navItems,
   onLogout,
   onNavChange,
+  showFilters,
 }: DashboardShellPropsI) {
   const [filtersOpen, setFiltersOpen] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -79,7 +80,12 @@ export function DashboardShell({
 
   return (
     <main className="min-h-svh bg-background text-foreground">
-      <div className="grid min-h-svh lg:grid-cols-[280px_minmax(0,1fr)_360px]">
+      <div
+        className={cn(
+          "grid min-h-svh transition-[grid-template-columns] duration-200 lg:grid-cols-[280px_minmax(0,1fr)_0px]",
+          showFilters && "lg:grid-cols-[280px_minmax(0,1fr)_360px]",
+        )}
+      >
         <aside className="hidden bg-background px-5 py-5 lg:block lg:border-r">
           <div className="flex h-full flex-col gap-8">
             <BrandLogo />
@@ -99,20 +105,24 @@ export function DashboardShell({
             >
               <Menu className="size-4" />
             </Button>
-            <Button
-              type="button"
-              variant="outline"
-              size="icon"
-              aria-label="Open filters"
-              onClick={() => setFiltersOpen(true)}
-            >
-              <Filter className="size-4" />
-            </Button>
+            {showFilters ? (
+              <Button
+                type="button"
+                variant="outline"
+                size="icon"
+                aria-label="Open filters"
+                onClick={() => setFiltersOpen(true)}
+              >
+                <Filter className="size-4" />
+              </Button>
+            ) : (
+              <span />
+            )}
           </div>
           {children}
         </section>
 
-        {(filtersOpen || sidebarOpen) && (
+        {((filtersOpen && showFilters) || sidebarOpen) && (
           <button
             type="button"
             className="fixed inset-0 z-40 bg-black/10 backdrop-blur-xs lg:hidden"
@@ -148,8 +158,11 @@ export function DashboardShell({
 
         <aside
           className={cn(
-            "fixed inset-y-0 right-0 z-50 w-[min(22rem,calc(100vw-2rem))] overflow-y-auto border-l bg-background px-5 py-6 shadow-xl transition-transform duration-200 lg:static lg:z-auto lg:w-auto lg:translate-x-0 lg:border-t-0 lg:px-6 lg:shadow-none",
-            filtersOpen ? "translate-x-0" : "translate-x-full",
+            "fixed inset-y-0 right-0 z-50 w-[min(22rem,calc(100vw-2rem))] overflow-y-auto border-l bg-background px-5 py-6 shadow-xl transition-transform duration-200 lg:static lg:z-auto lg:w-auto lg:border-t-0 lg:px-6 lg:shadow-none",
+            showFilters && filtersOpen ? "translate-x-0" : "translate-x-full",
+            showFilters
+              ? "lg:translate-x-0"
+              : "pointer-events-none lg:translate-x-full lg:overflow-hidden lg:border-l-0 lg:px-0",
           )}
         >
           <div className="mb-5 flex justify-end lg:hidden">

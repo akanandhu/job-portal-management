@@ -24,4 +24,5 @@ export type DashboardShellPropsI = {
   navItems: DashboardNavItemI[];
   onLogout: () => void;
   onNavChange: (value: string) => void;
+  showFilters: boolean;
 };
