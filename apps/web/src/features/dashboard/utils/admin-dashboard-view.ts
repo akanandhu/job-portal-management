@@ -9,7 +9,8 @@ import type { DashboardTabI } from "@/types/dashboard";
 export type AdminDashboardViewI =
   | { type: "jobs.list" }
   | { type: "jobs.detail"; job: AdminJobI }
-  | { type: "jobs.form"; mode: "add" | "edit"; job?: AdminJobI }
+  | { type: "jobs.form"; mode: "add"; job?: undefined }
+  | { type: "jobs.form"; mode: "edit"; job: AdminJobI }
   | { type: "applications.list" }
   | {
       type: "applications.detail";
@@ -65,7 +66,7 @@ export function getAdminDashboardView({
 
   if (activeNav === "jobs" && mode === "edit") {
     const job = jobs.find((item) => item.id === searchParams.get("jobId"));
-    return { type: "jobs.form", mode: "edit", job };
+    return job ? { type: "jobs.form", mode: "edit", job } : { type: "jobs.list" };
   }
 
   if (activeNav === "jobs") {

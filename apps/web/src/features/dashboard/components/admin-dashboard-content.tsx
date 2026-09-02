@@ -1,6 +1,7 @@
 import { ApplicationDetail } from "@/features/dashboard/components/application-detail";
 import { ApplicationList } from "@/features/dashboard/components/application-list";
 import { JobDetail } from "@/features/dashboard/components/job-detail";
+import { JobForm } from "@/features/dashboard/components/job-form";
 import { JobList } from "@/features/dashboard/components/job-list";
 import type {
   AdminApplicationI,
@@ -47,11 +48,10 @@ export function AdminDashboardContent({
 
     case "jobs.form":
       return (
-        <JobList
-          jobs={jobs}
-          onAddJob={onAddJob}
-          onEditJob={onEditJob}
-          onViewJob={onViewJob}
+        <JobForm
+          job={view.job}
+          mode={view.mode}
+          onCancel={onBackToJobs}
         />
       );
 
