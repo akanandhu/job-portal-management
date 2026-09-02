@@ -11,16 +11,19 @@ import { Input } from "@/components/ui/input";
 import { PasswordInput } from "@/components/ui/password-input";
 import type { LoginFormI } from "@/types/auth";
 import { useForm } from "react-hook-form";
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
 
 const LoginForm = () => {
+  const navigate = useNavigate();
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm<LoginFormI>();
 
-  const onSubmit = () => undefined;
+  const onSubmit = () => {
+    navigate("/dashboard");
+  };
 
   return (
     <Card>
