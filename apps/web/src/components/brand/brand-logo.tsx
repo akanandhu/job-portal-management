@@ -4,7 +4,7 @@ export function BrandLogo() {
       <span className="grid size-9 place-items-center rounded-2xl bg-primary text-lg font-bold text-primary-foreground shadow-sm">
         J
       </span>
-      Joblists
+      Jobs
     </a>
   )
 }

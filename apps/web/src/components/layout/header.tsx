@@ -33,7 +33,7 @@ export function Header() {
             Sign in
           </Button>
           <Button>
-            Join waitlist
+            Register
             <ArrowRight className="size-4" />
           </Button>
         </div>
