@@ -8,6 +8,7 @@ import {
 } from "@/components/ui/card";
 import ErrorBox from "@/components/ui/error-box";
 import { Input } from "@/components/ui/input";
+import { PasswordInput } from "@/components/ui/password-input";
 import type { LoginFormI } from "@/types/auth";
 import { useForm } from "react-hook-form";
 import { Link } from "react-router";
@@ -54,9 +55,8 @@ const LoginForm = () => {
 
           <label className="grid gap-2 text-sm font-medium" htmlFor="password">
             Password
-            <Input
+            <PasswordInput
               id="password"
-              type="password"
               autoComplete="current-password"
               placeholder="Enter your password"
               aria-invalid={Boolean(errors.password)}

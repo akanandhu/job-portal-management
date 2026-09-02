@@ -8,11 +8,13 @@ import {
 } from "@/components/ui/card";
 import ErrorBox from "@/components/ui/error-box";
 import { Input } from "@/components/ui/input";
+import { PasswordInput } from "@/components/ui/password-input";
 import type { RegisterFormI } from "@/types/auth";
 import { useForm } from "react-hook-form";
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
 
 const RegisterUserForm = () => {
+  const navigate = useNavigate();
   const {
     register,
     handleSubmit,
@@ -20,7 +22,9 @@ const RegisterUserForm = () => {
     formState: { errors },
   } = useForm<RegisterFormI>();
 
-  const onSubmit = () => undefined;
+  const onSubmit = () => {
+    navigate("/profile");
+  };
 
   return (
     <Card>
@@ -73,9 +77,8 @@ const RegisterUserForm = () => {
 
           <label className="grid gap-2 text-sm font-medium" htmlFor="password">
             Password
-            <Input
+            <PasswordInput
               id="password"
-              type="password"
               autoComplete="new-password"
               placeholder="Create a password"
               aria-invalid={Boolean(errors.password)}
@@ -84,11 +87,7 @@ const RegisterUserForm = () => {
                 minLength: { value: 6, message: "Use at least 6 characters" },
               })}
             />
-            {errors.password && (
-              <span className="text-xs text-destructive">
-                {errors.password.message}
-              </span>
-            )}
+            <ErrorBox message={errors.password?.message} />
           </label>
 
           <label
@@ -96,9 +95,8 @@ const RegisterUserForm = () => {
             htmlFor="confirmPassword"
           >
             Confirm password
-            <Input
+            <PasswordInput
               id="confirmPassword"
-              type="password"
               autoComplete="new-password"
               placeholder="Repeat your password"
               aria-invalid={Boolean(errors.confirmPassword)}
