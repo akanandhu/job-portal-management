@@ -1,7 +1,10 @@
 import { Router } from "express";
 import { authenticate } from "../../middleware/authenticate";
 import { requireRole } from "../../middleware/require-role";
-import { applyToJobController } from "../applications/application.controller";
+import {
+  applyToJobController,
+  listJobApplicationsController,
+} from "../applications/application.controller";
 import {
   createJobController,
   deleteJobController,
@@ -18,6 +21,12 @@ router.post(
   authenticate,
   requireRole("USER"),
   applyToJobController,
+);
+router.get(
+  "/:jobId/applications",
+  authenticate,
+  requireRole("ADMIN"),
+  listJobApplicationsController,
 );
 router.get("/:id", getJobController);
 

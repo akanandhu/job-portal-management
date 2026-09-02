@@ -1,9 +1,12 @@
 import type { Request, Response } from "express";
 import {
   ApplicationConflictError,
+  ApplicationNotFoundError,
   ApplicationUnavailableError,
   ApplicationValidationError,
   applyToJob,
+  changeApplicationStatus,
+  listJobApplications,
   listMyApplications,
 } from "./application.service";
 
@@ -17,6 +20,10 @@ function handleApplicationError(error: unknown, res: Response) {
   }
 
   if (error instanceof ApplicationUnavailableError) {
+    return res.status(404).json({ message: error.message });
+  }
+
+  if (error instanceof ApplicationNotFoundError) {
     return res.status(404).json({ message: error.message });
   }
 
@@ -37,7 +44,10 @@ export async function applyToJobController(req: Request, res: Response) {
   try {
     const application = await applyToJob(userId, req.params);
 
-    return res.status(201).json({ data: application });
+    return res.status(201).json({
+      message: "Application submitted successfully",
+      data: application,
+    });
   } catch (error) {
     return handleApplicationError(error, res);
   }
@@ -54,6 +64,29 @@ export async function listMyApplicationsController(req: Request, res: Response) 
     const applications = await listMyApplications(userId);
 
     return res.status(200).json({ data: applications });
+  } catch (error) {
+    return handleApplicationError(error, res);
+  }
+}
+
+export async function listJobApplicationsController(req: Request, res: Response) {
+  try {
+    const applications = await listJobApplications(req.params);
+
+    return res.status(200).json({ data: applications });
+  } catch (error) {
+    return handleApplicationError(error, res);
+  }
+}
+
+export async function updateApplicationStatusController(
+  req: Request,
+  res: Response,
+) {
+  try {
+    const application = await changeApplicationStatus(req.params, req.body);
+
+    return res.status(200).json({ data: application });
   } catch (error) {
     return handleApplicationError(error, res);
   }

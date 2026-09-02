@@ -1,3 +1,12 @@
+export const applicationStatuses = [
+  "APPLIED",
+  "REVIEWING",
+  "REJECTED",
+  "ACCEPTED",
+] as const;
+
+export type ApplicationStatusI = (typeof applicationStatuses)[number];
+
 export type ApplicationSnapshotInputI = {
   userId: string;
   jobId: string;

@@ -1,5 +1,8 @@
 import { db } from "../../prisma/db";
-import type { ApplicationSnapshotInputI } from "./application.types";
+import type {
+  ApplicationSnapshotInputI,
+  ApplicationStatusI,
+} from "./application.types";
 
 export async function findApplicationByUserAndJob(
   userId: string,
@@ -25,4 +28,33 @@ export async function findApplicationsByUserId(userId: string) {
       (application) => application.id.desc(),
     ])
     .all();
+}
+
+export async function findApplicationsByJobId(jobId: string) {
+  return await db.orm.public.Application.where({
+    jobId,
+  })
+    .include("user", (user) => user.select("id", "name", "email"))
+    .orderBy([
+      (application) => application.createdAt.desc(),
+      (application) => application.id.desc(),
+    ])
+    .all();
+}
+
+export async function findApplicationById(id: string) {
+  return await db.orm.public.Application.where({
+    id,
+  }).first();
+}
+
+export async function updateApplicationStatus(
+  id: string,
+  status: ApplicationStatusI,
+) {
+  return await db.orm.public.Application.where({
+    id,
+  }).update({
+    status,
+  });
 }
