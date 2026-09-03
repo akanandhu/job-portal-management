@@ -197,33 +197,30 @@ const generatedSkills = [
   ["Figma", "Research", "Design Systems"],
 ];
 
-const generatedApplications: AdminApplicationI[] = Array.from(
-  { length: 100 },
-  (_, index) => {
-    const id = index + 4;
+const generatedApplications: AdminApplicationI[] = Array.from({ length: 100 }, (_, index) => {
+  const id = index + 4;
 
-    return {
-      id: String(id),
-      candidate: `${generatedCandidateNames[index % generatedCandidateNames.length]} ${id}`,
-      jobId: "2",
-      status: index % 4 === 0 ? "REVIEWING" : index % 5 === 0 ? "ACCEPTED" : "APPLIED",
-      appliedAt: `${(index % 9) + 1}d ago`,
-      phone: `+91 90000 ${String(10000 + index)}`,
-      yearsOfExperience: index % 8,
-      education:
-        index % 3 === 0
-          ? "B.Tech Computer Science"
-          : index % 3 === 1
-            ? "MCA"
-            : "B.Sc Information Technology",
-      currentCompany: index % 4 === 0 ? null : `Company ${index + 1}`,
-      currentRole: index % 4 === 0 ? null : "Software Engineer",
-      expectedSalary: 450000 + index * 12000,
-      noticePeriodDays: [0, 15, 30, 45, 60][index % 5],
-      skills: generatedSkills[index % generatedSkills.length],
-    };
-  },
-);
+  return {
+    id: String(id),
+    candidate: `${generatedCandidateNames[index % generatedCandidateNames.length]} ${id}`,
+    jobId: "2",
+    status: index % 4 === 0 ? "REVIEWING" : index % 5 === 0 ? "ACCEPTED" : "APPLIED",
+    appliedAt: `${(index % 9) + 1}d ago`,
+    phone: `+91 90000 ${String(10000 + index)}`,
+    yearsOfExperience: index % 8,
+    education:
+      index % 3 === 0
+        ? "B.Tech Computer Science"
+        : index % 3 === 1
+          ? "MCA"
+          : "B.Sc Information Technology",
+    currentCompany: index % 4 === 0 ? null : `Company ${index + 1}`,
+    currentRole: index % 4 === 0 ? null : "Software Engineer",
+    expectedSalary: 450000 + index * 12000,
+    noticePeriodDays: [0, 15, 30, 45, 60][index % 5],
+    skills: generatedSkills[index % generatedSkills.length],
+  };
+});
 
 export const adminApplications: AdminApplicationI[] = [
   ...baseApplications,

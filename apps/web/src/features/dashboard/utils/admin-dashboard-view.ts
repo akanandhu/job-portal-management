@@ -1,9 +1,6 @@
 import { applicationStatuses } from "@job-portal/contracts/applications";
 
-import type {
-  AdminApplicationI,
-  AdminJobI,
-} from "@/features/dashboard/data/dashboard-data";
+import type { AdminApplicationI, AdminJobI } from "@/features/dashboard/data/dashboard-data";
 import type { DashboardTabI } from "@/types/dashboard";
 
 export type AdminDashboardViewI =
@@ -35,10 +32,8 @@ export const defaultJobTab = "all-jobs";
 export const defaultApplicationTab = applicationStatuses[0];
 export const defaultProfileTab = "candidate-profile";
 
-export const hasItem = <Item extends { id: string }>(
-  items: readonly Item[],
-  id: string,
-) => items.some((item) => item.id === id);
+export const hasItem = <Item extends { id: string }>(items: readonly Item[], id: string) =>
+  items.some((item) => item.id === id);
 
 export const formatOptionLabel = (value: string) =>
   value
@@ -47,20 +42,14 @@ export const formatOptionLabel = (value: string) =>
     .map((part) => part.slice(0, 1).toUpperCase() + part.slice(1))
     .join(" ");
 
-export const jobTabs: DashboardTabI[] = [
-  { id: defaultJobTab, label: "All Jobs" },
-];
+export const jobTabs: DashboardTabI[] = [{ id: defaultJobTab, label: "All Jobs" }];
 
-export const applicationTabs: DashboardTabI[] = applicationStatuses.map(
-  (status) => ({
-    id: status,
-    label: formatOptionLabel(status),
-  }),
-);
+export const applicationTabs: DashboardTabI[] = applicationStatuses.map((status) => ({
+  id: status,
+  label: formatOptionLabel(status),
+}));
 
-export const profileTabs: DashboardTabI[] = [
-  { id: defaultProfileTab, label: "Candidate Profile" },
-];
+export const profileTabs: DashboardTabI[] = [{ id: defaultProfileTab, label: "Candidate Profile" }];
 
 export function getAdminDashboardView({
   activeNav,
@@ -87,16 +76,12 @@ export function getAdminDashboardView({
   if (activeNav === "profile") {
     const application = applications[0];
     const profileJobId = searchParams.get("jobId");
-    const job = profileJobId
-      ? jobs.find((item) => item.id === profileJobId)
-      : undefined;
+    const job = profileJobId ? jobs.find((item) => item.id === profileJobId) : undefined;
 
     return { type: "candidate-profile.form", application, job };
   }
 
-  const application = applications.find(
-    (item) => item.id === searchParams.get("applicationId"),
-  );
+  const application = applications.find((item) => item.id === searchParams.get("applicationId"));
   const job = jobs.find((item) => item.id === application?.jobId);
 
   if (application && job) {

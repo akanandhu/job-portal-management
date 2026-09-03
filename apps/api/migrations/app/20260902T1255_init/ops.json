@@ -33,9 +33,7 @@
       {
         "description": "ensure table \"application\" does not exist",
         "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
-        "params": [
-          "\"public\".\"application\""
-        ]
+        "params": ["\"public\".\"application\""]
       }
     ],
     "execute": [
@@ -49,9 +47,7 @@
       {
         "description": "verify table \"application\" exists",
         "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
-        "params": [
-          "\"public\".\"application\""
-        ]
+        "params": ["\"public\".\"application\""]
       }
     ]
   },
@@ -72,9 +68,7 @@
       {
         "description": "ensure table \"candidateProfile\" does not exist",
         "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
-        "params": [
-          "\"public\".\"candidateProfile\""
-        ]
+        "params": ["\"public\".\"candidateProfile\""]
       }
     ],
     "execute": [
@@ -88,9 +82,7 @@
       {
         "description": "verify table \"candidateProfile\" exists",
         "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
-        "params": [
-          "\"public\".\"candidateProfile\""
-        ]
+        "params": ["\"public\".\"candidateProfile\""]
       }
     ]
   },
@@ -111,9 +103,7 @@
       {
         "description": "ensure table \"job\" does not exist",
         "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
-        "params": [
-          "\"public\".\"job\""
-        ]
+        "params": ["\"public\".\"job\""]
       }
     ],
     "execute": [
@@ -127,9 +117,7 @@
       {
         "description": "verify table \"job\" exists",
         "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
-        "params": [
-          "\"public\".\"job\""
-        ]
+        "params": ["\"public\".\"job\""]
       }
     ]
   },
@@ -150,9 +138,7 @@
       {
         "description": "ensure table \"refreshToken\" does not exist",
         "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
-        "params": [
-          "\"public\".\"refreshToken\""
-        ]
+        "params": ["\"public\".\"refreshToken\""]
       }
     ],
     "execute": [
@@ -166,9 +152,7 @@
       {
         "description": "verify table \"refreshToken\" exists",
         "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
-        "params": [
-          "\"public\".\"refreshToken\""
-        ]
+        "params": ["\"public\".\"refreshToken\""]
       }
     ]
   },
@@ -189,9 +173,7 @@
       {
         "description": "ensure table \"user\" does not exist",
         "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
-        "params": [
-          "\"public\".\"user\""
-        ]
+        "params": ["\"public\".\"user\""]
       }
     ],
     "execute": [
@@ -205,9 +187,7 @@
       {
         "description": "verify table \"user\" exists",
         "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
-        "params": [
-          "\"public\".\"user\""
-        ]
+        "params": ["\"public\".\"user\""]
       }
     ]
   },
@@ -228,11 +208,7 @@
       {
         "description": "ensure constraint \"application_userId_jobId_key\" does not exist",
         "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
-        "params": [
-          "application_userId_jobId_key",
-          "public",
-          "\"public\".\"application\""
-        ]
+        "params": ["application_userId_jobId_key", "public", "\"public\".\"application\""]
       }
     ],
     "execute": [
@@ -245,11 +221,7 @@
       {
         "description": "verify constraint \"application_userId_jobId_key\" exists",
         "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
-        "params": [
-          "application_userId_jobId_key",
-          "public",
-          "\"public\".\"application\""
-        ]
+        "params": ["application_userId_jobId_key", "public", "\"public\".\"application\""]
       }
     ]
   },
@@ -270,11 +242,7 @@
       {
         "description": "ensure constraint \"candidateProfile_userId_key\" does not exist",
         "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
-        "params": [
-          "candidateProfile_userId_key",
-          "public",
-          "\"public\".\"candidateProfile\""
-        ]
+        "params": ["candidateProfile_userId_key", "public", "\"public\".\"candidateProfile\""]
       }
     ],
     "execute": [
@@ -287,11 +255,7 @@
       {
         "description": "verify constraint \"candidateProfile_userId_key\" exists",
         "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
-        "params": [
-          "candidateProfile_userId_key",
-          "public",
-          "\"public\".\"candidateProfile\""
-        ]
+        "params": ["candidateProfile_userId_key", "public", "\"public\".\"candidateProfile\""]
       }
     ]
   },
@@ -312,11 +276,7 @@
       {
         "description": "ensure constraint \"refreshToken_tokenHash_key\" does not exist",
         "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
-        "params": [
-          "refreshToken_tokenHash_key",
-          "public",
-          "\"public\".\"refreshToken\""
-        ]
+        "params": ["refreshToken_tokenHash_key", "public", "\"public\".\"refreshToken\""]
       }
     ],
     "execute": [
@@ -329,11 +289,7 @@
       {
         "description": "verify constraint \"refreshToken_tokenHash_key\" exists",
         "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
-        "params": [
-          "refreshToken_tokenHash_key",
-          "public",
-          "\"public\".\"refreshToken\""
-        ]
+        "params": ["refreshToken_tokenHash_key", "public", "\"public\".\"refreshToken\""]
       }
     ]
   },
@@ -354,11 +310,7 @@
       {
         "description": "ensure constraint \"user_email_key\" does not exist",
         "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
-        "params": [
-          "user_email_key",
-          "public",
-          "\"public\".\"user\""
-        ]
+        "params": ["user_email_key", "public", "\"public\".\"user\""]
       }
     ],
     "execute": [
@@ -371,11 +323,7 @@
       {
         "description": "verify constraint \"user_email_key\" exists",
         "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
-        "params": [
-          "user_email_key",
-          "public",
-          "\"public\".\"user\""
-        ]
+        "params": ["user_email_key", "public", "\"public\".\"user\""]
       }
     ]
   },
@@ -396,9 +344,7 @@
       {
         "description": "ensure index \"application_jobId_idx_623c8f77\" does not exist",
         "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
-        "params": [
-          "\"public\".\"application_jobId_idx_623c8f77\""
-        ]
+        "params": ["\"public\".\"application_jobId_idx_623c8f77\""]
       }
     ],
     "execute": [
@@ -412,9 +358,7 @@
       {
         "description": "verify index \"application_jobId_idx_623c8f77\" exists",
         "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
-        "params": [
-          "\"public\".\"application_jobId_idx_623c8f77\""
-        ]
+        "params": ["\"public\".\"application_jobId_idx_623c8f77\""]
       }
     ]
   },
@@ -435,9 +379,7 @@
       {
         "description": "ensure index \"application_userId_idx_a489d58a\" does not exist",
         "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
-        "params": [
-          "\"public\".\"application_userId_idx_a489d58a\""
-        ]
+        "params": ["\"public\".\"application_userId_idx_a489d58a\""]
       }
     ],
     "execute": [
@@ -451,9 +393,7 @@
       {
         "description": "verify index \"application_userId_idx_a489d58a\" exists",
         "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
-        "params": [
-          "\"public\".\"application_userId_idx_a489d58a\""
-        ]
+        "params": ["\"public\".\"application_userId_idx_a489d58a\""]
       }
     ]
   },
@@ -474,9 +414,7 @@
       {
         "description": "ensure index \"job_category_idx_f2600f8e\" does not exist",
         "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
-        "params": [
-          "\"public\".\"job_category_idx_f2600f8e\""
-        ]
+        "params": ["\"public\".\"job_category_idx_f2600f8e\""]
       }
     ],
     "execute": [
@@ -490,9 +428,7 @@
       {
         "description": "verify index \"job_category_idx_f2600f8e\" exists",
         "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
-        "params": [
-          "\"public\".\"job_category_idx_f2600f8e\""
-        ]
+        "params": ["\"public\".\"job_category_idx_f2600f8e\""]
       }
     ]
   },
@@ -513,9 +449,7 @@
       {
         "description": "ensure index \"job_experienceLevel_idx_88bcaa5e\" does not exist",
         "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
-        "params": [
-          "\"public\".\"job_experienceLevel_idx_88bcaa5e\""
-        ]
+        "params": ["\"public\".\"job_experienceLevel_idx_88bcaa5e\""]
       }
     ],
     "execute": [
@@ -529,9 +463,7 @@
       {
         "description": "verify index \"job_experienceLevel_idx_88bcaa5e\" exists",
         "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
-        "params": [
-          "\"public\".\"job_experienceLevel_idx_88bcaa5e\""
-        ]
+        "params": ["\"public\".\"job_experienceLevel_idx_88bcaa5e\""]
       }
     ]
   },
@@ -552,9 +484,7 @@
       {
         "description": "ensure index \"job_isFeatured_status_createdAt_idx_7db32ec7\" does not exist",
         "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
-        "params": [
-          "\"public\".\"job_isFeatured_status_createdAt_idx_7db32ec7\""
-        ]
+        "params": ["\"public\".\"job_isFeatured_status_createdAt_idx_7db32ec7\""]
       }
     ],
     "execute": [
@@ -568,9 +498,7 @@
       {
         "description": "verify index \"job_isFeatured_status_createdAt_idx_7db32ec7\" exists",
         "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
-        "params": [
-          "\"public\".\"job_isFeatured_status_createdAt_idx_7db32ec7\""
-        ]
+        "params": ["\"public\".\"job_isFeatured_status_createdAt_idx_7db32ec7\""]
       }
     ]
   },
@@ -591,9 +519,7 @@
       {
         "description": "ensure index \"job_status_createdAt_idx_58610442\" does not exist",
         "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
-        "params": [
-          "\"public\".\"job_status_createdAt_idx_58610442\""
-        ]
+        "params": ["\"public\".\"job_status_createdAt_idx_58610442\""]
       }
     ],
     "execute": [
@@ -607,9 +533,7 @@
       {
         "description": "verify index \"job_status_createdAt_idx_58610442\" exists",
         "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
-        "params": [
-          "\"public\".\"job_status_createdAt_idx_58610442\""
-        ]
+        "params": ["\"public\".\"job_status_createdAt_idx_58610442\""]
       }
     ]
   },
@@ -630,9 +554,7 @@
       {
         "description": "ensure index \"refreshToken_userId_idx_a489d58a\" does not exist",
         "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
-        "params": [
-          "\"public\".\"refreshToken_userId_idx_a489d58a\""
-        ]
+        "params": ["\"public\".\"refreshToken_userId_idx_a489d58a\""]
       }
     ],
     "execute": [
@@ -646,9 +568,7 @@
       {
         "description": "verify index \"refreshToken_userId_idx_a489d58a\" exists",
         "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
-        "params": [
-          "\"public\".\"refreshToken_userId_idx_a489d58a\""
-        ]
+        "params": ["\"public\".\"refreshToken_userId_idx_a489d58a\""]
       }
     ]
   },
@@ -669,11 +589,7 @@
       {
         "description": "ensure FK \"application_userId_fkey\" does not exist",
         "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
-        "params": [
-          "application_userId_fkey",
-          "public",
-          "\"public\".\"application\""
-        ]
+        "params": ["application_userId_fkey", "public", "\"public\".\"application\""]
       }
     ],
     "execute": [
@@ -686,11 +602,7 @@
       {
         "description": "verify FK \"application_userId_fkey\" exists",
         "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
-        "params": [
-          "application_userId_fkey",
-          "public",
-          "\"public\".\"application\""
-        ]
+        "params": ["application_userId_fkey", "public", "\"public\".\"application\""]
       }
     ]
   },
@@ -711,11 +623,7 @@
       {
         "description": "ensure FK \"application_jobId_fkey\" does not exist",
         "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
-        "params": [
-          "application_jobId_fkey",
-          "public",
-          "\"public\".\"application\""
-        ]
+        "params": ["application_jobId_fkey", "public", "\"public\".\"application\""]
       }
     ],
     "execute": [
@@ -728,11 +636,7 @@
       {
         "description": "verify FK \"application_jobId_fkey\" exists",
         "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
-        "params": [
-          "application_jobId_fkey",
-          "public",
-          "\"public\".\"application\""
-        ]
+        "params": ["application_jobId_fkey", "public", "\"public\".\"application\""]
       }
     ]
   },
@@ -753,11 +657,7 @@
       {
         "description": "ensure FK \"candidateProfile_userId_fkey\" does not exist",
         "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
-        "params": [
-          "candidateProfile_userId_fkey",
-          "public",
-          "\"public\".\"candidateProfile\""
-        ]
+        "params": ["candidateProfile_userId_fkey", "public", "\"public\".\"candidateProfile\""]
       }
     ],
     "execute": [
@@ -770,11 +670,7 @@
       {
         "description": "verify FK \"candidateProfile_userId_fkey\" exists",
         "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
-        "params": [
-          "candidateProfile_userId_fkey",
-          "public",
-          "\"public\".\"candidateProfile\""
-        ]
+        "params": ["candidateProfile_userId_fkey", "public", "\"public\".\"candidateProfile\""]
       }
     ]
   },
@@ -795,11 +691,7 @@
       {
         "description": "ensure FK \"refreshToken_userId_fkey\" does not exist",
         "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
-        "params": [
-          "refreshToken_userId_fkey",
-          "public",
-          "\"public\".\"refreshToken\""
-        ]
+        "params": ["refreshToken_userId_fkey", "public", "\"public\".\"refreshToken\""]
       }
     ],
     "execute": [
@@ -812,11 +704,7 @@
       {
         "description": "verify FK \"refreshToken_userId_fkey\" exists",
         "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
-        "params": [
-          "refreshToken_userId_fkey",
-          "public",
-          "\"public\".\"refreshToken\""
-        ]
+        "params": ["refreshToken_userId_fkey", "public", "\"public\".\"refreshToken\""]
       }
     ]
   }

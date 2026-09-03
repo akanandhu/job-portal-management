@@ -4,18 +4,12 @@ import type { ApplicationStatusI } from "@job-portal/contracts/applications";
 import { Button } from "@/components/ui/button";
 import { ApplicationStatusSelect } from "@/features/dashboard/components/application-status-select";
 import { ListingShimmer } from "@/features/dashboard/components/listing-shimmer";
-import type {
-  AdminApplicationI,
-  AdminJobI,
-} from "@/features/dashboard/data/dashboard-data";
+import type { AdminApplicationI, AdminJobI } from "@/features/dashboard/data/dashboard-data";
 
 type ApplicationListPropsI = {
   applications: AdminApplicationI[];
   jobs: AdminJobI[];
-  onChangeApplicationStatus: (
-    applicationId: string,
-    status: ApplicationStatusI,
-  ) => void;
+  onChangeApplicationStatus: (applicationId: string, status: ApplicationStatusI) => void;
   onViewApplication: (applicationId: string) => void;
   isLoading?: boolean;
 };
@@ -56,12 +50,9 @@ export function ApplicationList({
                 <div className="min-w-0 flex-1">
                   <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
                     <div className="min-w-0">
-                      <h2 className="truncate text-base font-semibold">
-                        {application.candidate}
-                      </h2>
+                      <h2 className="truncate text-base font-semibold">{application.candidate}</h2>
                       <p className="mt-1 text-sm text-muted-foreground">
-                        {job?.title} at {job?.company} •{" "}
-                        {application.yearsOfExperience} years
+                        {job?.title} at {job?.company} • {application.yearsOfExperience} years
                       </p>
                       <p className="mt-1 text-xs text-muted-foreground sm:hidden">
                         {application.appliedAt}

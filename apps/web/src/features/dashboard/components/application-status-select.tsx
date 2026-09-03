@@ -28,9 +28,7 @@ export function ApplicationStatusSelect({
   onChange,
   value,
 }: ApplicationStatusSelectPropsI) {
-  const [pendingStatus, setPendingStatus] = useState<ApplicationStatusI | null>(
-    null,
-  );
+  const [pendingStatus, setPendingStatus] = useState<ApplicationStatusI | null>(null);
 
   const handleOpenChange = (open: boolean) => {
     if (!open) {

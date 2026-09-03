@@ -1,11 +1,5 @@
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import ErrorBox from "@/components/ui/error-box";
 import { Input } from "@/components/ui/input";
 import { PasswordInput } from "@/components/ui/password-input";
@@ -30,16 +24,10 @@ const RegisterUserForm = () => {
     <Card>
       <CardHeader>
         <CardTitle>Create your account</CardTitle>
-        <CardDescription>
-          Register as a candidate to apply for jobs.
-        </CardDescription>
+        <CardDescription>Register as a candidate to apply for jobs.</CardDescription>
       </CardHeader>
       <CardContent>
-        <form
-          className="grid gap-5"
-          onSubmit={handleSubmit(onSubmit)}
-          noValidate
-        >
+        <form className="grid gap-5" onSubmit={handleSubmit(onSubmit)} noValidate>
           <label className="grid gap-2 text-sm font-medium" htmlFor="name">
             Full name
             <Input
@@ -69,9 +57,7 @@ const RegisterUserForm = () => {
               })}
             />
             {errors.email && (
-              <span className="text-xs text-destructive">
-                {errors.email.message}
-              </span>
+              <span className="text-xs text-destructive">{errors.email.message}</span>
             )}
           </label>
 
@@ -90,10 +76,7 @@ const RegisterUserForm = () => {
             <ErrorBox message={errors.password?.message} />
           </label>
 
-          <label
-            className="grid gap-2 text-sm font-medium"
-            htmlFor="confirmPassword"
-          >
+          <label className="grid gap-2 text-sm font-medium" htmlFor="confirmPassword">
             Confirm password
             <PasswordInput
               id="confirmPassword"
@@ -102,8 +85,7 @@ const RegisterUserForm = () => {
               aria-invalid={Boolean(errors.confirmPassword)}
               {...register("confirmPassword", {
                 required: "Please confirm your password",
-                validate: (value) =>
-                  value === getValues("password") || "Passwords do not match",
+                validate: (value) => value === getValues("password") || "Passwords do not match",
               })}
             />
             <ErrorBox message={errors.confirmPassword?.message} />
@@ -115,10 +97,7 @@ const RegisterUserForm = () => {
         </form>
         <p className="mt-6 text-center text-sm text-muted-foreground">
           Already have an account?{" "}
-          <Link
-            className="font-medium text-foreground underline underline-offset-4"
-            to="/login"
-          >
+          <Link className="font-medium text-foreground underline underline-offset-4" to="/login">
             Sign in
           </Link>
         </p>

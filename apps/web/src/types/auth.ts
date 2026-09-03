@@ -3,7 +3,6 @@ export type LoginFormI = {
   password: string;
 };
 
-
 export type RegisterFormI = {
   name: string;
   email: string;

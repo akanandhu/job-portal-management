@@ -1,37 +1,31 @@
-import { ArrowRight, BriefcaseBusiness, Building2, MapPin } from 'lucide-react'
+import { ArrowRight, BriefcaseBusiness, Building2, MapPin } from "lucide-react";
 
-import { Button } from '@/components/ui/button'
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card'
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 
 const featuredJobs = [
   {
-    role: 'Senior Product Designer',
-    company: 'Linear',
-    location: 'Remote',
-    salary: '$140k - $190k',
-    tags: ['Design systems', 'B2B SaaS'],
+    role: "Senior Product Designer",
+    company: "Linear",
+    location: "Remote",
+    salary: "$140k - $190k",
+    tags: ["Design systems", "B2B SaaS"],
   },
   {
-    role: 'Founding Frontend Engineer',
-    company: 'Orbital',
-    location: 'San Francisco',
-    salary: '$160k - $220k',
-    tags: ['React', 'Seed stage'],
+    role: "Founding Frontend Engineer",
+    company: "Orbital",
+    location: "San Francisco",
+    salary: "$160k - $220k",
+    tags: ["React", "Seed stage"],
   },
   {
-    role: 'Growth Product Manager',
-    company: 'Mercury',
-    location: 'New York',
-    salary: '$130k - $175k',
-    tags: ['Fintech', 'Analytics'],
+    role: "Growth Product Manager",
+    company: "Mercury",
+    location: "New York",
+    salary: "$130k - $175k",
+    tags: ["Fintech", "Analytics"],
   },
-]
+];
 
 export function FeaturedJobs() {
   return (
@@ -91,5 +85,5 @@ export function FeaturedJobs() {
         ))}
       </div>
     </section>
-  )
+  );
 }

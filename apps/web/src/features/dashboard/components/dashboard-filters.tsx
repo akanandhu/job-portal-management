@@ -38,20 +38,11 @@ const formatOptionLabel = (value: string) =>
     .map((part) => part.slice(0, 1).toUpperCase() + part.slice(1))
     .join(" ");
 
-function FilterSelect({
-  label,
-  onValueChange,
-  options,
-  placeholder,
-  value,
-}: FilterSelectPropsI) {
+function FilterSelect({ label, onValueChange, options, placeholder, value }: FilterSelectPropsI) {
   return (
     <div className="grid gap-2 text-sm font-semibold">
       {label}
-      <Select
-        value={value}
-        onValueChange={(nextValue) => onValueChange(String(nextValue))}
-      >
+      <Select value={value} onValueChange={(nextValue) => onValueChange(String(nextValue))}>
         <SelectTrigger className="h-10 w-full">
           <SelectValue placeholder={placeholder} />
         </SelectTrigger>
@@ -138,11 +129,7 @@ export function DashboardFilters({ section }: DashboardFiltersPropsI) {
 
       <div className="grid gap-2 text-sm font-semibold">
         Skills
-        <MultiTextInput
-          value={skills}
-          placeholder="React"
-          onValueChange={setSkills}
-        />
+        <MultiTextInput value={skills} placeholder="React" onValueChange={setSkills} />
       </div>
     </div>
   );

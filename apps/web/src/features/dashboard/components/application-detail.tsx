@@ -24,9 +24,7 @@ const formatOptionLabel = (value: string) =>
 function DetailItem({ label, value }: { label: string; value: React.ReactNode }) {
   return (
     <div>
-      <dt className="text-xs font-semibold text-muted-foreground uppercase">
-        {label}
-      </dt>
+      <dt className="text-xs font-semibold text-muted-foreground uppercase">{label}</dt>
       <dd className="mt-1 text-sm font-medium">{value}</dd>
     </div>
   );
@@ -42,12 +40,7 @@ export function ApplicationDetail({
   return (
     <div className="py-5">
       <div className="border-b pb-5">
-        <Button
-          type="button"
-          variant="ghost"
-          className="-ml-2 mb-3 w-fit"
-          onClick={onBack}
-        >
+        <Button type="button" variant="ghost" className="-ml-2 mb-3 w-fit" onClick={onBack}>
           <ArrowLeft className="size-4" />
           Applications
         </Button>
@@ -57,9 +50,7 @@ export function ApplicationDetail({
               {application.candidate.slice(0, 1)}
             </div>
             <div className="min-w-0">
-              <h1 className="text-2xl font-semibold leading-tight">
-                {application.candidate}
-              </h1>
+              <h1 className="text-2xl font-semibold leading-tight">{application.candidate}</h1>
               <p className="mt-1 text-sm text-muted-foreground">
                 {jobTitle} at {company} • {formatOptionLabel(application.status)}
               </p>
@@ -82,26 +73,17 @@ export function ApplicationDetail({
         <dl className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
           <DetailItem label="Education" value={application.education} />
           <DetailItem label="Phone" value={application.phone} />
-          <DetailItem
-            label="Experience"
-            value={`${application.yearsOfExperience} years`}
-          />
+          <DetailItem label="Experience" value={`${application.yearsOfExperience} years`} />
           <DetailItem
             label="Current company"
             value={application.currentCompany ?? "Not provided"}
           />
-          <DetailItem
-            label="Current role"
-            value={application.currentRole ?? "Not provided"}
-          />
+          <DetailItem label="Current role" value={application.currentRole ?? "Not provided"} />
           <DetailItem
             label="Expected salary"
             value={`₹${application.expectedSalary.toLocaleString("en-IN")}`}
           />
-          <DetailItem
-            label="Notice period"
-            value={`${application.noticePeriodDays} days`}
-          />
+          <DetailItem label="Notice period" value={`${application.noticePeriodDays} days`} />
           <DetailItem label="Applied" value={application.appliedAt} />
         </dl>
 

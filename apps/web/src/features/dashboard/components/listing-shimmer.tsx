@@ -16,10 +16,7 @@ function ShimmerBlock({ className }: { className: string }) {
   );
 }
 
-export function ListingShimmer({
-  count = 6,
-  showAction = true,
-}: ListingShimmerPropsI) {
+export function ListingShimmer({ count = 6, showAction = true }: ListingShimmerPropsI) {
   return (
     <div className="divide-y">
       {Array.from({ length: count }).map((_, index) => (

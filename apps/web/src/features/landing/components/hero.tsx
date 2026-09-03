@@ -1,30 +1,24 @@
-import { ArrowRight, Briefcase, MapPin, Search, Sparkles } from 'lucide-react'
+import { ArrowRight, Briefcase, MapPin, Search, Sparkles } from "lucide-react";
 
-import { Button } from '@/components/ui/button'
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card'
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 
 const productSteps = [
   {
-    title: 'Build your profile',
-    description: 'Add your skills, and experience once.',
+    title: "Build your profile",
+    description: "Add your skills, and experience once.",
   },
   {
-    title: 'Apply to roles',
-    description: 'Find open listings that fit and apply in a click.',
+    title: "Apply to roles",
+    description: "Find open listings that fit and apply in a click.",
   },
   {
-    title: 'Wait for shortlisting',
+    title: "Wait for shortlisting",
     description: "We'll reach out to you when we think you're a good fit.",
   },
-]
+];
 
-const tags = ['Remote', 'Full-time', 'Posted 2 days ago']
+const tags = ["Remote", "Full-time", "Posted 2 days ago"];
 
 export function Hero() {
   return (
@@ -43,9 +37,8 @@ export function Hero() {
               Find a job you're actually excited to start.
             </h1>
             <p className="max-w-xl text-lg leading-8 text-muted-foreground">
-              Browse open roles from verified companies, apply in a few
-              clicks, and keep track of every application from one
-              dashboard.
+              Browse open roles from verified companies, apply in a few clicks, and keep track of
+              every application from one dashboard.
             </p>
           </div>
 
@@ -64,9 +57,7 @@ export function Hero() {
         <Card className="w-full max-w-2xl border-2 bg-background/95 shadow-2xl shadow-black/5">
           <CardHeader className="space-y-1.5 border-b pb-6">
             <CardTitle className="text-2xl">Open positions</CardTitle>
-            <CardDescription>
-              A live look at roles you can apply to right now.
-            </CardDescription>
+            <CardDescription>A live look at roles you can apply to right now.</CardDescription>
           </CardHeader>
 
           <CardContent className="space-y-6 p-6">
@@ -110,12 +101,8 @@ export function Hero() {
                     {index + 1}
                   </span>
                   <div className="space-y-0.5">
-                    <p className="text-sm font-medium leading-snug">
-                      {step.title}
-                    </p>
-                    <p className="text-sm leading-snug text-muted-foreground">
-                      {step.description}
-                    </p>
+                    <p className="text-sm font-medium leading-snug">{step.title}</p>
+                    <p className="text-sm leading-snug text-muted-foreground">{step.description}</p>
                   </div>
                 </div>
               ))}
@@ -124,5 +111,5 @@ export function Hero() {
         </Card>
       </div>
     </section>
-  )
+  );
 }

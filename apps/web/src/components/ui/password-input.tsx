@@ -6,10 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 
-function PasswordInput({
-  className,
-  ...props
-}: Omit<React.ComponentProps<"input">, "type">) {
+function PasswordInput({ className, ...props }: Omit<React.ComponentProps<"input">, "type">) {
   const [showPassword, setShowPassword] = useState(false);
 
   return (
@@ -27,11 +24,7 @@ function PasswordInput({
         aria-label={showPassword ? "Hide password" : "Show password"}
         onClick={() => setShowPassword((value) => !value)}
       >
-        {showPassword ? (
-          <EyeOff className="size-4" />
-        ) : (
-          <Eye className="size-4" />
-        )}
+        {showPassword ? <EyeOff className="size-4" /> : <Eye className="size-4" />}
       </Button>
     </div>
   );

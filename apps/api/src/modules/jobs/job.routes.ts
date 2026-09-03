@@ -20,12 +20,7 @@ const router = Router();
 router.get("/", listJobsController);
 router.get("/featured", listFeaturedJobsController);
 router.get("/categories", listJobCategoriesController);
-router.post(
-  "/:jobId/apply",
-  authenticate,
-  requireRole("USER"),
-  applyToJobController,
-);
+router.post("/:jobId/apply", authenticate, requireRole("USER"), applyToJobController);
 router.get(
   "/:jobId/applications",
   authenticate,

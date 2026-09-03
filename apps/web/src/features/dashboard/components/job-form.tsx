@@ -58,15 +58,8 @@ function JobSelect({
   return (
     <label className="grid gap-2 text-sm font-medium">
       {label}
-      <Select
-        value={value}
-        onValueChange={(nextValue) => onValueChange(String(nextValue))}
-      >
-        <SelectTrigger
-          className="h-9 w-full"
-          aria-invalid={Boolean(error)}
-          onBlur={onBlur}
-        >
+      <Select value={value} onValueChange={(nextValue) => onValueChange(String(nextValue))}>
+        <SelectTrigger className="h-9 w-full" aria-invalid={Boolean(error)} onBlur={onBlur}>
           <SelectValue placeholder={placeholder} />
         </SelectTrigger>
         <SelectContent>
@@ -99,12 +92,7 @@ export function JobForm({ job, mode, onCancel }: JobFormPropsI) {
   return (
     <div className="py-5">
       <div className="border-b pb-5">
-        <Button
-          type="button"
-          variant="ghost"
-          className="-ml-2 mb-3 w-fit"
-          onClick={onCancel}
-        >
+        <Button type="button" variant="ghost" className="-ml-2 mb-3 w-fit" onClick={onCancel}>
           <ArrowLeft className="size-4" />
           All jobs
         </Button>
@@ -116,11 +104,7 @@ export function JobForm({ job, mode, onCancel }: JobFormPropsI) {
         </p>
       </div>
 
-      <form
-        className="grid gap-6 py-6"
-        onSubmit={handleSubmit(onSubmit)}
-        noValidate
-      >
+      <form className="grid gap-6 py-6" onSubmit={handleSubmit(onSubmit)} noValidate>
         <div className="grid gap-5 md:grid-cols-2">
           <label className="grid gap-2 text-sm font-medium" htmlFor="title">
             Job title

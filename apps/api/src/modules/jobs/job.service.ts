@@ -9,11 +9,7 @@ import {
   findPublishedJobById,
   updateJob,
 } from "./job.repository";
-import type {
-  CreateJobInputI,
-  ListJobsQueryI,
-  UpdateJobInputI,
-} from "./job.types";
+import type { CreateJobInputI, ListJobsQueryI, UpdateJobInputI } from "./job.types";
 import {
   createJobSchema,
   featuredJobsQuerySchema,
@@ -27,14 +23,10 @@ export class JobQueryValidationError extends Error {}
 export class JobNotFoundError extends Error {}
 
 const parseJobSchema = <Output>(parser: () => Output) =>
-  parseWithZodValidation(
-    parser,
-    (message) => new JobQueryValidationError(message),
-    {
-      fallbackMessage: "Invalid jobs request",
-      fallbackPath: "job",
-    },
-  );
+  parseWithZodValidation(parser, (message) => new JobQueryValidationError(message), {
+    fallbackMessage: "Invalid jobs request",
+    fallbackPath: "job",
+  });
 
 export function parseListJobsQuery(query: Record<string, unknown>): ListJobsQueryI {
   return parseJobSchema(() => listJobsQuerySchema.parse(query));
@@ -103,10 +95,7 @@ function parseUpdateJobBody(body: unknown): UpdateJobInputI {
 
 export async function listJobs(query: Record<string, unknown>) {
   const parsedQuery = parseListJobsQuery(query);
-  const [jobs, countResult] = await Promise.all([
-    findJobs(parsedQuery),
-    countJobs(parsedQuery),
-  ]);
+  const [jobs, countResult] = await Promise.all([findJobs(parsedQuery), countJobs(parsedQuery)]);
   const total = countResult.total;
 
   return {
@@ -139,8 +128,7 @@ export async function listJobCategories() {
         count: category.count,
       }))
       .sort(
-        (left, right) =>
-          right.count - left.count || left.category.localeCompare(right.category),
+        (left, right) => right.count - left.count || left.category.localeCompare(right.category),
       ),
   };
 }
@@ -162,10 +150,7 @@ export async function createAdminJob(body: unknown) {
   return await createJob(parsedBody);
 }
 
-export async function updateAdminJob(
-  params: Record<string, unknown>,
-  body: unknown,
-) {
+export async function updateAdminJob(params: Record<string, unknown>, body: unknown) {
   const id = parseJobId(params);
   const existingJob = await findJobById(id);
 

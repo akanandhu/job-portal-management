@@ -6,5 +6,5 @@ export function BrandLogo() {
       </span>
       Jobs
     </a>
-  )
+  );
 }

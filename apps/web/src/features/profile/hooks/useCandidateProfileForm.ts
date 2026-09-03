@@ -1,9 +1,6 @@
 import type { CandidateProfileFormValuesI } from "@/types/profile";
 import { zodResolver } from "@hookform/resolvers/zod";
-import {
-  candidateProfileSchema,
-  type CandidateProfileInputI,
-} from "@job-portal/contracts";
+import { candidateProfileSchema, type CandidateProfileInputI } from "@job-portal/contracts";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router";
 
@@ -64,7 +61,7 @@ const useCandidateProfileForm = ({
     errors,
     handleProfileSubmit,
     onBack,
-    emptyToNull
+    emptyToNull,
   };
 };
 

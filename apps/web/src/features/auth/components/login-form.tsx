@@ -1,11 +1,5 @@
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardHeader,
-  CardTitle,
-  CardContent,
-  CardDescription,
-} from "@/components/ui/card";
+import { Card, CardHeader, CardTitle, CardContent, CardDescription } from "@/components/ui/card";
 import ErrorBox from "@/components/ui/error-box";
 import { Input } from "@/components/ui/input";
 import { PasswordInput } from "@/components/ui/password-input";
@@ -32,11 +26,7 @@ const LoginForm = () => {
         <CardDescription>Sign in to continue to your account.</CardDescription>
       </CardHeader>
       <CardContent>
-        <form
-          className="grid gap-5"
-          onSubmit={handleSubmit(onSubmit)}
-          noValidate
-        >
+        <form className="grid gap-5" onSubmit={handleSubmit(onSubmit)} noValidate>
           <label className="grid gap-2 text-sm font-medium" htmlFor="email">
             Email
             <Input
@@ -74,10 +64,7 @@ const LoginForm = () => {
         </form>
         <p className="mt-6 text-center text-sm text-muted-foreground">
           Don&apos;t have an account?{" "}
-          <Link
-            className="font-medium text-foreground underline underline-offset-4"
-            to="/register"
-          >
+          <Link className="font-medium text-foreground underline underline-offset-4" to="/register">
             Create one
           </Link>
         </p>

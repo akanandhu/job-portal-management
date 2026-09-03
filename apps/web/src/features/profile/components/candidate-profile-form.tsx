@@ -1,11 +1,5 @@
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import ErrorBox from "@/components/ui/error-box";
 import { Input } from "@/components/ui/input";
 import { MultiTextInput } from "@/components/ui/multi-text-input";
@@ -19,27 +13,18 @@ export function CandidateProfileForm({
   onCancel,
   onSubmit,
 }: CandidateProfileFormPropsI) {
-  const {
-    control,
-    errors,
-    register,
-    handleSubmit,
-    handleProfileSubmit,
-    onBack,
-    emptyToNull
-  } = useCandidateProfileForm({
-    initialValues,
-    onCancel,
-    onSubmit,
-  });
+  const { control, errors, register, handleSubmit, handleProfileSubmit, onBack, emptyToNull } =
+    useCandidateProfileForm({
+      initialValues,
+      onCancel,
+      onSubmit,
+    });
 
   return (
     <Card>
       <CardHeader>
         <CardTitle>
-          {mode === "edit"
-            ? "Edit candidate profile"
-            : "Complete your candidate profile"}
+          {mode === "edit" ? "Edit candidate profile" : "Complete your candidate profile"}
         </CardTitle>
         <CardDescription>
           {mode === "edit"
@@ -48,11 +33,7 @@ export function CandidateProfileForm({
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <form
-          className="grid gap-6"
-          onSubmit={handleSubmit(handleProfileSubmit)}
-          noValidate
-        >
+        <form className="grid gap-6" onSubmit={handleSubmit(handleProfileSubmit)} noValidate>
           <div className="grid gap-5 md:grid-cols-2">
             <label className="grid gap-2 text-sm font-medium" htmlFor="phone">
               Phone
@@ -66,10 +47,7 @@ export function CandidateProfileForm({
               <ErrorBox message={errors.phone?.message} />
             </label>
 
-            <label
-              className="grid gap-2 text-sm font-medium"
-              htmlFor="education"
-            >
+            <label className="grid gap-2 text-sm font-medium" htmlFor="education">
               Highest education
               <Input
                 id="education"
@@ -80,10 +58,7 @@ export function CandidateProfileForm({
               <ErrorBox message={errors.education?.message} />
             </label>
 
-            <label
-              className="grid gap-2 text-sm font-medium"
-              htmlFor="yearsOfExperience"
-            >
+            <label className="grid gap-2 text-sm font-medium" htmlFor="yearsOfExperience">
               Years of experience
               <Input
                 id="yearsOfExperience"
@@ -98,10 +73,7 @@ export function CandidateProfileForm({
               <ErrorBox message={errors.yearsOfExperience?.message} />
             </label>
 
-            <label
-              className="grid gap-2 text-sm font-medium"
-              htmlFor="expectedSalary"
-            >
+            <label className="grid gap-2 text-sm font-medium" htmlFor="expectedSalary">
               Expected salary
               <Input
                 id="expectedSalary"
@@ -116,10 +88,7 @@ export function CandidateProfileForm({
               <ErrorBox message={errors.expectedSalary?.message} />
             </label>
 
-            <label
-              className="grid gap-2 text-sm font-medium"
-              htmlFor="currentCompany"
-            >
+            <label className="grid gap-2 text-sm font-medium" htmlFor="currentCompany">
               Current company
               <Input
                 id="currentCompany"
@@ -130,10 +99,7 @@ export function CandidateProfileForm({
               <ErrorBox message={errors.currentCompany?.message} />
             </label>
 
-            <label
-              className="grid gap-2 text-sm font-medium"
-              htmlFor="currentRole"
-            >
+            <label className="grid gap-2 text-sm font-medium" htmlFor="currentRole">
               Current role
               <Input
                 id="currentRole"
@@ -144,10 +110,7 @@ export function CandidateProfileForm({
               <ErrorBox message={errors.currentRole?.message} />
             </label>
 
-            <label
-              className="grid gap-2 text-sm font-medium"
-              htmlFor="noticePeriodDays"
-            >
+            <label className="grid gap-2 text-sm font-medium" htmlFor="noticePeriodDays">
               Notice period
               <Input
                 id="noticePeriodDays"

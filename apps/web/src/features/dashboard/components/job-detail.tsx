@@ -19,20 +19,14 @@ export function JobDetail({
   profileHref,
   onViewApplication,
 }: JobDetailPropsI) {
-  const { page, totalPages, visibleApplications, applicationsPerPage, setPage } =
-    useJobDetail({
-      applications,
-    });
+  const { page, totalPages, visibleApplications, applicationsPerPage, setPage } = useJobDetail({
+    applications,
+  });
 
   return (
     <div className="py-5">
       <div className="border-b pb-5">
-        <Button
-          type="button"
-          variant="ghost"
-          className="-ml-2 mb-3 w-fit"
-          onClick={onBack}
-        >
+        <Button type="button" variant="ghost" className="-ml-2 mb-3 w-fit" onClick={onBack}>
           <ArrowLeft className="size-4" />
           All jobs
         </Button>
@@ -42,9 +36,7 @@ export function JobDetail({
               {job.logo}
             </div>
             <div className="min-w-0">
-              <h1 className="text-2xl font-semibold leading-tight">
-                {job.title}
-              </h1>
+              <h1 className="text-2xl font-semibold leading-tight">{job.title}</h1>
               <p className="mt-1 text-sm text-muted-foreground">
                 {job.company} • {job.location}
               </p>
@@ -77,29 +69,15 @@ export function JobDetail({
       <section className="grid gap-5 border-b py-6">
         <div>
           <h2 className="text-base font-semibold">Job details</h2>
-          <p className="mt-2 text-sm leading-6 text-muted-foreground">
-            {job.description}
-          </p>
+          <p className="mt-2 text-sm leading-6 text-muted-foreground">{job.description}</p>
         </div>
 
         <dl className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-          <DetailItem
-            label="Category"
-            value={formatOptionLabel(job.category)}
-          />
-          <DetailItem
-            label="Experience"
-            value={formatOptionLabel(job.experienceLevel)}
-          />
-          <DetailItem
-            label="Workplace"
-            value={formatOptionLabel(job.workplaceType)}
-          />
+          <DetailItem label="Category" value={formatOptionLabel(job.category)} />
+          <DetailItem label="Experience" value={formatOptionLabel(job.experienceLevel)} />
+          <DetailItem label="Workplace" value={formatOptionLabel(job.workplaceType)} />
           <DetailItem label="Status" value={formatOptionLabel(job.status)} />
-          <DetailItem
-            label="Featured"
-            value={job.isFeatured ? "Featured" : "Not featured"}
-          />
+          <DetailItem label="Featured" value={job.isFeatured ? "Featured" : "Not featured"} />
           <DetailItem label="Applications" value={job.applicationsCount} />
           <DetailItem label="Posted" value={job.postedAt} />
         </dl>
@@ -150,9 +128,8 @@ export function JobDetail({
                             {application.candidate}
                           </h3>
                           <p className="mt-1 text-sm text-muted-foreground">
-                            {application.yearsOfExperience} years •{" "}
-                            {application.education} • Expected ₹
-                            {application.expectedSalary.toLocaleString("en-IN")}
+                            {application.yearsOfExperience} years • {application.education} •
+                            Expected ₹{application.expectedSalary.toLocaleString("en-IN")}
                           </p>
                           <p className="mt-1 text-xs text-muted-foreground md:hidden">
                             {application.appliedAt}
@@ -220,9 +197,7 @@ export function JobDetail({
                     type="button"
                     variant="outline"
                     disabled={page === totalPages}
-                    onClick={() =>
-                      setPage((value) => Math.min(totalPages, value + 1))
-                    }
+                    onClick={() => setPage((value) => Math.min(totalPages, value + 1))}
                   >
                     Next
                   </Button>

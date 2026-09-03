@@ -63,10 +63,7 @@ export function JobList({
               </div>
               <div className="min-w-0 flex-1">
                 <h2 className="truncate text-base font-semibold">
-                  {job.title}{" "}
-                  <span className="font-normal text-foreground">
-                    at {job.company}
-                  </span>
+                  {job.title} <span className="font-normal text-foreground">at {job.company}</span>
                 </h2>
                 <p className="mt-1 text-sm text-muted-foreground break-words">
                   {formatOptionLabel(job.workplaceType)} ({job.location}) •{" "}

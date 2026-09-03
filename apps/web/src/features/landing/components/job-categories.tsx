@@ -1,21 +1,15 @@
-import { ArrowRight } from 'lucide-react'
+import { ArrowRight } from "lucide-react";
 
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 
 const categories = [
-  { name: 'Engineering', open: '428 roles', focus: 'Frontend, backend, infra' },
-  { name: 'Design', open: '164 roles', focus: 'Product, brand, systems' },
-  { name: 'Product', open: '219 roles', focus: 'PM, growth, strategy' },
-  { name: 'Marketing', open: '132 roles', focus: 'Content, lifecycle, demand' },
-  { name: 'Operations', open: '98 roles', focus: 'People, finance, talent' },
-  { name: 'Data', open: '145 roles', focus: 'Analytics, ML, research' },
-]
+  { name: "Engineering", open: "428 roles", focus: "Frontend, backend, infra" },
+  { name: "Design", open: "164 roles", focus: "Product, brand, systems" },
+  { name: "Product", open: "219 roles", focus: "PM, growth, strategy" },
+  { name: "Marketing", open: "132 roles", focus: "Content, lifecycle, demand" },
+  { name: "Operations", open: "98 roles", focus: "People, finance, talent" },
+  { name: "Data", open: "145 roles", focus: "Analytics, ML, research" },
+];
 
 export function JobCategories() {
   return (
@@ -27,8 +21,8 @@ export function JobCategories() {
             Browse by how teams hire
           </h2>
           <p className="text-muted-foreground">
-            Every category groups roles by craft, intent, and network signals so
-            candidates can move fast without sorting through generic listings.
+            Every category groups roles by craft, intent, and network signals so candidates can move
+            fast without sorting through generic listings.
           </p>
         </div>
 
@@ -40,9 +34,7 @@ export function JobCategories() {
                 <CardDescription>{category.focus}</CardDescription>
               </CardHeader>
               <CardContent className="flex items-center justify-between">
-                <span className="text-sm font-medium text-primary">
-                  {category.open}
-                </span>
+                <span className="text-sm font-medium text-primary">{category.open}</span>
                 <ArrowRight className="size-4 text-muted-foreground" />
               </CardContent>
             </Card>
@@ -50,5 +42,5 @@ export function JobCategories() {
         </div>
       </div>
     </section>
-  )
+  );
 }

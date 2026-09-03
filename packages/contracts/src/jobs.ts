@@ -26,9 +26,7 @@ const DEFAULT_FEATURED_LIMIT = 6;
 
 export const listJobsQuerySchema = z.object({
   page: positiveIntegerSchema(DEFAULT_PAGE),
-  limit: positiveIntegerSchema(DEFAULT_LIMIT).transform((limit) =>
-    Math.min(limit, MAX_LIMIT),
-  ),
+  limit: positiveIntegerSchema(DEFAULT_LIMIT).transform((limit) => Math.min(limit, MAX_LIMIT)),
   category: queryValueSchema(z.enum(jobCategories).optional()),
   experienceLevel: queryValueSchema(z.enum(experienceLevels).optional()),
 });

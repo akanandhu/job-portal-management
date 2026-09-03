@@ -7,10 +7,7 @@ import { AdminDashboardContent } from "@/features/dashboard/components/admin-das
 import { DashboardFilters } from "@/features/dashboard/components/dashboard-filters";
 import { DashboardShell } from "@/features/dashboard/components/dashboard-shell";
 import { DashboardTabs } from "@/features/dashboard/components/dashboard-tabs";
-import {
-  adminApplications,
-  adminJobs,
-} from "@/features/dashboard/data/dashboard-data";
+import { adminApplications, adminJobs } from "@/features/dashboard/data/dashboard-data";
 import {
   defaultApplicationTab,
   defaultJobTab,
@@ -33,9 +30,7 @@ export function AdminDashboard() {
   const [applications, setApplications] = useState(adminApplications);
   const [searchParams, setSearchParams] = useSearchParams();
   const sectionParam = searchParams.get("section") ?? defaultSection;
-  const activeNav = hasItem(navItems, sectionParam)
-    ? sectionParam
-    : defaultSection;
+  const activeNav = hasItem(navItems, sectionParam) ? sectionParam : defaultSection;
 
   const currentTabs = getDashboardTabs(activeNav);
   const defaultTab = getDefaultTab(activeNav);
@@ -177,15 +172,10 @@ export function AdminDashboard() {
     navigate("/login");
   };
 
-  const handleChangeApplicationStatus = (
-    applicationId: string,
-    status: ApplicationStatusI,
-  ) => {
+  const handleChangeApplicationStatus = (applicationId: string, status: ApplicationStatusI) => {
     setApplications((currentApplications) =>
       currentApplications.map((application) =>
-        application.id === applicationId
-          ? { ...application, status }
-          : application,
+        application.id === applicationId ? { ...application, status } : application,
       ),
     );
   };
@@ -207,11 +197,7 @@ export function AdminDashboard() {
       onNavChange={handleNavChange}
       showFilters={view.type.endsWith(".list")}
     >
-      <DashboardTabs
-        activeTab={activeTab}
-        tabs={currentTabs}
-        onTabChange={handleTabChange}
-      />
+      <DashboardTabs activeTab={activeTab} tabs={currentTabs} onTabChange={handleTabChange} />
       <AdminDashboardContent
         applications={applications}
         jobs={adminJobs}

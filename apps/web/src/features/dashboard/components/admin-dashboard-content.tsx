@@ -4,22 +4,14 @@ import { CandidateProfileEditor } from "@/features/dashboard/components/candidat
 import { JobDetail } from "@/features/dashboard/components/job-detail";
 import { JobForm } from "@/features/dashboard/components/job-form";
 import { JobList } from "@/features/dashboard/components/job-list";
-import type {
-  ApplicationStatusI,
-} from "@job-portal/contracts/applications";
-import type {
-  AdminApplicationI,
-  AdminJobI,
-} from "@/features/dashboard/data/dashboard-data";
+import type { ApplicationStatusI } from "@job-portal/contracts/applications";
+import type { AdminApplicationI, AdminJobI } from "@/features/dashboard/data/dashboard-data";
 import type { AdminDashboardViewI } from "@/features/dashboard/utils/admin-dashboard-view";
 
 type AdminDashboardContentPropsI = {
   applications: AdminApplicationI[];
   jobs: AdminJobI[];
-  onChangeApplicationStatus: (
-    applicationId: string,
-    status: ApplicationStatusI,
-  ) => void;
+  onChangeApplicationStatus: (applicationId: string, status: ApplicationStatusI) => void;
   onAddJob: () => void;
   onBackToApplications: () => void;
   onBackToApplicationDetail: (applicationId: string) => void;
@@ -49,9 +41,7 @@ export function AdminDashboardContent({
     case "jobs.detail":
       return (
         <JobDetail
-          applications={applications.filter(
-            (application) => application.jobId === view.job.id,
-          )}
+          applications={applications.filter((application) => application.jobId === view.job.id)}
           job={view.job}
           onBack={onBackToJobs}
           onChangeApplicationStatus={onChangeApplicationStatus}
@@ -62,22 +52,11 @@ export function AdminDashboardContent({
       );
 
     case "jobs.form":
-      return (
-        <JobForm
-          job={view.job}
-          mode={view.mode}
-          onCancel={onBackToJobs}
-        />
-      );
+      return <JobForm job={view.job} mode={view.mode} onCancel={onBackToJobs} />;
 
     case "jobs.list":
       return (
-        <JobList
-          jobs={jobs}
-          onAddJob={onAddJob}
-          onEditJob={onEditJob}
-          onViewJob={onViewJob}
-        />
+        <JobList jobs={jobs} onAddJob={onAddJob} onEditJob={onEditJob} onViewJob={onViewJob} />
       );
 
     case "applications.detail":
@@ -101,11 +80,7 @@ export function AdminDashboardContent({
           : undefined;
 
       return (
-        <CandidateProfileEditor
-          application={profileApplication}
-          job={profileJob}
-          onBack={onBack}
-        />
+        <CandidateProfileEditor application={profileApplication} job={profileJob} onBack={onBack} />
       );
     }
 
