@@ -1,26 +1,31 @@
+import type { CandidateProfileFormPropsI } from "@/types/profile";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import ErrorBox from "@/components/ui/error-box";
 import { Input } from "@/components/ui/input";
 import { MultiTextInput } from "@/components/ui/multi-text-input";
-import type { CandidateProfileFormPropsI } from "@/types/profile";
 import { Controller } from "react-hook-form";
 import useCandidateProfileForm from "../hooks/useCandidateProfileForm";
 
 export function CandidateProfileForm({
-  initialValues,
-  isSubmitting = false,
-  mode = "create",
+  mode = "edit",
   onCancel,
   onSubmit,
-  submitError,
 }: CandidateProfileFormPropsI) {
-  const { control, errors, register, handleSubmit, handleProfileSubmit, onBack } =
-    useCandidateProfileForm({
-      initialValues,
-      onCancel,
-      onSubmit,
-    });
+  const {
+    control,
+    errors,
+    register,
+    handleSubmit,
+    handleProfileSubmit,
+    isSubmitting,
+    onBack,
+    submitError,
+  } = useCandidateProfileForm({
+    mode,
+    onCancel,
+    onSubmit,
+  });
 
   return (
     <Card>

@@ -1,8 +1,12 @@
-import type { CandidateProfileFormValuesI } from "@/types/profile";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { candidateProfileSchema, type CandidateProfileInputI } from "@job-portal/contracts";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router";
+import toast from "react-hot-toast";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { candidateProfileSchema, type CandidateProfileInputI } from "@job-portal/contracts";
+import { getApiErrorMessage } from "@/services/api-error";
+import type { CandidateProfileFormModeI, CandidateProfileFormValuesI } from "@/types/profile";
+import { useGetCandidateProfileQuery, useSaveCandidateProfileMutation } from "../store/profile-api";
 
 const defaultValues: CandidateProfileFormValuesI = {
   phone: "",
@@ -15,44 +19,37 @@ const defaultValues: CandidateProfileFormValuesI = {
   skills: [],
 };
 
-const getFormValues = (
-  initialValues: CandidateProfileFormValuesI | undefined,
-): CandidateProfileFormValuesI => {
-  if (!initialValues) {
-    return defaultValues;
-  }
-
-  return {
-    ...initialValues,
-    currentCompany: initialValues.currentCompany ?? "",
-    currentRole: initialValues.currentRole ?? "",
-  };
-};
-
-const useCandidateProfileForm = ({
-  initialValues,
-  onCancel,
-  onSubmit,
-}: {
-  initialValues?: CandidateProfileFormValuesI;
+type UseCandidateProfileFormOptionsI = {
+  mode?: CandidateProfileFormModeI;
   onCancel?: () => void;
   onSubmit?: (values: CandidateProfileInputI) => Promise<void> | void;
-}) => {
+};
+
+export const useCandidateProfileForm = ({
+  mode = "edit",
+  onCancel,
+  onSubmit: externalOnSubmit,
+}: UseCandidateProfileFormOptionsI = {}) => {
+  const [submitError, setSubmitError] = useState<string>();
+  const [saveCandidateProfile, { isLoading }] = useSaveCandidateProfileMutation();
+
+  const candidateProfileQuery = useGetCandidateProfileQuery(undefined, {
+    skip: mode === "create",
+  });
+  const candidateProfile = candidateProfileQuery.data?.data;
+
   const {
     register,
     control,
     handleSubmit,
     formState: { errors },
+    setValue,
   } = useForm<CandidateProfileFormValuesI, unknown, CandidateProfileInputI>({
-    defaultValues: getFormValues(initialValues),
+    defaultValues,
     resolver: zodResolver(candidateProfileSchema),
   });
 
   const navigate = useNavigate();
-
-  const handleProfileSubmit = async (values: CandidateProfileInputI) => {
-    await onSubmit?.(values);
-  };
 
   const onBack = () => {
     if (onCancel) {
@@ -60,16 +57,52 @@ const useCandidateProfileForm = ({
       return;
     }
 
-    navigate("/register");
+    if (mode === "create") {
+      navigate("/");
+    } else {
+      navigate("/listing");
+    }
   };
 
+  const handleProfileSubmit = async (values: CandidateProfileInputI) => {
+    try {
+      setSubmitError(undefined);
+      if (externalOnSubmit) {
+        await externalOnSubmit(values);
+      } else {
+        await saveCandidateProfile(values).unwrap();
+        toast.success(mode === "create" ? "Profile created!" : "Profile updated!");
+        navigate("/listing", { replace: true });
+      }
+    } catch (error) {
+      setSubmitError(
+        getApiErrorMessage(error, "Failed to save profile. Check your details and try again."),
+      );
+    }
+  };
+
+  useEffect(() => {
+    if (mode === "edit" && candidateProfile) {
+      setValue("phone", candidateProfile.phone ?? "");
+      setValue("education", candidateProfile.education ?? "");
+      setValue("yearsOfExperience", candidateProfile.yearsOfExperience ?? 0);
+      setValue("currentCompany", candidateProfile.currentCompany ?? "");
+      setValue("currentRole", candidateProfile.currentRole ?? "");
+      setValue("expectedSalary", candidateProfile.expectedSalary ?? 0);
+      setValue("noticePeriodDays", candidateProfile.noticePeriodDays ?? 0);
+      setValue("skills", candidateProfile.skills ? [...candidateProfile.skills] : []);
+    }
+  }, [mode, candidateProfile, setValue]);
+
   return {
-    register,
     control,
-    handleSubmit,
     errors,
     handleProfileSubmit,
+    handleSubmit,
+    isSubmitting: isLoading,
     onBack,
+    register,
+    submitError,
   };
 };
 

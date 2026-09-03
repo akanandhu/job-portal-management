@@ -1,6 +1,6 @@
 import { ApplicationDetail } from "@/features/applications/components/application-detail";
 import { ApplicationList } from "@/features/applications/components/application-list";
-import { CandidateProfileEditor } from "@/features/dashboard/components/candidate-profile-editor";
+import { CandidateProfileEditor } from "@/features/profile/components/candidate-profile-editor";
 import { JobDetail } from "@/features/jobs/components/job-detail";
 import { JobList } from "@/features/jobs/components/job-list";
 import { formatOptionLabel } from "@/lib/utils";
