@@ -69,6 +69,7 @@ export function AdminDashboard() {
       jobId: undefined,
       applicationId: undefined,
       mode: undefined,
+      profileMode: undefined,
     });
   };
 
@@ -79,6 +80,7 @@ export function AdminDashboard() {
       jobId: undefined,
       applicationId: undefined,
       mode: undefined,
+      profileMode: undefined,
     });
   };
 
@@ -89,6 +91,7 @@ export function AdminDashboard() {
       mode: "add",
       jobId: undefined,
       applicationId: undefined,
+      profileMode: undefined,
     });
   };
 
@@ -99,6 +102,7 @@ export function AdminDashboard() {
       mode: "edit",
       jobId,
       applicationId: undefined,
+      profileMode: undefined,
     });
   };
 
@@ -109,6 +113,7 @@ export function AdminDashboard() {
       jobId,
       mode: undefined,
       applicationId: undefined,
+      profileMode: undefined,
     });
   };
 
@@ -119,6 +124,7 @@ export function AdminDashboard() {
       jobId: undefined,
       mode: undefined,
       applicationId: undefined,
+      profileMode: undefined,
     });
   };
 
@@ -129,6 +135,29 @@ export function AdminDashboard() {
       applicationId,
       jobId: undefined,
       mode: undefined,
+      profileMode: undefined,
+    });
+  };
+
+  const handleEditProfile = (applicationId: string) => {
+    updateParams({
+      section: "applications",
+      tab: activeTab,
+      applicationId,
+      jobId: undefined,
+      mode: undefined,
+      profileMode: "edit",
+    });
+  };
+
+  const handleBackToApplicationDetail = (applicationId: string) => {
+    updateParams({
+      section: "applications",
+      tab: activeTab,
+      applicationId,
+      jobId: undefined,
+      mode: undefined,
+      profileMode: undefined,
     });
   };
 
@@ -139,6 +168,7 @@ export function AdminDashboard() {
       applicationId: undefined,
       jobId: undefined,
       mode: undefined,
+      profileMode: undefined,
     });
   };
 
@@ -186,9 +216,11 @@ export function AdminDashboard() {
         jobs={adminJobs}
         onChangeApplicationStatus={handleChangeApplicationStatus}
         onAddJob={handleAddJob}
+        onBackToApplicationDetail={handleBackToApplicationDetail}
         onBackToApplications={handleBackToApplications}
         onBackToJobs={handleBackToJobs}
         onEditJob={handleEditJob}
+        onEditProfile={handleEditProfile}
         onViewApplication={handleViewApplication}
         onViewJob={handleViewJob}
         view={view}

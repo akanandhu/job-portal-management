@@ -9,14 +9,12 @@ import {
 import ErrorBox from "@/components/ui/error-box";
 import { Input } from "@/components/ui/input";
 import { MultiTextInput } from "@/components/ui/multi-text-input";
+import type { CandidateProfileFormPropsI, CandidateProfileFormValuesI } from "@/types/profile";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { candidateProfileSchema } from "@job-portal/contracts/profile";
 import type { CandidateProfileInputI } from "@job-portal/contracts/profile";
 import { Controller, useForm } from "react-hook-form";
 import { useNavigate } from "react-router";
-import type { z } from "zod";
-
-type CandidateProfileFormValuesI = z.input<typeof candidateProfileSchema>;
 
 const defaultValues: CandidateProfileFormValuesI = {
   phone: "",
@@ -34,37 +32,55 @@ const emptyToNull = (value: unknown) => {
   return trimmedValue ? trimmedValue : null;
 };
 
-export function CandidateProfileForm() {
+export function CandidateProfileForm({
+  initialValues,
+  mode = "create",
+  onCancel,
+  onSubmit,
+}: CandidateProfileFormPropsI) {
   const {
     register,
     control,
     handleSubmit,
     formState: { errors },
   } = useForm<CandidateProfileFormValuesI, unknown, CandidateProfileInputI>({
-    defaultValues,
+    defaultValues: initialValues ?? defaultValues,
     resolver: zodResolver(candidateProfileSchema),
   });
 
   const navigate = useNavigate();
 
-  const onSubmit = () => undefined;
+  const handleProfileSubmit = (values: CandidateProfileInputI) => {
+    onSubmit?.(values);
+  };
 
   const onBack = () => {
+    if (onCancel) {
+      onCancel();
+      return;
+    }
+
     navigate("/register");
   };
 
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Complete your candidate profile</CardTitle>
+        <CardTitle>
+          {mode === "edit"
+            ? "Edit candidate profile"
+            : "Complete your candidate profile"}
+        </CardTitle>
         <CardDescription>
-          Add the details recruiters need before you start applying.
+          {mode === "edit"
+            ? "Update the candidate details used for application review."
+            : "Add the details recruiters need before you start applying."}
         </CardDescription>
       </CardHeader>
       <CardContent>
         <form
           className="grid gap-6"
-          onSubmit={handleSubmit(onSubmit)}
+          onSubmit={handleSubmit(handleProfileSubmit)}
           noValidate
         >
           <div className="grid gap-5 md:grid-cols-2">
@@ -198,10 +214,10 @@ export function CandidateProfileForm() {
 
           <div className="flex flex-col gap-3 border-t pt-6 sm:flex-row sm:justify-end">
             <Button onClick={onBack} type="button" variant="outline" size="lg">
-              Back to Register
+              {mode === "edit" ? "Cancel" : "Back to Register"}
             </Button>
             <Button type="submit" size="lg">
-              Save profile
+              {mode === "edit" ? "Update profile" : "Save profile"}
             </Button>
           </div>
         </form>

@@ -1,4 +1,4 @@
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, Pencil } from "lucide-react";
 import type * as React from "react";
 import type { ApplicationStatusI } from "@job-portal/contracts/applications";
 
@@ -12,6 +12,7 @@ type ApplicationDetailPropsI = {
   jobTitle: string;
   onBack: () => void;
   onChangeStatus: (applicationId: string, status: ApplicationStatusI) => void;
+  onEditProfile: (applicationId: string) => void;
 };
 
 const formatOptionLabel = (value: string) =>
@@ -38,6 +39,7 @@ export function ApplicationDetail({
   jobTitle,
   onBack,
   onChangeStatus,
+  onEditProfile,
 }: ApplicationDetailPropsI) {
   return (
     <div className="py-5">
@@ -65,13 +67,24 @@ export function ApplicationDetail({
               </p>
             </div>
           </div>
-          <ApplicationStatusSelect
-            applicationId={application.id}
-            candidate={application.candidate}
-            className="sm:w-40"
-            value={application.status}
-            onChange={onChangeStatus}
-          />
+          <div className="flex w-full flex-col gap-2 sm:w-auto sm:flex-row sm:items-center">
+            <ApplicationStatusSelect
+              applicationId={application.id}
+              candidate={application.candidate}
+              className="sm:w-40"
+              value={application.status}
+              onChange={onChangeStatus}
+            />
+            <Button
+              type="button"
+              variant="outline"
+              className="w-full sm:w-fit"
+              onClick={() => onEditProfile(application.id)}
+            >
+              <Pencil className="size-4" />
+              Edit profile
+            </Button>
+          </div>
         </div>
       </div>
 
@@ -79,6 +92,7 @@ export function ApplicationDetail({
         <h2 className="text-base font-semibold">Candidate snapshot</h2>
         <dl className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
           <DetailItem label="Education" value={application.education} />
+          <DetailItem label="Phone" value={application.phone} />
           <DetailItem
             label="Experience"
             value={`${application.yearsOfExperience} years`}

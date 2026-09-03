@@ -14,6 +14,7 @@ export type AdminApplicationI = {
   jobId: string;
   status: ApplicationStatusI;
   appliedAt: string;
+  phone: string;
   yearsOfExperience: number;
   education: string;
   currentCompany: string | null;
@@ -135,6 +136,7 @@ const baseApplications: AdminApplicationI[] = [
     jobId: "2",
     status: "APPLIED",
     appliedAt: "Today",
+    phone: "+91 98765 43210",
     yearsOfExperience: 2,
     education: "B.Tech Computer Science",
     currentCompany: "Acme Labs",
@@ -149,6 +151,7 @@ const baseApplications: AdminApplicationI[] = [
     jobId: "1",
     status: "REVIEWING",
     appliedAt: "1d ago",
+    phone: "+91 98765 43211",
     yearsOfExperience: 3,
     education: "B.Des Interaction Design",
     currentCompany: "Studio Grid",
@@ -163,6 +166,7 @@ const baseApplications: AdminApplicationI[] = [
     jobId: "5",
     status: "APPLIED",
     appliedAt: "2d ago",
+    phone: "+91 98765 43212",
     yearsOfExperience: 1,
     education: "MCA",
     currentCompany: null,
@@ -204,6 +208,7 @@ const generatedApplications: AdminApplicationI[] = Array.from(
       jobId: "2",
       status: index % 4 === 0 ? "REVIEWING" : index % 5 === 0 ? "ACCEPTED" : "APPLIED",
       appliedAt: `${(index % 9) + 1}d ago`,
+      phone: `+91 90000 ${String(10000 + index)}`,
       yearsOfExperience: index % 8,
       education:
         index % 3 === 0

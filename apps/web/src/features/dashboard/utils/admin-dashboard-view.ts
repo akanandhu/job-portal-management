@@ -16,6 +16,11 @@ export type AdminDashboardViewI =
       type: "applications.detail";
       application: AdminApplicationI;
       job: AdminJobI;
+    }
+  | {
+      type: "candidate-profile.form";
+      application: AdminApplicationI;
+      job: AdminJobI;
     };
 
 type AdminDashboardViewParamsI = {
@@ -80,6 +85,10 @@ export function getAdminDashboardView({
   const job = jobs.find((item) => item.id === application?.jobId);
 
   if (application && job) {
+    if (searchParams.get("profileMode") === "edit") {
+      return { type: "candidate-profile.form", application, job };
+    }
+
     return { type: "applications.detail", application, job };
   }
 
