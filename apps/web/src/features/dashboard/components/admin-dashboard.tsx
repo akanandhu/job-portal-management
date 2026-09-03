@@ -44,13 +44,15 @@ export function AdminDashboard() {
       accountName={accountName}
       accountSubtitle={accountSubtitle}
       activeNav={activeNav}
+      header={
+        <DashboardTabs activeTab={activeTab} tabs={currentTabs} onTabChange={handleTabChange} />
+      }
       filters={<DashboardFilters section={activeNav} />}
       navItems={navItems}
       onLogout={handleLogout}
       onNavChange={handleNavChange}
       showFilters={view.type.endsWith(".list")}
     >
-      <DashboardTabs activeTab={activeTab} tabs={currentTabs} onTabChange={handleTabChange} />
       <AdminDashboardContent
         onChangeApplicationStatus={handleChangeApplicationStatus}
         onAddJob={handleAddJob}

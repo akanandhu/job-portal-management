@@ -14,6 +14,7 @@ export function DashboardShell({
   accountSubtitle = "TNP Portal",
   activeNav,
   children,
+  header,
   filters,
   navItems,
   onLogout,
@@ -101,32 +102,41 @@ export function DashboardShell({
           </div>
         </aside>
 
-        <section className="min-w-0 px-5 py-4 lg:h-svh lg:overflow-y-auto lg:px-8">
-          <div className="mb-3 flex items-center justify-between lg:hidden">
-            <Button
-              type="button"
-              variant="outline"
-              size="icon"
-              aria-label="Open sidebar"
-              onClick={() => setSidebarOpen(true)}
+        <section className="flex min-w-0 flex-col h-svh overflow-hidden lg:h-svh">
+          <header className="sticky top-0 z-10 shrink-0 bg-background/95 px-5 py-3 backdrop-blur-xs lg:px-8">
+            <div
+              className={cn(
+                "flex items-center justify-between",
+                header ? "mb-3 lg:hidden" : "lg:hidden",
+              )}
             >
-              <Menu className="size-4" />
-            </Button>
-            {showFilters ? (
               <Button
                 type="button"
                 variant="outline"
                 size="icon"
-                aria-label="Open filters"
-                onClick={() => setFiltersOpen(true)}
+                aria-label="Open sidebar"
+                onClick={() => setSidebarOpen(true)}
               >
-                <Filter className="size-4" />
+                <Menu className="size-4" />
               </Button>
-            ) : (
-              <span />
-            )}
-          </div>
-          {children}
+              {showFilters ? (
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="icon"
+                  aria-label="Open filters"
+                  onClick={() => setFiltersOpen(true)}
+                >
+                  <Filter className="size-4" />
+                </Button>
+              ) : (
+                <span />
+              )}
+            </div>
+            {header}
+          </header>
+
+          <div className="flex-1 min-h-0 overflow-y-auto px-5 py-4 lg:px-8">{children}</div>
         </section>
 
         {((filtersOpen && showFilters) || sidebarOpen) && (

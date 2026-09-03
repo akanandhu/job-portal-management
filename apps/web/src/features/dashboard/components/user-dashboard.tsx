@@ -67,13 +67,15 @@ export function UserDashboard() {
       accountName={accountName}
       accountSubtitle={accountSubtitle}
       activeNav={activeNav}
+      header={
+        <DashboardTabs activeTab={activeTab} tabs={currentTabs} onTabChange={handleTabChange} />
+      }
       filters={<DashboardFilters section={activeNav} />}
       navItems={navItems}
       onLogout={isAuthenticated ? handleLogout : undefined}
       onNavChange={handleNavChange}
       showFilters={showFilters}
     >
-      <DashboardTabs activeTab={activeTab} tabs={currentTabs} onTabChange={handleTabChange} />
       <UserDashboardContent
         activeTab={activeTab}
         isAuthenticated={isAuthenticated}

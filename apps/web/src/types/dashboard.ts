@@ -24,6 +24,7 @@ export type DashboardShellPropsI = {
   accountAction?: React.ReactNode;
   activeNav: string;
   children: React.ReactNode;
+  header?: React.ReactNode;
   filters: React.ReactNode;
   navItems: DashboardNavItemI[];
   onLogout?: () => void;
