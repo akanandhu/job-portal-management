@@ -12,7 +12,7 @@ export type ApplicationDataI = {
   currentRole?: string | null;
   expectedSalary?: number;
   noticePeriodDays?: number;
-  skills?: readonly string[];
+  skills?: string[];
   createdAt?: string;
   updatedAt?: string;
   candidate?:
@@ -35,7 +35,7 @@ export type ApplicationDataI = {
     currentRole?: string | null;
     expectedSalary?: number;
     noticePeriodDays?: number;
-    skills?: readonly string[];
+    skills?: string[];
   };
   job?: {
     id: string;

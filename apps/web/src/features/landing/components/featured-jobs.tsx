@@ -4,6 +4,7 @@ import { Link, useNavigate } from "react-router";
 import { useAppSelector } from "@/app/hook";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { ListStateCard } from "@/components/ui/list-state-card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useListFeaturedJobsQuery } from "@/features/jobs/store/jobs-api";
 import { selectFeaturedJobs } from "@/features/jobs/store/jobs-slice";
@@ -54,29 +55,23 @@ export function FeaturedJobs() {
 
       {/* Error state */}
       {isError && (
-        <Card className="border-destructive/30 bg-destructive/5 text-center p-8">
-          <CardHeader className="items-center">
-            <BriefcaseBusiness className="size-8 text-destructive mb-2" />
-            <CardTitle className="text-lg">Failed to load featured jobs</CardTitle>
-            <CardDescription>
-              {"data" in (error ?? {})
-                ? String((error as { data?: { message?: string } })?.data?.message)
-                : "Unable to connect to the jobs service."}
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <Button variant="outline" onClick={() => refetch()}>
-              Try again
-            </Button>
-          </CardContent>
-        </Card>
+        <ListStateCard
+          actionLabel="Try again"
+          description={
+            "data" in (error ?? {})
+              ? String((error as { data?: { message?: string } })?.data?.message)
+              : "Unable to connect to the jobs service."
+          }
+          onAction={() => refetch()}
+          title="Failed to load featured jobs"
+          variant="error"
+        />
       )}
 
       {/* Empty state */}
       {!isLoading && !isError && featuredJobs.length === 0 && (
         <Card className="bg-background p-8 text-center">
           <CardHeader className="items-center pb-2">
-            <BriefcaseBusiness className="size-8 text-muted-foreground mb-2" />
             <CardTitle className="text-lg">No featured jobs available</CardTitle>
             <CardDescription>Check back soon or explore all open job listings.</CardDescription>
           </CardHeader>

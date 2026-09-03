@@ -15,10 +15,8 @@ type ListStateCardPropsI = {
 };
 
 export function ListStateCard({
-  actionIcon: ActionIcon,
   actionLabel,
   description,
-  icon: Icon,
   onAction,
   title,
   variant = "empty",
@@ -33,15 +31,6 @@ export function ListStateCard({
       )}
     >
       <CardHeader className="items-center justify-center pb-2">
-        {Icon ? (
-          variant === "error" ? (
-            <Icon className="mb-2 size-8  text-destructive" />
-          ) : (
-            <div className="mb-2 flex size-12 items-center mx-auto justify-center rounded-full bg-muted/80">
-              <Icon className="size-6 text-muted-foreground" />
-            </div>
-          )
-        ) : null}
         <CardTitle className="text-lg font-semibold">{title}</CardTitle>
         <CardDescription className="max-w-md text-sm text-muted-foreground">
           {description}
@@ -50,7 +39,6 @@ export function ListStateCard({
       {onAction && actionLabel ? (
         <CardContent className="pt-3">
           <Button type="button" variant="outline" onClick={onAction}>
-            {ActionIcon ? <ActionIcon className="size-4" /> : null}
             {actionLabel}
           </Button>
         </CardContent>
