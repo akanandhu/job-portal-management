@@ -2,8 +2,8 @@ import { ChevronRight, ClipboardX, RotateCcw } from "lucide-react";
 import type { ApplicationStatusI } from "@job-portal/contracts/applications";
 
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { InfiniteScrollTrigger } from "@/components/ui/infinite-scroll-trigger";
+import { ListStateCard } from "@/components/ui/list-state-card";
 import { ListingShimmer } from "@/components/ui/shimmer";
 import { ApplicationStatusSelect } from "@/features/applications/components/application-status-select";
 import { useApplicationList } from "@/features/applications/hooks/useApplicationList";
@@ -61,42 +61,27 @@ export function ApplicationList({
       {isLoading ? (
         <ListingShimmer count={6} />
       ) : isError ? (
-        <Card className="border-destructive/30 bg-destructive/5 p-8 text-center">
-          <CardHeader className="items-center pb-2">
-            <ClipboardX className="mb-2 size-8 text-destructive" />
-            <CardTitle className="text-lg font-semibold">Failed to load applications</CardTitle>
-            <CardDescription className="max-w-md text-sm text-muted-foreground">
-              {errorMessage ?? "Unable to connect to the applications service."}
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="pt-3">
-            <Button type="button" variant="outline" onClick={onRetry}>
-              <RotateCcw className="size-4" />
-              Try again
-            </Button>
-          </CardContent>
-        </Card>
+        <ListStateCard
+          actionIcon={RotateCcw}
+          actionLabel="Try again"
+          description={errorMessage ?? "Unable to connect to the applications service."}
+          icon={ClipboardX}
+          onAction={onRetry}
+          title="Failed to load applications"
+          variant="error"
+        />
       ) : applications.length === 0 ? (
-        <Card className="border-dashed bg-muted/20 p-8 text-center">
-          <CardHeader className="items-center pb-2">
-            <div className="mb-2 flex size-12 items-center justify-center rounded-full bg-muted/80">
-              <ClipboardX className="size-6 text-muted-foreground" />
-            </div>
-            <CardTitle className="text-lg font-semibold">No applications found</CardTitle>
-            <CardDescription className="max-w-md text-sm text-muted-foreground">
-              {hasActiveFilters
-                ? "No applications matched your current filter criteria. Try adjusting or clearing your filters."
-                : emptyMessage}
-            </CardDescription>
-          </CardHeader>
-          {hasActiveFilters && (
-            <CardContent className="pt-3">
-              <Button type="button" variant="outline" onClick={onClearFilters}>
-                Clear filters
-              </Button>
-            </CardContent>
-          )}
-        </Card>
+        <ListStateCard
+          actionLabel={hasActiveFilters ? "Clear filters" : undefined}
+          description={
+            hasActiveFilters
+              ? "No applications matched your current filter criteria. Try adjusting or clearing your filters."
+              : emptyMessage
+          }
+          icon={ClipboardX}
+          onAction={hasActiveFilters ? onClearFilters : undefined}
+          title="No applications found"
+        />
       ) : (
         <>
           <div className="divide-y">

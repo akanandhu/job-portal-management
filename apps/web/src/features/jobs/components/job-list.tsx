@@ -1,13 +1,12 @@
-import { BriefcaseBusiness, Pencil, Plus } from "lucide-react";
+import { BriefcaseBusiness, Pencil, Plus, RotateCcw } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { InfiniteScrollTrigger } from "@/components/ui/infinite-scroll-trigger";
+import { ListStateCard } from "@/components/ui/list-state-card";
 import { ListingShimmer } from "@/components/ui/shimmer";
 import { useJobList } from "@/features/jobs/hooks/useJobList";
 import { useInfiniteScroll } from "@/hooks/use-infinite-scroll";
 import { formatOptionLabel } from "@/lib/utils";
 import type { JobStatusI } from "@job-portal/contracts/jobs";
-import JobListErrorCard from "./job-list-error-card";
-import JobListEmptyCard from "./job-list-empty-card";
 
 type JobListPropsI = {
   description?: string;
@@ -67,9 +66,27 @@ export function JobList({
       {isLoading ? (
         <ListingShimmer count={6} />
       ) : isError ? (
-        <JobListErrorCard errorMessage={errorMessage} onRetry={onRetry} />
+        <ListStateCard
+          actionIcon={RotateCcw}
+          actionLabel="Try again"
+          description={errorMessage ?? "Unable to connect to the jobs service."}
+          icon={BriefcaseBusiness}
+          onAction={onRetry}
+          title="Failed to load jobs"
+          variant="error"
+        />
       ) : jobs.length === 0 ? (
-        <JobListEmptyCard hasActiveFilters={hasActiveFilters} onClearFilters={onClearFilters} />
+        <ListStateCard
+          actionLabel={hasActiveFilters ? "Clear filters" : undefined}
+          description={
+            hasActiveFilters
+              ? "No job listings matched your active filter criteria. Try adjusting or clearing your filters."
+              : "There are currently no job postings available in this view."
+          }
+          icon={BriefcaseBusiness}
+          onAction={hasActiveFilters ? onClearFilters : undefined}
+          title="No jobs found"
+        />
       ) : (
         <>
           <div className="divide-y">
