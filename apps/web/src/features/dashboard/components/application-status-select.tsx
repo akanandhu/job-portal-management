@@ -10,8 +10,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { formatOptionLabel } from "@/features/dashboard/utils/admin-dashboard-view";
-import { cn } from "@/lib/utils";
+import { cn, formatOptionLabel } from "@/lib/utils";
 
 type ApplicationStatusSelectPropsI = {
   applicationId: string;

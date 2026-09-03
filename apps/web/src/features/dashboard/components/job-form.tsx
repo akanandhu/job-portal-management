@@ -23,8 +23,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import type { AdminJobI } from "@/features/dashboard/data/dashboard-data";
-import { formatOptionLabel } from "@/features/dashboard/utils/admin-dashboard-view";
-import { cn } from "@/lib/utils";
+import { cn, formatOptionLabel } from "@/lib/utils";
 import type { JobFormPropsI, JobSelectPropsI } from "@/types/jobs";
 
 export type JobFormValuesI = z.input<typeof createJobSchema>;

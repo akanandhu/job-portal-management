@@ -1,9 +1,11 @@
 import { useLogoutMutation } from "@/features/auth/store/auth-api";
 import { useState } from "react";
 import { useNavigate, useSearchParams } from "react-router";
+import { useAppSelector } from "@/app/hook";
+import { selectCurrentUser } from "@/features/auth/store/auth-selectors";
+import { getNameInitial } from "@/lib/utils";
 import { adminApplications, adminJobs } from "../data/dashboard-data";
 import {
-  defaultApplicationTab,
   defaultJobTab,
   defaultSection,
   getAdminDashboardView,
@@ -13,12 +15,11 @@ import {
 } from "../utils/admin-dashboard-view";
 import type { ApplicationStatusI } from "@job-portal/contracts";
 import type { DashboardNavItemI } from "@/types/dashboard";
-import { BriefcaseBusiness, ClipboardList, UserRoundPen } from "lucide-react";
+import { BriefcaseBusiness, ClipboardList } from "lucide-react";
 
 const navItems: DashboardNavItemI[] = [
   { id: "jobs", label: "Jobs", icon: BriefcaseBusiness },
   { id: "applications", label: "Applications", icon: ClipboardList },
-  { id: "profile", label: "Candidate Profile", icon: UserRoundPen },
 ];
 
 const useAdminDashboard = () => {
@@ -26,6 +27,7 @@ const useAdminDashboard = () => {
   const [logout] = useLogoutMutation();
   const [applications, setApplications] = useState(adminApplications);
   const [searchParams, setSearchParams] = useSearchParams();
+  const currentUser = useAppSelector(selectCurrentUser);
   const sectionParam = searchParams.get("section") ?? defaultSection;
   const activeNav = hasItem(navItems, sectionParam) ? sectionParam : defaultSection;
 
@@ -62,7 +64,6 @@ const useAdminDashboard = () => {
       jobId: undefined,
       applicationId: undefined,
       mode: undefined,
-      profileMode: undefined,
     });
   };
 
@@ -73,7 +74,6 @@ const useAdminDashboard = () => {
       jobId: undefined,
       applicationId: undefined,
       mode: undefined,
-      profileMode: undefined,
     });
   };
 
@@ -84,7 +84,6 @@ const useAdminDashboard = () => {
       mode: "add",
       jobId: undefined,
       applicationId: undefined,
-      profileMode: undefined,
     });
   };
 
@@ -95,51 +94,46 @@ const useAdminDashboard = () => {
       mode: "edit",
       jobId,
       applicationId: undefined,
-      profileMode: undefined,
     });
   };
 
   const handleViewJob = (jobId: string) => {
     updateParams({
       section: "jobs",
-      tab: defaultJobTab,
+      tab: activeTab,
       jobId,
       mode: undefined,
       applicationId: undefined,
-      profileMode: undefined,
     });
   };
 
   const handleBackToJobDetail = (jobId: string) => {
     updateParams({
       section: "jobs",
-      tab: defaultJobTab,
+      tab: activeTab,
       jobId,
       mode: undefined,
       applicationId: undefined,
-      profileMode: undefined,
     });
   };
 
   const handleBackToJobs = () => {
     updateParams({
       section: "jobs",
-      tab: defaultJobTab,
+      tab: activeTab,
       jobId: undefined,
       mode: undefined,
       applicationId: undefined,
-      profileMode: undefined,
     });
   };
 
   const handleViewApplication = (applicationId: string) => {
     updateParams({
       section: "applications",
-      tab: defaultApplicationTab,
+      tab: activeTab,
       applicationId,
       jobId: undefined,
       mode: undefined,
-      profileMode: undefined,
     });
   };
 
@@ -150,7 +144,6 @@ const useAdminDashboard = () => {
       applicationId,
       jobId: undefined,
       mode: undefined,
-      profileMode: undefined,
     });
   };
 
@@ -161,7 +154,6 @@ const useAdminDashboard = () => {
       applicationId: undefined,
       jobId: undefined,
       mode: undefined,
-      profileMode: undefined,
     });
   };
 
@@ -183,6 +175,9 @@ const useAdminDashboard = () => {
   };
 
   return {
+    accountInitial: getNameInitial(currentUser?.name, "A"),
+    accountName: currentUser?.name ?? "Admin",
+    accountSubtitle: "Admin",
     activeNav,
     activeTab,
     applications,

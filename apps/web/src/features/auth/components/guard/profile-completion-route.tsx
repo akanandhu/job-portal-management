@@ -15,7 +15,7 @@ export function ProfileCompletionRoute({ children }: ProfileCompletionRouteProps
   }
 
   if (data?.data) {
-    return <Navigate to="/listings" replace />;
+    return <Navigate to="/listing" replace />;
   }
 
   return children;

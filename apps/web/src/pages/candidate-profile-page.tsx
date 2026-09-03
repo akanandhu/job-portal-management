@@ -15,12 +15,16 @@ const CandidateProfilePage = () => {
     try {
       setSubmitError(undefined);
       await saveCandidateProfile(values).unwrap();
-      navigate("/listings", { replace: true });
+      navigate("/listing", { replace: true });
     } catch (error) {
       setSubmitError(
         getApiErrorMessage(error, "Failed to save profile. Check your details and try again."),
       );
     }
+  };
+
+  const handleCancel = () => {
+    navigate("/", { replace: true });
   };
 
   return (
@@ -33,6 +37,7 @@ const CandidateProfilePage = () => {
           isSubmitting={isLoading}
           submitError={submitError}
           onSubmit={handleSubmit}
+          onCancel={handleCancel}
         />
       </div>
     </main>

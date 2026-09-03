@@ -19,11 +19,15 @@ export type JobSelectPropsI = {
 
 export type JobDetailPropsI = {
   applications: AdminApplicationI[];
+  applyHref?: string;
+  applyLabel?: string;
+  backLabel?: string;
   job: AdminJobI;
   onBack: () => void;
-  onChangeApplicationStatus: (applicationId: string, status: ApplicationStatusI) => void;
-  onEdit: (jobId: string) => void;
-  profileHref: string;
-  onViewApplication: (applicationId: string) => void;
+  onApply?: (jobId: string) => void;
+  onChangeApplicationStatus?: (applicationId: string, status: ApplicationStatusI) => void;
+  onEdit?: (jobId: string) => void;
+  onViewApplication?: (applicationId: string) => void;
+  showApplications?: boolean;
   isLoading?: boolean;
 };

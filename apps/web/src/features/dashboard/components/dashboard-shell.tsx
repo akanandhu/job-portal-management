@@ -8,6 +8,10 @@ import { cn } from "@/lib/utils";
 import type { DashboardShellPropsI } from "@/types/dashboard";
 
 export function DashboardShell({
+  accountAction,
+  accountInitial = "A",
+  accountName = "Admin",
+  accountSubtitle = "TNP Portal",
   activeNav,
   children,
   filters,
@@ -47,34 +51,37 @@ export function DashboardShell({
     </nav>
   );
 
-  const renderAdminCard = () => (
+  const renderAccountCard = () => (
     <div className="mt-auto rounded-xl border bg-muted/40 p-4">
       <div className="flex items-center gap-3">
         <div className="flex size-10 items-center justify-center rounded-full bg-primary text-sm font-semibold text-primary-foreground">
-          A
+          {accountInitial}
         </div>
         <div className="min-w-0 flex-1">
-          <p className="font-medium">Admin</p>
-          <p className="text-sm text-muted-foreground">TNP Portal</p>
+          <p className="truncate font-medium">{accountName}</p>
+          <p className="truncate text-sm text-muted-foreground">{accountSubtitle}</p>
         </div>
       </div>
-      <ConfirmDialog
-        title="Log out?"
-        description="You will be returned to the login screen."
-        confirmLabel="Log out"
-        onConfirm={onLogout}
-        trigger={({ onClick }) => (
-          <Button
-            type="button"
-            variant="outline"
-            className="mt-4 w-full justify-start"
-            onClick={onClick}
-          >
-            <LogOut className="size-4" />
-            Logout
-          </Button>
-        )}
-      />
+      {accountAction ? <div className="mt-4">{accountAction}</div> : null}
+      {onLogout ? (
+        <ConfirmDialog
+          title="Log out?"
+          description="You will be returned to the login screen."
+          confirmLabel="Log out"
+          onConfirm={onLogout}
+          trigger={({ onClick }) => (
+            <Button
+              type="button"
+              variant="outline"
+              className="mt-4 w-full justify-start"
+              onClick={onClick}
+            >
+              <LogOut className="size-4" />
+              Logout
+            </Button>
+          )}
+        />
+      ) : null}
     </div>
   );
 
@@ -90,7 +97,7 @@ export function DashboardShell({
           <div className="flex min-h-full flex-col gap-8">
             <BrandLogo />
             {renderNavItems()}
-            {renderAdminCard()}
+            {renderAccountCard()}
           </div>
         </aside>
 
@@ -153,7 +160,7 @@ export function DashboardShell({
             </Button>
           </div>
           {renderNavItems(() => setSidebarOpen(false))}
-          {renderAdminCard()}
+          {renderAccountCard()}
         </aside>
 
         <aside

@@ -9,7 +9,6 @@ import RegisterPage from "./pages/register-page";
 import { AuthSessionGate } from "./features/auth/components/guard/auth-session-gate";
 import { GuestRoute } from "./features/auth/components/guard/guest-route";
 import { ProfileCompletionRoute } from "./features/auth/components/guard/profile-completion-route";
-import { ProfileRequiredRoute } from "./features/auth/components/guard/profile-required-route";
 import { RoleRoute } from "./features/auth/components/guard/role-route";
 
 function App() {
@@ -43,16 +42,7 @@ function App() {
             </RoleRoute>
           }
         />
-        <Route
-          path="/listings"
-          element={
-            <RoleRoute allowedRoles={["USER"]}>
-              <ProfileRequiredRoute>
-                <ListingsPage />
-              </ProfileRequiredRoute>
-            </RoleRoute>
-          }
-        />
+        <Route path="/listing" element={<ListingsPage />} />
         <Route
           path="/dashboard"
           element={

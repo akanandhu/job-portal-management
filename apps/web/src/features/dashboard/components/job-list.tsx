@@ -1,43 +1,43 @@
 import { Button } from "@/components/ui/button";
 import { ListingShimmer } from "@/features/dashboard/components/listing-shimmer";
+import { formatOptionLabel } from "@/lib/utils";
 import { BriefcaseBusiness, Pencil, Plus } from "lucide-react";
 import type { AdminJobI } from "../data/dashboard-data";
 
 type JobListPropsI = {
   jobs: AdminJobI[];
-  onAddJob: () => void;
-  onEditJob: (jobId: string) => void;
+  description?: string;
+  onAddJob?: () => void;
+  onEditJob?: (jobId: string) => void;
   onViewJob: (jobId: string) => void;
+  showApplicationsCount?: boolean;
+  title?: string;
   isLoading?: boolean;
 };
-
-const formatOptionLabel = (value: string) =>
-  value
-    .toLowerCase()
-    .split("_")
-    .map((part) => part.slice(0, 1).toUpperCase() + part.slice(1))
-    .join(" ");
 
 export function JobList({
   isLoading = false,
   jobs,
+  description = "Manage active job posts and candidate visibility.",
   onAddJob,
   onEditJob,
   onViewJob,
+  showApplicationsCount = true,
+  title = "All jobs",
 }: JobListPropsI) {
   return (
     <div>
       <div className="flex flex-col gap-4 py-5 sm:flex-row sm:items-center sm:justify-between">
         <div className="min-w-0">
-          <h1 className="text-xl font-semibold">All jobs</h1>
-          <p className="text-sm text-muted-foreground">
-            Manage active job posts and candidate visibility.
-          </p>
+          <h1 className="text-xl font-semibold">{title}</h1>
+          <p className="text-sm text-muted-foreground">{description}</p>
         </div>
-        <Button className="w-full sm:w-fit" onClick={onAddJob}>
-          <Plus className="size-4" />
-          Add job
-        </Button>
+        {onAddJob ? (
+          <Button className="w-full sm:w-fit" onClick={onAddJob}>
+            <Plus className="size-4" />
+            Add job
+          </Button>
+        ) : null}
       </div>
 
       {isLoading ? (
@@ -70,24 +70,28 @@ export function JobList({
                   {formatOptionLabel(job.experienceLevel)}
                 </p>
               </div>
-              <div className="hidden items-start gap-2 pt-1 text-sm text-muted-foreground sm:flex">
-                <BriefcaseBusiness className="mt-0.5 size-4" />
-                {job.applicationsCount}
-              </div>
-              <div className="flex shrink-0 items-start gap-1">
-                <Button
-                  type="button"
-                  variant="ghost"
-                  size="icon"
-                  aria-label={`Edit ${job.title}`}
-                  onClick={(event) => {
-                    event.stopPropagation();
-                    onEditJob(job.id);
-                  }}
-                >
-                  <Pencil className="size-4" />
-                </Button>
-              </div>
+              {showApplicationsCount ? (
+                <div className="hidden items-start gap-2 pt-1 text-sm text-muted-foreground sm:flex">
+                  <BriefcaseBusiness className="mt-0.5 size-4" />
+                  {job.applicationsCount}
+                </div>
+              ) : null}
+              {onEditJob ? (
+                <div className="flex shrink-0 items-start gap-1">
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="icon"
+                    aria-label={`Edit ${job.title}`}
+                    onClick={(event) => {
+                      event.stopPropagation();
+                      onEditJob(job.id);
+                    }}
+                  >
+                    <Pencil className="size-4" />
+                  </Button>
+                </div>
+              ) : null}
             </article>
           ))}
         </div>

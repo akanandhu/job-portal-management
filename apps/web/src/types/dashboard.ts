@@ -18,11 +18,15 @@ export type DashboardNavItemI = {
 };
 
 export type DashboardShellPropsI = {
+  accountInitial?: string;
+  accountName?: string;
+  accountSubtitle?: string;
+  accountAction?: React.ReactNode;
   activeNav: string;
   children: React.ReactNode;
   filters: React.ReactNode;
   navItems: DashboardNavItemI[];
-  onLogout: () => void;
+  onLogout?: () => void;
   onNavChange: (value: string) => void;
   showFilters: boolean;
 };

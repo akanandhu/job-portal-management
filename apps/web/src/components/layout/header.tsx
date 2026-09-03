@@ -15,8 +15,8 @@ const navLinks = [
 export function Header() {
   const isAuthenticated = useAppSelector(selectIsAuthenticated);
   const user = useAppSelector(selectCurrentUser);
-  const authenticatedRoute = user?.role === "ADMIN" ? "/dashboard" : "/listings";
-  const authenticatedLabel = user?.role === "ADMIN" ? "Go to dashboard" : "Go to Listings";
+  const authenticatedRoute = user?.role === "ADMIN" ? "/dashboard" : "/listing";
+  const authenticatedLabel = user?.role === "ADMIN" ? "Go to dashboard" : "Go to listing";
 
   return (
     <header className="sticky top-0 z-20 border-b bg-background/85 backdrop-blur-xl">

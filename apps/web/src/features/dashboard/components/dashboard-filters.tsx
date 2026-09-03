@@ -1,7 +1,6 @@
 import { useState } from "react";
 
 import { Button } from "@/components/ui/button";
-import { MultiTextInput } from "@/components/ui/multi-text-input";
 import {
   Select,
   SelectContent,
@@ -9,13 +8,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import {
-  experienceLevels,
-  jobCategories,
-  jobStatuses,
-  workplaceTypes,
-} from "@job-portal/contracts/jobs";
-import { applicationStatuses } from "@job-portal/contracts/applications";
+import { experienceLevels, jobCategories, jobStatuses } from "@job-portal/contracts/jobs";
+import { formatOptionLabel } from "@/lib/utils";
 
 type FilterSelectPropsI = {
   label: string;
@@ -30,13 +24,7 @@ type DashboardFiltersPropsI = {
 };
 
 const emptyValue = "all";
-
-const formatOptionLabel = (value: string) =>
-  value
-    .toLowerCase()
-    .split("_")
-    .map((part) => part.slice(0, 1).toUpperCase() + part.slice(1))
-    .join(" ");
+const applicationExperienceOptions = ["0", "1", "2", "3", "4", "5+"] as const;
 
 function FilterSelect({ label, onValueChange, options, placeholder, value }: FilterSelectPropsI) {
   return (
@@ -61,20 +49,16 @@ function FilterSelect({ label, onValueChange, options, placeholder, value }: Fil
 
 export function DashboardFilters({ section }: DashboardFiltersPropsI) {
   const [category, setCategory] = useState(emptyValue);
-  const [workplaceType, setWorkplaceType] = useState(emptyValue);
   const [experienceLevel, setExperienceLevel] = useState(emptyValue);
   const [jobStatus, setJobStatus] = useState(emptyValue);
-  const [applicationStatus, setApplicationStatus] = useState(emptyValue);
-  const [skills, setSkills] = useState<string[]>([]);
+  const [applicationExperience, setApplicationExperience] = useState(emptyValue);
   const isJobsSection = section === "jobs";
 
   const clearFilters = () => {
     setCategory(emptyValue);
-    setWorkplaceType(emptyValue);
     setExperienceLevel(emptyValue);
     setJobStatus(emptyValue);
-    setApplicationStatus(emptyValue);
-    setSkills([]);
+    setApplicationExperience(emptyValue);
   };
 
   return (
@@ -96,13 +80,6 @@ export function DashboardFilters({ section }: DashboardFiltersPropsI) {
             onValueChange={setCategory}
           />
           <FilterSelect
-            label="Workplace"
-            options={workplaceTypes}
-            placeholder="All workplace types"
-            value={workplaceType}
-            onValueChange={setWorkplaceType}
-          />
-          <FilterSelect
             label="Experience"
             options={experienceLevels}
             placeholder="All levels"
@@ -119,18 +96,13 @@ export function DashboardFilters({ section }: DashboardFiltersPropsI) {
         </>
       ) : (
         <FilterSelect
-          label="Application status"
-          options={applicationStatuses}
-          placeholder="All statuses"
-          value={applicationStatus}
-          onValueChange={setApplicationStatus}
+          label="Years of experience"
+          options={applicationExperienceOptions}
+          placeholder="All experience"
+          value={applicationExperience}
+          onValueChange={setApplicationExperience}
         />
       )}
-
-      <div className="grid gap-2 text-sm font-semibold">
-        Skills
-        <MultiTextInput value={skills} placeholder="React" onValueChange={setSkills} />
-      </div>
     </div>
   );
 }

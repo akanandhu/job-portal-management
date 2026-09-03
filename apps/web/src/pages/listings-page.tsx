@@ -1,5 +1,7 @@
+import { UserDashboard } from "@/features/dashboard/components/user-dashboard";
+
 const ListingsPage = () => {
-  return <main className="min-h-svh bg-background text-foreground" />;
+  return <UserDashboard />;
 };
 
 export default ListingsPage;

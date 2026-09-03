@@ -8,6 +8,9 @@ import useAdminDashboard from "../hooks/useAdminDashboard";
 
 export function AdminDashboard() {
   const {
+    accountInitial,
+    accountName,
+    accountSubtitle,
     activeNav,
     activeTab,
     applications,
@@ -16,9 +19,7 @@ export function AdminDashboard() {
     view,
     currentTabs,
     handleAddJob,
-    handleBackToApplicationDetail,
     handleBackToApplications,
-    handleBackToJobDetail,
     handleBackToJobs,
     handleChangeApplicationStatus,
     handleEditJob,
@@ -29,6 +30,10 @@ export function AdminDashboard() {
     handleViewApplication,
     handleViewJob,
   } = useAdminDashboard();
+  const visibleApplications =
+    activeNav === "applications"
+      ? applications.filter((application) => application.status === activeTab)
+      : applications;
 
   if (!hasValidParams) {
     const nextParams = new URLSearchParams(searchParams);
@@ -40,6 +45,9 @@ export function AdminDashboard() {
 
   return (
     <DashboardShell
+      accountInitial={accountInitial}
+      accountName={accountName}
+      accountSubtitle={accountSubtitle}
       activeNav={activeNav}
       filters={<DashboardFilters section={activeNav} />}
       navItems={navItems}
@@ -49,13 +57,11 @@ export function AdminDashboard() {
     >
       <DashboardTabs activeTab={activeTab} tabs={currentTabs} onTabChange={handleTabChange} />
       <AdminDashboardContent
-        applications={applications}
+        applications={visibleApplications}
         jobs={adminJobs}
         onChangeApplicationStatus={handleChangeApplicationStatus}
         onAddJob={handleAddJob}
-        onBackToApplicationDetail={handleBackToApplicationDetail}
         onBackToApplications={handleBackToApplications}
-        onBackToJobDetail={handleBackToJobDetail}
         onBackToJobs={handleBackToJobs}
         onEditJob={handleEditJob}
         onViewApplication={handleViewApplication}

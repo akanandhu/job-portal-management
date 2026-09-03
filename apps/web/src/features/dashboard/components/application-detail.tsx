@@ -4,6 +4,7 @@ import type { ApplicationStatusI } from "@job-portal/contracts/applications";
 
 import { Button } from "@/components/ui/button";
 import { ApplicationStatusSelect } from "@/features/dashboard/components/application-status-select";
+import { formatOptionLabel } from "@/lib/utils";
 import type { AdminApplicationI } from "../data/dashboard-data";
 
 type ApplicationDetailPropsI = {
@@ -11,15 +12,8 @@ type ApplicationDetailPropsI = {
   company: string;
   jobTitle: string;
   onBack: () => void;
-  onChangeStatus: (applicationId: string, status: ApplicationStatusI) => void;
+  onChangeStatus?: (applicationId: string, status: ApplicationStatusI) => void;
 };
-
-const formatOptionLabel = (value: string) =>
-  value
-    .toLowerCase()
-    .split("_")
-    .map((part) => part.slice(0, 1).toUpperCase() + part.slice(1))
-    .join(" ");
 
 function DetailItem({ label, value }: { label: string; value: React.ReactNode }) {
   return (
@@ -56,15 +50,17 @@ export function ApplicationDetail({
               </p>
             </div>
           </div>
-          <div className="flex w-full flex-col gap-2 sm:w-auto sm:flex-row sm:items-center">
-            <ApplicationStatusSelect
-              applicationId={application.id}
-              candidate={application.candidate}
-              className="sm:w-40"
-              value={application.status}
-              onChange={onChangeStatus}
-            />
-          </div>
+          {onChangeStatus ? (
+            <div className="flex w-full flex-col gap-2 sm:w-auto sm:flex-row sm:items-center">
+              <ApplicationStatusSelect
+                applicationId={application.id}
+                candidate={application.candidate}
+                className="sm:w-40"
+                value={application.status}
+                onChange={onChangeStatus}
+              />
+            </div>
+          ) : null}
         </div>
       </div>
 

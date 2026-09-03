@@ -1,6 +1,5 @@
 import { ApplicationDetail } from "@/features/dashboard/components/application-detail";
 import { ApplicationList } from "@/features/dashboard/components/application-list";
-import { CandidateProfileEditor } from "@/features/dashboard/components/candidate-profile-editor";
 import { JobDetail } from "@/features/dashboard/components/job-detail";
 import { JobForm } from "@/features/dashboard/components/job-form";
 import { JobList } from "@/features/dashboard/components/job-list";
@@ -14,8 +13,6 @@ type AdminDashboardContentPropsI = {
   onChangeApplicationStatus: (applicationId: string, status: ApplicationStatusI) => void;
   onAddJob: () => void;
   onBackToApplications: () => void;
-  onBackToApplicationDetail: (applicationId: string) => void;
-  onBackToJobDetail: (jobId: string) => void;
   onBackToJobs: () => void;
   onEditJob: (jobId: string) => void;
   onViewApplication: (applicationId: string) => void;
@@ -28,9 +25,7 @@ export function AdminDashboardContent({
   jobs,
   onChangeApplicationStatus,
   onAddJob,
-  onBackToApplicationDetail,
   onBackToApplications,
-  onBackToJobDetail,
   onBackToJobs,
   onEditJob,
   onViewApplication,
@@ -46,7 +41,6 @@ export function AdminDashboardContent({
           onBack={onBackToJobs}
           onChangeApplicationStatus={onChangeApplicationStatus}
           onEdit={onEditJob}
-          profileHref={`/dashboard?section=profile&tab=candidate-profile&jobId=${view.job.id}`}
           onViewApplication={onViewApplication}
         />
       );
@@ -69,20 +63,6 @@ export function AdminDashboardContent({
           onBack={onBackToApplications}
         />
       );
-
-    case "candidate-profile.form": {
-      const profileJob = view.job;
-      const profileApplication = view.application;
-      const onBack = profileJob
-        ? () => onBackToJobDetail(profileJob.id)
-        : profileApplication
-          ? () => onBackToApplicationDetail(profileApplication.id)
-          : undefined;
-
-      return (
-        <CandidateProfileEditor application={profileApplication} job={profileJob} onBack={onBack} />
-      );
-    }
 
     case "applications.list":
       return (

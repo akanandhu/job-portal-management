@@ -149,7 +149,7 @@ export function CandidateProfileForm({
 
           <div className="flex flex-col gap-3 border-t pt-6 sm:flex-row sm:justify-end">
             <Button onClick={onBack} type="button" variant="outline" size="lg">
-              {mode === "edit" ? "Cancel" : "Back to Register"}
+              {mode === "edit" ? "Cancel" : "Back to Home"}
             </Button>
             <Button type="submit" size="lg" disabled={isSubmitting}>
               {isSubmitting

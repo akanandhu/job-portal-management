@@ -13,7 +13,7 @@ const getAuthenticatedHomeRoute = (role: string | undefined) => {
     return "/dashboard";
   }
 
-  return "/listings";
+  return "/listing";
 };
 
 export function GuestRoute({ children }: GuestRoutePropsI) {
