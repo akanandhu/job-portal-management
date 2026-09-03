@@ -8,6 +8,7 @@
     "start": "node src/server.ts",
     "postinstall": "prisma skills sync || exit 0",
     "contract:emit": "prisma contract emit",
+    "db:init": "prisma db init",
     "seed": "tsx src/prisma/seeds/index.ts"
   },
   "dependencies": {
