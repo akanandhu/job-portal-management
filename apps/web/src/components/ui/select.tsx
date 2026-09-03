@@ -108,12 +108,11 @@ function SelectLabel({ className, ...props }: SelectPrimitive.GroupLabel.Props) 
 
 function SelectItem({
   className,
-  children,
   displayValue,
   value,
   ...props
 }: SelectPrimitive.Item.Props & { displayValue?: React.ReactNode }) {
-  const label = displayValue ?? children ?? value;
+  const label = displayValue ?? value;
 
   return (
     <SelectPrimitive.Item
