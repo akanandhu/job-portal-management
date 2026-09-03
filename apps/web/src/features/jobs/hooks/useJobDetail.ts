@@ -84,13 +84,14 @@ export function useJobDetail({
     ? formatApplications(jobAppsApiData.data)
     : undefined;
 
-  const jobApplications: AdminApplicationI[] = providedApplications
-    ? providedApplications
-    : apiJobAppsFormatted
-      ? apiJobAppsFormatted
-      : jobId
-        ? formatApplications(allApplications.filter((app) => app.jobId === jobId))
-        : [];
+  const jobApplications: AdminApplicationI[] =
+    providedApplications && providedApplications.length > 0
+      ? providedApplications
+      : apiJobAppsFormatted
+        ? apiJobAppsFormatted
+        : jobId
+          ? formatApplications(allApplications.filter((app) => app.jobId === jobId))
+          : [];
 
   const totalPages = Math.max(1, Math.ceil(jobApplications.length / applicationsPerPage));
   const visibleApplications = jobApplications.slice(

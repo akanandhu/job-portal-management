@@ -155,8 +155,22 @@ export async function listJobApplications(params: Record<string, unknown>) {
 
   return applications.map((application) => ({
     id: application.id,
+    jobId: application.jobId,
+    userId: application.userId,
     status: application.status,
     createdAt: application.createdAt,
+    yearsOfExperience: application.yearsOfExperience,
+    education: application.education,
+    currentCompany: application.currentCompany,
+    currentRole: application.currentRole,
+    expectedSalary: application.expectedSalary,
+    noticePeriodDays: application.noticePeriodDays,
+    skills: application.skills,
+    user: {
+      id: application.user.id,
+      name: application.user.name,
+      email: application.user.email,
+    },
     candidate: {
       id: application.user.id,
       name: application.user.name,

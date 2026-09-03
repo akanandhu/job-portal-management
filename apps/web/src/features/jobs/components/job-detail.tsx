@@ -26,7 +26,10 @@ export function JobDetail({
   showApplications = true,
   showApplyButton,
 }: JobDetailPropsI) {
-  const detail = useJobDetail({ jobId: job.id, applications: providedApplications });
+  const detail = useJobDetail({
+    jobId: job.id,
+    applications: providedApplications.length > 0 ? providedApplications : undefined,
+  });
   const activeJob = detail.job ?? job;
 
   const hasApplied = customHasApplied ?? detail.hasApplied;
@@ -155,8 +158,8 @@ export function JobDetail({
 
       {showApplications ? (
         <JobApplicationsPanel
-          applications={providedApplications}
-          isLoading={isLoading}
+          applications={detail.applications}
+          isLoading={isLoading || detail.isLoadingJobApps}
           onChangeApplicationStatus={onChangeApplicationStatus}
           onViewApplication={onViewApplication}
         />
