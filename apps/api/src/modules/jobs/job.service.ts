@@ -145,9 +145,9 @@ export async function listJobCategories() {
   };
 }
 
-export async function getJob(params: Record<string, unknown>) {
+export async function getJob(params: Record<string, unknown>, role?: UserRoleI) {
   const id = parseJobId(params);
-  const job = await findPublishedJobById(id);
+  const job = role === "ADMIN" ? await findJobById(id) : await findPublishedJobById(id);
 
   if (!job) {
     throw new JobNotFoundError("Job not found");

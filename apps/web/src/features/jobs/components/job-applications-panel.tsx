@@ -1,4 +1,4 @@
-import { ChevronRight } from "lucide-react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 import type { ApplicationStatusI } from "@job-portal/contracts";
 
 import { Button } from "@/components/ui/button";
@@ -22,24 +22,32 @@ export function JobApplicationsPanel({
 }: JobApplicationsPanelPropsI) {
   const { page, totalPages, visibleApplications, applicationsPerPage, setPage } = useJobDetail({
     applications,
+    applicationsPerPage: 20,
   });
+
+  const totalCount = applications.length;
 
   return (
     <section className="py-6">
-      <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+      <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h2 className="text-base font-semibold">Applications</h2>
-          <p className="text-sm text-muted-foreground">
-            {applications.length} candidate snapshots submitted for this job.
+          <div className="flex items-center gap-2">
+            <h2 className="text-base font-semibold">Job Applications</h2>
+            <span className="rounded-full bg-primary/10 px-2.5 py-0.5 text-xs font-semibold text-primary">
+              Total: {totalCount}
+            </span>
+          </div>
+          <p className="mt-0.5 text-xs text-muted-foreground">
+            Candidate applications submitted for this job role.
           </p>
         </div>
-        <p className="text-sm font-medium text-muted-foreground">
+        <p className="text-xs font-medium text-muted-foreground">
           Page {page} of {totalPages}
         </p>
       </div>
 
       {isLoading ? (
-        <ListingShimmer count={applicationsPerPage} />
+        <ListingShimmer count={5} />
       ) : (
         <>
           <div className="divide-y rounded-xl border">
@@ -110,28 +118,35 @@ export function JobApplicationsPanel({
             )}
           </div>
 
-          {applications.length > applicationsPerPage && (
+          {totalCount > 0 && (
             <div className="mt-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-              <p className="text-sm text-muted-foreground">
+              <p className="text-xs text-muted-foreground">
                 Showing {(page - 1) * applicationsPerPage + 1}-
-                {Math.min(page * applicationsPerPage, applications.length)} of {applications.length}
+                {Math.min(page * applicationsPerPage, totalCount)} of {totalCount} applications
               </p>
-              <div className="flex gap-2">
+              <div className="flex items-center gap-2">
                 <Button
                   type="button"
                   variant="outline"
+                  size="sm"
                   disabled={page === 1}
                   onClick={() => setPage((value) => Math.max(1, value - 1))}
                 >
+                  <ChevronLeft className="mr-1 size-4" />
                   Previous
                 </Button>
+                <span className="px-1 text-xs font-medium text-muted-foreground">
+                  {page} / {totalPages}
+                </span>
                 <Button
                   type="button"
                   variant="outline"
+                  size="sm"
                   disabled={page === totalPages}
                   onClick={() => setPage((value) => Math.min(totalPages, value + 1))}
                 >
                   Next
+                  <ChevronRight className="ml-1 size-4" />
                 </Button>
               </div>
             </div>

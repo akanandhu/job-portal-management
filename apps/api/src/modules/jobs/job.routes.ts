@@ -28,7 +28,7 @@ router.get(
   requireRole("ADMIN"),
   listJobApplicationsController,
 );
-router.get("/:id", getJobController);
+router.get("/:id", optionalAuthenticate, getJobController);
 
 router.post("/", authenticate, requireRole("ADMIN"), createJobController);
 router.patch("/:id", authenticate, requireRole("ADMIN"), updateJobController);

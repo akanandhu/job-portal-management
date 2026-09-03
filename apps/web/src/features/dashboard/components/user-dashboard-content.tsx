@@ -22,12 +22,12 @@ export function UserDashboardContent({
       return (
         <JobDetail
           applications={[]}
-          applyHref={!isAuthenticated ? "/login" : undefined}
-          applyLabel={isCandidate ? "Apply" : "Login to apply"}
           backLabel="Suggested jobs"
           job={view.job}
           onBack={onBackToJobs}
           showApplications={false}
+          showApplyButton={isAuthenticated && isCandidate}
+          onEditProfile={isAuthenticated && isCandidate ? () => onNavChange("profile") : undefined}
         />
       );
 

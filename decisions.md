@@ -293,6 +293,14 @@ Commit example env files only.
 
 ---
 
+### Job Detail Candidate Actions Visibility
+
+**Decision:** The "Apply" and "Edit Profile" buttons on job detail pages are strictly scoped to authorized candidate (APPLICANT) users only.
+
+**Why:** Admins manage jobs and applications; they do not apply to open roles or edit candidate profiles. Unauthenticated/unauthorized users cannot submit applications without logging in. Restricting these controls ensures correct role authorization boundaries and prevents unexpected behavior across user and admin flows.
+
+---
+
 ## Principle
 
 Keep the implementation typed, relational, predictable, and intentionally simple. The assignment needs clear boundaries, correct authorization, data integrity, and an app that remains easy to read after the machine test is over.

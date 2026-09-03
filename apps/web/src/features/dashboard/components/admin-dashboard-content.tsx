@@ -42,6 +42,7 @@ export function AdminDashboardContent({
           onChangeApplicationStatus={onChangeApplicationStatus}
           onEdit={onEditJob}
           onViewApplication={onViewApplication}
+          showApplyButton={false}
         />
       );
 

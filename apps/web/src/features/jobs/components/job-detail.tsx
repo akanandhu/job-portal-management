@@ -1,4 +1,4 @@
-import { ArrowLeft, Check, Loader2, LogIn, Pencil, Send } from "lucide-react";
+import { ArrowLeft, Check, Loader2, LogIn, Pencil, Send, UserRoundPen } from "lucide-react";
 import { Link } from "react-router";
 
 import { Button, buttonVariants } from "@/components/ui/button";
@@ -21,14 +21,17 @@ export function JobDetail({
   onApply: customOnApply,
   onChangeApplicationStatus,
   onEdit,
+  onEditProfile,
   onViewApplication,
   showApplications = true,
+  showApplyButton,
 }: JobDetailPropsI) {
   const detail = useJobDetail({ jobId: job.id, applications: providedApplications });
+  const activeJob = detail.job ?? job;
 
   const hasApplied = customHasApplied ?? detail.hasApplied;
   const isApplying = customIsApplying ?? detail.isApplying;
-  const onApply = customOnApply ?? (applyHref ? undefined : detail.handleApply);
+  const onApply = customOnApply ?? (showApplyButton ? detail.handleApply : undefined);
 
   return (
     <div className="py-5">
@@ -40,12 +43,12 @@ export function JobDetail({
         <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
           <div className="flex min-w-0 gap-4">
             <div className="flex size-14 shrink-0 items-center justify-center rounded-full bg-primary/10 text-base font-semibold text-primary ring-1 ring-primary/15">
-              {job.logo}
+              {activeJob.logo}
             </div>
             <div className="min-w-0">
-              <h1 className="text-2xl font-semibold leading-tight">{job.title}</h1>
+              <h1 className="text-2xl font-semibold leading-tight">{activeJob.title}</h1>
               <p className="mt-1 text-sm text-muted-foreground">
-                {job.company} • {job.location}
+                {activeJob.company} • {activeJob.location}
               </p>
             </div>
           </div>
@@ -95,12 +98,24 @@ export function JobDetail({
               )
             ) : null}
 
+            {onEditProfile ? (
+              <Button
+                type="button"
+                variant="outline"
+                className="w-full sm:w-fit"
+                onClick={onEditProfile}
+              >
+                <UserRoundPen className="size-4" />
+                Edit profile
+              </Button>
+            ) : null}
+
             {onEdit ? (
               <Button
                 type="button"
                 variant="outline"
                 className="w-full sm:w-fit"
-                onClick={() => onEdit(job.id)}
+                onClick={() => onEdit(activeJob.id)}
               >
                 <Pencil className="size-4" />
                 Edit job
@@ -113,21 +128,21 @@ export function JobDetail({
       <section className="grid gap-5 border-b py-6">
         <div>
           <h2 className="text-base font-semibold">Job details</h2>
-          <p className="mt-2 text-sm leading-6 text-muted-foreground">{job.description}</p>
+          <p className="mt-2 text-sm leading-6 text-muted-foreground">{activeJob.description}</p>
         </div>
 
         <dl className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-          <DetailItem label="Category" value={formatOptionLabel(job.category)} />
-          <DetailItem label="Experience" value={formatOptionLabel(job.experienceLevel)} />
-          <DetailItem label="Workplace" value={formatOptionLabel(job.workplaceType)} />
-          <DetailItem label="Status" value={formatOptionLabel(job.status)} />
-          <DetailItem label="Featured" value={job.isFeatured ? "Featured" : "Not featured"} />
-          <DetailItem label="Applications" value={job.applicationsCount} />
-          <DetailItem label="Posted" value={job.postedAt} />
+          <DetailItem label="Category" value={formatOptionLabel(activeJob.category)} />
+          <DetailItem label="Experience" value={formatOptionLabel(activeJob.experienceLevel)} />
+          <DetailItem label="Workplace" value={formatOptionLabel(activeJob.workplaceType)} />
+          <DetailItem label="Status" value={formatOptionLabel(activeJob.status)} />
+          <DetailItem label="Featured" value={activeJob.isFeatured ? "Featured" : "Not featured"} />
+          <DetailItem label="Applications" value={activeJob.applicationsCount} />
+          <DetailItem label="Posted" value={activeJob.postedAt} />
         </dl>
 
         <div className="flex flex-wrap gap-2">
-          {job.skills.map((skill) => (
+          {activeJob.skills.map((skill) => (
             <span
               key={skill}
               className="rounded-md bg-secondary px-2 py-1 text-xs font-medium text-secondary-foreground"

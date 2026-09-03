@@ -39,8 +39,10 @@ export type JobDetailPropsI = {
   onApply?: (jobId: string) => void;
   onChangeApplicationStatus?: (applicationId: string, status: ApplicationStatusI) => void;
   onEdit?: (jobId: string) => void;
+  onEditProfile?: () => void;
   onViewApplication?: (applicationId: string) => void;
   showApplications?: boolean;
+  showApplyButton?: boolean;
   isLoading?: boolean;
 };
 

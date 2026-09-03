@@ -105,6 +105,13 @@ export const applicationsApi = api.injectEndpoints({
       },
       providesTags: ["Application"],
     }),
+    listJobApplications: builder.query<{ data: ApplicationDataI[] }, string>({
+      query: (jobId) => ({
+        url: `/jobs/${jobId}/applications`,
+        method: "GET",
+      }),
+      providesTags: ["Application"],
+    }),
     updateApplicationStatus: builder.mutation<
       { data: ApplicationDataI },
       UpdateApplicationStatusRequestI
@@ -130,6 +137,7 @@ export const applicationsApi = api.injectEndpoints({
 export const {
   useApplyToJobMutation,
   useListAllApplicationsQuery,
+  useListJobApplicationsQuery,
   useListMyApplicationsQuery,
   useUpdateApplicationStatusMutation,
 } = applicationsApi;
