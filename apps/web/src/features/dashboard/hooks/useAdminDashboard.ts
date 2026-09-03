@@ -1,6 +1,4 @@
-import { useLogoutMutation } from "@/features/auth/store/auth-api";
 import { useState } from "react";
-import { useNavigate, useSearchParams } from "react-router";
 import { useAppSelector } from "@/app/hook";
 import { selectCurrentUser } from "@/features/auth/store/auth-selectors";
 import { getNameInitial } from "@/lib/utils";
@@ -11,11 +9,11 @@ import {
   getAdminDashboardView,
   getDashboardTabs,
   getDefaultTab,
-  hasItem,
 } from "../utils/admin-dashboard-view";
 import type { ApplicationStatusI } from "@job-portal/contracts";
 import type { DashboardNavItemI } from "@/types/dashboard";
 import { BriefcaseBusiness, ClipboardList } from "lucide-react";
+import { useDashboard } from "./useDashboard";
 
 const navItems: DashboardNavItemI[] = [
   { id: "jobs", label: "Jobs", icon: BriefcaseBusiness },
@@ -23,62 +21,23 @@ const navItems: DashboardNavItemI[] = [
 ];
 
 const useAdminDashboard = () => {
-  const navigate = useNavigate();
-  const [logout] = useLogoutMutation();
   const [applications, setApplications] = useState(adminApplications);
-  const [searchParams, setSearchParams] = useSearchParams();
   const currentUser = useAppSelector(selectCurrentUser);
-  const sectionParam = searchParams.get("section") ?? defaultSection;
-  const activeNav = hasItem(navItems, sectionParam) ? sectionParam : defaultSection;
-
-  const currentTabs = getDashboardTabs(activeNav);
-  const defaultTab = getDefaultTab(activeNav);
-  const tabParam = searchParams.get("tab") ?? defaultTab;
-  const activeTab = hasItem(currentTabs, tabParam) ? tabParam : defaultTab;
+  const dashboard = useDashboard({
+    defaultSection,
+    getDefaultTab,
+    getTabs: getDashboardTabs,
+    navItems,
+  });
   const view = getAdminDashboardView({
-    activeNav,
+    activeNav: dashboard.activeNav,
     applications,
     jobs: adminJobs,
-    searchParams,
+    searchParams: dashboard.searchParams,
   });
-  const hasValidParams = sectionParam === activeNav && tabParam === activeTab;
-
-  const updateParams = (updates: Record<string, string | undefined>) => {
-    const nextParams = new URLSearchParams(searchParams);
-
-    for (const [key, value] of Object.entries(updates)) {
-      if (value === undefined) {
-        nextParams.delete(key);
-      } else {
-        nextParams.set(key, value);
-      }
-    }
-
-    setSearchParams(nextParams);
-  };
-
-  const handleNavChange = (nextSection: string) => {
-    updateParams({
-      section: nextSection,
-      tab: getDefaultTab(nextSection),
-      jobId: undefined,
-      applicationId: undefined,
-      mode: undefined,
-    });
-  };
-
-  const handleTabChange = (nextTab: string) => {
-    updateParams({
-      section: activeNav,
-      tab: nextTab,
-      jobId: undefined,
-      applicationId: undefined,
-      mode: undefined,
-    });
-  };
 
   const handleAddJob = () => {
-    updateParams({
+    dashboard.updateParams({
       section: "jobs",
       tab: defaultJobTab,
       mode: "add",
@@ -88,82 +47,13 @@ const useAdminDashboard = () => {
   };
 
   const handleEditJob = (jobId: string) => {
-    updateParams({
+    dashboard.updateParams({
       section: "jobs",
       tab: defaultJobTab,
       mode: "edit",
       jobId,
       applicationId: undefined,
     });
-  };
-
-  const handleViewJob = (jobId: string) => {
-    updateParams({
-      section: "jobs",
-      tab: activeTab,
-      jobId,
-      mode: undefined,
-      applicationId: undefined,
-    });
-  };
-
-  const handleBackToJobDetail = (jobId: string) => {
-    updateParams({
-      section: "jobs",
-      tab: activeTab,
-      jobId,
-      mode: undefined,
-      applicationId: undefined,
-    });
-  };
-
-  const handleBackToJobs = () => {
-    updateParams({
-      section: "jobs",
-      tab: activeTab,
-      jobId: undefined,
-      mode: undefined,
-      applicationId: undefined,
-    });
-  };
-
-  const handleViewApplication = (applicationId: string) => {
-    updateParams({
-      section: "applications",
-      tab: activeTab,
-      applicationId,
-      jobId: undefined,
-      mode: undefined,
-    });
-  };
-
-  const handleBackToApplicationDetail = (applicationId: string) => {
-    updateParams({
-      section: "applications",
-      tab: activeTab,
-      applicationId,
-      jobId: undefined,
-      mode: undefined,
-    });
-  };
-
-  const handleBackToApplications = () => {
-    updateParams({
-      section: "applications",
-      tab: activeTab,
-      applicationId: undefined,
-      jobId: undefined,
-      mode: undefined,
-    });
-  };
-
-  const handleLogout = async () => {
-    await logout()
-      .unwrap()
-      .catch(() => undefined)
-      .finally(() => {
-        navigate("/login", { replace: true });
-      });
   };
 
   const handleChangeApplicationStatus = (applicationId: string, status: ApplicationStatusI) => {
@@ -178,27 +68,27 @@ const useAdminDashboard = () => {
     accountInitial: getNameInitial(currentUser?.name, "A"),
     accountName: currentUser?.name ?? "Admin",
     accountSubtitle: "Admin",
-    activeNav,
-    activeTab,
+    activeNav: dashboard.activeNav,
+    activeTab: dashboard.activeTab,
     applications,
-    currentTabs,
+    currentTabs: dashboard.currentTabs,
     handleAddJob,
-    handleBackToApplicationDetail,
-    handleBackToApplications,
-    handleBackToJobDetail,
-    handleBackToJobs,
+    handleBackToApplicationDetail: dashboard.handleViewApplication,
+    handleBackToApplications: dashboard.handleBackToApplications,
+    handleBackToJobDetail: dashboard.handleViewJob,
+    handleBackToJobs: dashboard.handleBackToJobs,
     handleChangeApplicationStatus,
     handleEditJob,
-    handleLogout,
-    handleNavChange,
-    handleTabChange,
-    handleViewApplication,
-    handleViewJob,
-    hasValidParams,
+    handleLogout: dashboard.handleLogout,
+    handleNavChange: dashboard.handleNavChange,
+    handleTabChange: dashboard.handleTabChange,
+    handleViewApplication: dashboard.handleViewApplication,
+    handleViewJob: dashboard.handleViewJob,
+    hasValidParams: dashboard.hasValidParams,
     view,
     navItems,
-    updateParams,
-    searchParams,
+    updateParams: dashboard.updateParams,
+    searchParams: dashboard.searchParams,
   };
 };
 

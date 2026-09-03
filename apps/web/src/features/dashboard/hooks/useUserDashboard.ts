@@ -1,8 +1,6 @@
 import { BriefcaseBusiness, ClipboardList, UserRoundPen } from "lucide-react";
-import { useNavigate, useSearchParams } from "react-router";
 
 import { useAppSelector } from "@/app/hook";
-import { useLogoutMutation } from "@/features/auth/store/auth-api";
 import {
   selectCurrentUser,
   selectIsAuthenticated,
@@ -12,11 +10,11 @@ import { adminApplications, adminJobs } from "@/features/dashboard/data/dashboar
 import {
   applicationTabs,
   defaultApplicationTab,
-  hasItem,
 } from "@/features/dashboard/utils/admin-dashboard-view";
 import { getNameInitial } from "@/lib/utils";
 import type { DashboardNavItemI, DashboardTabI } from "@/types/dashboard";
 import type { UseUserDashboardResultI, UserDashboardViewI } from "@/types/user-dashboard";
+import { useDashboard } from "./useDashboard";
 
 const defaultSection = "jobs";
 const defaultJobTab = "suggested-jobs";
@@ -67,20 +65,7 @@ const getView = ({
     : { type: "applications.list" };
 };
 
-const getRedirectTo = (searchParams: URLSearchParams, activeNav: string, activeTab: string) => {
-  const nextParams = new URLSearchParams(searchParams);
-  nextParams.set("section", activeNav);
-  nextParams.set("tab", activeTab);
-  nextParams.delete("jobId");
-  nextParams.delete("applicationId");
-
-  return `/listing?${nextParams.toString()}`;
-};
-
 export default function useUserDashboard(): UseUserDashboardResultI {
-  const navigate = useNavigate();
-  const [logout] = useLogoutMutation();
-  const [searchParams, setSearchParams] = useSearchParams();
   const isAuthenticated = useAppSelector(selectIsAuthenticated);
   const isCandidate = useAppSelector(selectIsCandidate);
   const currentUser = useAppSelector(selectCurrentUser);
@@ -93,96 +78,49 @@ export default function useUserDashboard(): UseUserDashboardResultI {
         ]
       : []),
   ];
-  const sectionParam = searchParams.get("section") ?? defaultSection;
-  const activeNav = hasItem(navItems, sectionParam) ? sectionParam : defaultSection;
-  const currentTabs = getTabs(activeNav);
-  const tabParam = searchParams.get("tab") ?? getDefaultTab(activeNav);
-  const activeTab = hasItem(currentTabs, tabParam) ? tabParam : getDefaultTab(activeNav);
+  const dashboard = useDashboard({
+    defaultSection,
+    getDefaultTab,
+    getTabs,
+    navItems,
+  });
   const jobs = adminJobs.filter((job) => job.status === "PUBLISHED");
   const applications =
-    activeNav === "applications"
-      ? candidateApplications.filter((application) => application.status === activeTab)
+    dashboard.activeNav === "applications"
+      ? candidateApplications.filter((application) => application.status === dashboard.activeTab)
       : candidateApplications;
-  const view = getView({ activeNav, applications: candidateApplications, jobs, searchParams });
-  const hasValidParams = sectionParam === activeNav && tabParam === activeTab;
-
-  const updateParams = (updates: Record<string, string | undefined>) => {
-    const nextParams = new URLSearchParams(searchParams);
-
-    for (const [key, value] of Object.entries(updates)) {
-      if (value === undefined) {
-        nextParams.delete(key);
-      } else {
-        nextParams.set(key, value);
-      }
-    }
-
-    setSearchParams(nextParams);
-  };
-
-  const handleNavChange = (nextSection: string) => {
-    updateParams({
-      section: nextSection,
-      tab: getDefaultTab(nextSection),
-      jobId: undefined,
-      applicationId: undefined,
-    });
-  };
-
-  const handleTabChange = (nextTab: string) => {
-    updateParams({
-      section: activeNav,
-      tab: nextTab,
-      jobId: undefined,
-      applicationId: undefined,
-    });
-  };
-
-  const handleBackToJobs = () => handleNavChange("jobs");
-  const handleBackToApplications = () => handleNavChange("applications");
-
-  const handleViewJob = (jobId: string) => {
-    updateParams({ section: "jobs", tab: defaultJobTab, jobId, applicationId: undefined });
-  };
-
-  const handleViewApplication = (applicationId: string) => {
-    updateParams({ section: "applications", tab: activeTab, applicationId, jobId: undefined });
-  };
+  const view = getView({
+    activeNav: dashboard.activeNav,
+    applications: candidateApplications,
+    jobs,
+    searchParams: dashboard.searchParams,
+  });
 
   const handleApply = () => undefined;
-
-  const handleLogout = async () => {
-    await logout()
-      .unwrap()
-      .catch(() => undefined)
-      .finally(() => {
-        navigate("/login", { replace: true });
-      });
-  };
 
   return {
     accountInitial: getNameInitial(currentUser?.name),
     accountName: currentUser?.name ?? "Guest",
     accountSubtitle: isCandidate ? "Candidate" : "Login to apply for jobs",
-    activeNav,
-    activeTab,
+    activeNav: dashboard.activeNav,
+    activeTab: dashboard.activeTab,
     applications,
-    currentTabs,
+    currentTabs: dashboard.currentTabs,
     handleApply,
-    handleBackToApplications,
-    handleBackToJobs,
-    handleLogout,
-    handleNavChange,
-    handleTabChange,
-    handleViewApplication,
-    handleViewJob,
-    hasValidParams,
+    handleBackToApplications: () => dashboard.handleNavChange("applications"),
+    handleBackToJobs: () => dashboard.handleNavChange("jobs"),
+    handleLogout: dashboard.handleLogout,
+    handleNavChange: dashboard.handleNavChange,
+    handleTabChange: dashboard.handleTabChange,
+    handleViewApplication: dashboard.handleViewApplication,
+    handleViewJob: (jobId: string) => dashboard.handleViewJob(jobId, defaultJobTab),
+    hasValidParams: dashboard.hasValidParams,
     isAuthenticated,
     isCandidate,
     jobs,
     navItems,
-    redirectTo: getRedirectTo(searchParams, activeNav, activeTab),
-    showFilters: activeNav !== "profile" && view.type.endsWith(".list"),
+    redirectTo: dashboard.getRedirectTo("/listing"),
+    showFilters: dashboard.activeNav !== "profile" && view.type.endsWith(".list"),
     view,
   };
 }
