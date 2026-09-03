@@ -9,6 +9,7 @@ import {
 import type { CreateJobInputI } from "@job-portal/contracts/jobs";
 import { ArrowLeft } from "lucide-react";
 import { Controller, useForm } from "react-hook-form";
+import toast from "react-hot-toast";
 import type { z } from "zod";
 
 import { Button } from "@/components/ui/button";
@@ -23,7 +24,9 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import type { AdminJobI } from "@/features/dashboard/data/dashboard-data";
+import { useCreateJobMutation } from "@/features/dashboard/store/jobs-api";
 import { cn, formatOptionLabel } from "@/lib/utils";
+import { getApiErrorMessage } from "@/services/api-error";
 import type { JobFormPropsI, JobSelectPropsI } from "@/types/jobs";
 
 export type JobFormValuesI = z.input<typeof createJobSchema>;
@@ -63,8 +66,8 @@ function JobSelect({
         </SelectTrigger>
         <SelectContent>
           {options.map((option) => (
-            <SelectItem key={option} value={option}>
-              {formatOptionLabel(option)}
+            <SelectItem key={option} value={option} displayValue={formatOptionLabel(option)}>
+              {option}
             </SelectItem>
           ))}
         </SelectContent>
@@ -74,19 +77,44 @@ function JobSelect({
   );
 }
 
-export function JobForm({ job, mode, onCancel }: JobFormPropsI) {
+export function JobForm({ job, mode, onCancel, onCreated }: JobFormPropsI) {
+  const [createJob, { isLoading: isCreating }] = useCreateJobMutation();
   const {
     control,
     register,
     handleSubmit,
-    formState: { errors, isSubmitSuccessful },
+    setError,
+    formState: { errors },
   } = useForm<JobFormValuesI, unknown, CreateJobInputI>({
     defaultValues: getJobFormValues(job),
     resolver: zodResolver(createJobSchema),
   });
 
-  const onSubmit = () => undefined;
+  const onSubmit = async (values: CreateJobInputI) => {
+    if (mode !== "add") {
+      const message = "Job updates are not connected yet.";
+      toast.error(message);
+      setError("root", { type: "server", message });
+      return;
+    }
+
+    try {
+      const result = await createJob(values).unwrap();
+
+      toast.success("Job opening created.");
+      onCreated?.(result.data);
+    } catch (error) {
+      const message = getApiErrorMessage(error, "Failed to create job opening");
+
+      setError("root", {
+        type: "server",
+        message,
+      });
+      toast.error(message);
+    }
+  };
   const title = mode === "add" ? "Add job" : "Edit job";
+  const submitLabel = mode === "add" ? "Create job" : "Save changes";
 
   return (
     <div className="py-5">
@@ -245,18 +273,20 @@ export function JobForm({ job, mode, onCancel }: JobFormPropsI) {
           <ErrorBox message={errors.skills?.message} />
         </div>
 
-        {isSubmitSuccessful && (
-          <p className="rounded-lg border border-primary/25 bg-primary/10 px-3 py-2 text-sm text-primary">
-            Job details are valid and ready to save when the API is connected.
-          </p>
-        )}
+        <ErrorBox message={errors.root?.message} />
 
         <div className="flex flex-col gap-3 border-t pt-6 sm:flex-row sm:justify-end">
-          <Button type="button" variant="outline" size="lg" onClick={onCancel}>
+          <Button
+            type="button"
+            variant="outline"
+            size="lg"
+            onClick={onCancel}
+            disabled={isCreating}
+          >
             Cancel
           </Button>
-          <Button type="submit" size="lg">
-            {mode === "add" ? "Create job" : "Save changes"}
+          <Button type="submit" size="lg" disabled={isCreating}>
+            {isCreating ? "Creating..." : submitLabel}
           </Button>
         </div>
       </form>

@@ -1,10 +1,18 @@
 import type { AdminApplicationI, AdminJobI } from "@/features/dashboard/data/dashboard-data";
 import type { ApplicationStatusI } from "@job-portal/contracts";
+import type { CreateJobInputI } from "@job-portal/contracts/jobs";
+
+export type JobResponseDataI = CreateJobInputI & {
+  id: string;
+  createdAt?: string;
+  updatedAt?: string;
+};
 
 export type JobFormPropsI = {
   job?: AdminJobI;
   mode: "add" | "edit";
   onCancel: () => void;
+  onCreated?: (job: JobResponseDataI) => void;
 };
 
 export type JobSelectPropsI = {

@@ -3,7 +3,6 @@ import { AdminDashboardContent } from "@/features/dashboard/components/admin-das
 import { DashboardFilters } from "@/features/dashboard/components/dashboard-filters";
 import { DashboardShell } from "@/features/dashboard/components/dashboard-shell";
 import { DashboardTabs } from "@/features/dashboard/components/dashboard-tabs";
-import { adminJobs } from "@/features/dashboard/data/dashboard-data";
 import useAdminDashboard from "../hooks/useAdminDashboard";
 
 export function AdminDashboard() {
@@ -23,12 +22,14 @@ export function AdminDashboard() {
     handleBackToJobs,
     handleChangeApplicationStatus,
     handleEditJob,
+    handleJobCreated,
     handleLogout,
     handleNavChange,
     handleTabChange,
     navItems,
     handleViewApplication,
     handleViewJob,
+    jobs,
   } = useAdminDashboard();
   const visibleApplications =
     activeNav === "applications"
@@ -58,11 +59,12 @@ export function AdminDashboard() {
       <DashboardTabs activeTab={activeTab} tabs={currentTabs} onTabChange={handleTabChange} />
       <AdminDashboardContent
         applications={visibleApplications}
-        jobs={adminJobs}
+        jobs={jobs}
         onChangeApplicationStatus={handleChangeApplicationStatus}
         onAddJob={handleAddJob}
         onBackToApplications={handleBackToApplications}
         onBackToJobs={handleBackToJobs}
+        onJobCreated={handleJobCreated}
         onEditJob={handleEditJob}
         onViewApplication={handleViewApplication}
         onViewJob={handleViewJob}

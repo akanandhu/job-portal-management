@@ -35,10 +35,12 @@ function FilterSelect({ label, onValueChange, options, placeholder, value }: Fil
           <SelectValue placeholder={placeholder} />
         </SelectTrigger>
         <SelectContent>
-          <SelectItem value={emptyValue}>All</SelectItem>
+          <SelectItem value={emptyValue} displayValue="All">
+            {emptyValue}
+          </SelectItem>
           {options.map((option) => (
-            <SelectItem key={option} value={option}>
-              {formatOptionLabel(option)}
+            <SelectItem key={option} value={option} displayValue={formatOptionLabel(option)}>
+              {option}
             </SelectItem>
           ))}
         </SelectContent>

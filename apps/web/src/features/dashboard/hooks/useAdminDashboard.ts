@@ -14,13 +14,22 @@ import type { ApplicationStatusI } from "@job-portal/contracts";
 import type { DashboardNavItemI } from "@/types/dashboard";
 import { BriefcaseBusiness, ClipboardList } from "lucide-react";
 import { useDashboard } from "./useDashboard";
+import type { JobResponseDataI } from "@/types/jobs";
 
 const navItems: DashboardNavItemI[] = [
   { id: "jobs", label: "Jobs", icon: BriefcaseBusiness },
   { id: "applications", label: "Applications", icon: ClipboardList },
 ];
 
+const toAdminJob = (job: JobResponseDataI) => ({
+  ...job,
+  applicationsCount: 0,
+  logo: getNameInitial(job.company, "J"),
+  postedAt: "Just now",
+});
+
 const useAdminDashboard = () => {
+  const [jobs, setJobs] = useState(adminJobs);
   const [applications, setApplications] = useState(adminApplications);
   const currentUser = useAppSelector(selectCurrentUser);
   const dashboard = useDashboard({
@@ -32,7 +41,7 @@ const useAdminDashboard = () => {
   const view = getAdminDashboardView({
     activeNav: dashboard.activeNav,
     applications,
-    jobs: adminJobs,
+    jobs,
     searchParams: dashboard.searchParams,
   });
 
@@ -64,6 +73,11 @@ const useAdminDashboard = () => {
     );
   };
 
+  const handleJobCreated = (job: JobResponseDataI) => {
+    setJobs((currentJobs) => [toAdminJob(job), ...currentJobs]);
+    dashboard.handleBackToJobs(defaultJobTab);
+  };
+
   return {
     accountInitial: getNameInitial(currentUser?.name, "A"),
     accountName: currentUser?.name ?? "Admin",
@@ -79,12 +93,14 @@ const useAdminDashboard = () => {
     handleBackToJobs: dashboard.handleBackToJobs,
     handleChangeApplicationStatus,
     handleEditJob,
+    handleJobCreated,
     handleLogout: dashboard.handleLogout,
     handleNavChange: dashboard.handleNavChange,
     handleTabChange: dashboard.handleTabChange,
     handleViewApplication: dashboard.handleViewApplication,
     handleViewJob: dashboard.handleViewJob,
     hasValidParams: dashboard.hasValidParams,
+    jobs,
     view,
     navItems,
     updateParams: dashboard.updateParams,

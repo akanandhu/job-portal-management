@@ -101,7 +101,7 @@ export default function useUserDashboard(): UseUserDashboardResultI {
   return {
     accountInitial: getNameInitial(currentUser?.name),
     accountName: currentUser?.name ?? "Guest",
-    accountSubtitle: isCandidate ? "Candidate" : "Login to apply for jobs",
+    accountSubtitle: isCandidate ? "Candidate" : isAuthenticated ? "" : "Login to apply for jobs",
     activeNav: dashboard.activeNav,
     activeTab: dashboard.activeTab,
     applications,

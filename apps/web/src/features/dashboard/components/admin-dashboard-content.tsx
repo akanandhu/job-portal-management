@@ -6,6 +6,7 @@ import { JobList } from "@/features/dashboard/components/job-list";
 import type { ApplicationStatusI } from "@job-portal/contracts/applications";
 import type { AdminApplicationI, AdminJobI } from "@/features/dashboard/data/dashboard-data";
 import type { AdminDashboardViewI } from "@/features/dashboard/utils/admin-dashboard-view";
+import type { JobFormPropsI } from "@/types/jobs";
 
 type AdminDashboardContentPropsI = {
   applications: AdminApplicationI[];
@@ -15,6 +16,7 @@ type AdminDashboardContentPropsI = {
   onBackToApplications: () => void;
   onBackToJobs: () => void;
   onEditJob: (jobId: string) => void;
+  onJobCreated: JobFormPropsI["onCreated"];
   onViewApplication: (applicationId: string) => void;
   onViewJob: (jobId: string) => void;
   view: AdminDashboardViewI;
@@ -28,6 +30,7 @@ export function AdminDashboardContent({
   onBackToApplications,
   onBackToJobs,
   onEditJob,
+  onJobCreated,
   onViewApplication,
   onViewJob,
   view,
@@ -46,7 +49,9 @@ export function AdminDashboardContent({
       );
 
     case "jobs.form":
-      return <JobForm job={view.job} mode={view.mode} onCancel={onBackToJobs} />;
+      return (
+        <JobForm job={view.job} mode={view.mode} onCancel={onBackToJobs} onCreated={onJobCreated} />
+      );
 
     case "jobs.list":
       return (

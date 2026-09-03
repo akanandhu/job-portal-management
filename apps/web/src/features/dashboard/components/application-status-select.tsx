@@ -52,8 +52,8 @@ export function ApplicationStatusSelect({
         </SelectTrigger>
         <SelectContent>
           {applicationStatuses.map((status) => (
-            <SelectItem key={status} value={status}>
-              {formatOptionLabel(status)}
+            <SelectItem key={status} value={status} displayValue={formatOptionLabel(status)}>
+              {status}
             </SelectItem>
           ))}
         </SelectContent>

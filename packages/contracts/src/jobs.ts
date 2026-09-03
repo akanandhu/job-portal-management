@@ -42,14 +42,16 @@ export const jobIdParamsSchema = z.object({
 });
 
 export const createJobSchema = z.object({
-  title: z.string().trim().min(1),
-  description: z.string().trim().min(1),
-  company: z.string().trim().min(1),
-  location: z.string().trim().min(1),
+  title: z.string().trim().min(1, "Job title is required"),
+  description: z.string().trim().min(1, "Job description is required"),
+  company: z.string().trim().min(1, "Company name is required"),
+  location: z.string().trim().min(1, "Location is required"),
   workplaceType: z.enum(workplaceTypes),
   category: z.enum(jobCategories),
   experienceLevel: z.enum(experienceLevels),
-  skills: z.array(z.string().trim().min(1)).min(1),
+  skills: z
+    .array(z.string().trim().min(1, "Skill cannot be empty"))
+    .min(1, "Add at least one skill"),
   status: z.enum(jobStatuses).default("DRAFT"),
   isFeatured: z.boolean().default(false),
 });
