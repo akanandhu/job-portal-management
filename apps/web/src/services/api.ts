@@ -26,6 +26,10 @@ const rawBaseQuery = fetchBaseQuery({
   },
 });
 
+const getRequestUrl = (args: string | FetchArgs) => (typeof args === "string" ? args : args.url);
+
+const authPathsWithoutRefresh = new Set(["/auth/login", "/auth/refresh", "/auth/logout"]);
+
 const baseQueryWithReauth: BaseQueryFn<string | FetchArgs, unknown, FetchBaseQueryError> = async (
   args,
   api,
@@ -33,7 +37,7 @@ const baseQueryWithReauth: BaseQueryFn<string | FetchArgs, unknown, FetchBaseQue
 ) => {
   let result = await rawBaseQuery(args, api, extraOptions);
 
-  if (result.error?.status === 401) {
+  if (result.error?.status === 401 && !authPathsWithoutRefresh.has(getRequestUrl(args))) {
     const refreshResult = await rawBaseQuery(
       {
         url: "/auth/refresh",

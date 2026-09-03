@@ -3,20 +3,33 @@ import { Card, CardHeader, CardTitle, CardContent, CardDescription } from "@/com
 import ErrorBox from "@/components/ui/error-box";
 import { Input } from "@/components/ui/input";
 import { PasswordInput } from "@/components/ui/password-input";
+import { useLoginMutation } from "@/features/auth/store/auth-api";
 import type { LoginFormI } from "@/types/auth";
 import { useForm } from "react-hook-form";
 import { Link, useNavigate } from "react-router";
 
 const LoginForm = () => {
   const navigate = useNavigate();
+  const [login, { isLoading }] = useLoginMutation();
   const {
     register,
     handleSubmit,
+    setError,
     formState: { errors },
   } = useForm<LoginFormI>();
 
-  const onSubmit = () => {
-    navigate("/dashboard");
+  const onSubmit = async (values: LoginFormI) => {
+    try {
+      const result = await login(values).unwrap();
+      const nextRoute = result.user.role === "ADMIN" ? "/dashboard" : "/candidate";
+
+      navigate(nextRoute, { replace: true });
+    } catch {
+      setError("root", {
+        type: "server",
+        message: "Invalid email or password",
+      });
+    }
   };
 
   return (
@@ -58,9 +71,10 @@ const LoginForm = () => {
             <ErrorBox message={errors.password?.message} />
           </label>
 
-          <Button type="submit" size="lg" className="mt-1 w-full">
-            Sign in
+          <Button type="submit" size="lg" className="mt-1 w-full" disabled={isLoading}>
+            {isLoading ? "Signing in..." : "Sign in"}
           </Button>
+          <ErrorBox message={errors.root?.message} />
         </form>
         <p className="mt-6 text-center text-sm text-muted-foreground">
           Don&apos;t have an account?{" "}

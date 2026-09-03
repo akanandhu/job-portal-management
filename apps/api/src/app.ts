@@ -6,9 +6,17 @@ import jobRoutes from "./modules/jobs/job.routes";
 import profileRoutes from "./modules/profile/profile.routes";
 import cookieParser from "cookie-parser";
 
+const allowedOrigins = process.env["CORS_ORIGINS"]?.split(",") ?? [];
+
 export const app = express();
 
-app.use(cors());
+app.use(
+  cors({
+    allowedHeaders: ["Content-Type", "Authorization"],
+    origin: allowedOrigins,
+    credentials: true,
+  }),
+);
 app.use(express.json());
 app.use(cookieParser());
 
