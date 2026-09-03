@@ -9,6 +9,8 @@ import type { UserDashboardContentPropsI } from "@/types/user-dashboard";
 export function UserDashboardContent({
   activeTab,
   applications,
+  hasApplied,
+  isApplying,
   isAuthenticated,
   isJobsLoading = false,
   jobsErrorMessage,
@@ -30,6 +32,8 @@ export function UserDashboardContent({
           applyHref={!isAuthenticated ? "/login" : undefined}
           applyLabel={isCandidate ? "Apply" : "Login to apply"}
           backLabel="Suggested jobs"
+          hasApplied={hasApplied}
+          isApplying={isApplying}
           job={view.job}
           onApply={isCandidate ? onApply : undefined}
           onBack={onBackToJobs}

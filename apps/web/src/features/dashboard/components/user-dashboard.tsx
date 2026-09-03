@@ -25,6 +25,8 @@ export function UserDashboard() {
     handleTabChange,
     handleViewApplication,
     handleViewJob,
+    hasApplied,
+    isApplying,
     hasValidParams,
     isAuthenticated,
     isCandidate,
@@ -82,6 +84,8 @@ export function UserDashboard() {
       <UserDashboardContent
         activeTab={activeTab}
         applications={applications}
+        hasApplied={hasApplied}
+        isApplying={isApplying}
         isAuthenticated={isAuthenticated}
         isJobsLoading={isJobsLoading}
         jobsErrorMessage={jobsErrorMessage}

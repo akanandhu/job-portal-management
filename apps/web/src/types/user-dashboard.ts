@@ -11,6 +11,8 @@ export type UserDashboardViewI =
 export type UserDashboardContentPropsI = {
   activeTab: string;
   applications: AdminApplicationI[];
+  hasApplied?: boolean;
+  isApplying?: boolean;
   isJobsLoading?: boolean;
   jobsErrorMessage?: string;
   isCandidate: boolean;
@@ -41,6 +43,8 @@ export type UseUserDashboardResultI = {
   handleTabChange: (value: string) => void;
   handleViewApplication: (applicationId: string) => void;
   handleViewJob: (jobId: string) => void;
+  hasApplied?: boolean;
+  isApplying?: boolean;
   hasValidParams: boolean;
   isAuthenticated: boolean;
   isCandidate: boolean;

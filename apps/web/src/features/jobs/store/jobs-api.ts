@@ -1,32 +1,21 @@
 import { api } from "@/services/api";
-import type { CreateJobInputI, JobStatusI, UpdateJobInputI } from "@job-portal/contracts/jobs";
-import type { JobResponseDataI } from "@/types/jobs";
-import { jobCreated, jobEdited, jobsReceived } from "./jobs-slice";
-
-type JobsListResponseMetaI = {
-  page: number;
-  limit: number;
-  total: number;
-  totalPages: number;
-};
-
-type JobsListApiResponseI = {
-  data: JobResponseDataI[];
-  meta: JobsListResponseMetaI;
-};
-
-type ListJobsQueryI = {
-  status?: JobStatusI | "all";
-};
-
-type JobResponseI = {
-  data: JobResponseDataI;
-};
-
-type UpdateJobRequestI = {
-  id: string;
-  data: UpdateJobInputI;
-};
+import type { CreateJobInputI } from "@job-portal/contracts/jobs";
+import {
+  categoriesReceived,
+  featuredJobsReceived,
+  jobCreated,
+  jobEdited,
+  jobsReceived,
+} from "./jobs-slice";
+import type {
+  FeaturedJobsApiResponseI,
+  FeaturedJobsQueryRequestI,
+  JobCategoryCountResponseI,
+  JobResponseI,
+  JobsListApiResponseI,
+  ListJobsQueryI,
+  UpdateJobRequestI,
+} from "@/types/jobs";
 
 export const jobsApi = api.injectEndpoints({
   endpoints: (builder) => ({
@@ -40,6 +29,37 @@ export const jobsApi = api.injectEndpoints({
         try {
           const { data } = await queryFulfilled;
           dispatch(jobsReceived(data.data));
+        } catch {
+          return;
+        }
+      },
+      providesTags: ["Job"],
+    }),
+    listJobCategories: builder.query<JobCategoryCountResponseI, void>({
+      query: () => ({
+        url: "/jobs/categories",
+        method: "GET",
+      }),
+      async onQueryStarted(_query, { dispatch, queryFulfilled }) {
+        try {
+          const { data } = await queryFulfilled;
+          dispatch(categoriesReceived(data.data));
+        } catch {
+          return;
+        }
+      },
+      providesTags: ["Job"],
+    }),
+    listFeaturedJobs: builder.query<FeaturedJobsApiResponseI, FeaturedJobsQueryRequestI | void>({
+      query: (query) => ({
+        url: "/jobs/featured",
+        method: "GET",
+        params: query ?? undefined,
+      }),
+      async onQueryStarted(_query, { dispatch, queryFulfilled }) {
+        try {
+          const { data } = await queryFulfilled;
+          dispatch(featuredJobsReceived(data.data));
         } catch {
           return;
         }
@@ -81,4 +101,10 @@ export const jobsApi = api.injectEndpoints({
   }),
 });
 
-export const { useCreateJobMutation, useListJobsQuery, useUpdateJobMutation } = jobsApi;
+export const {
+  useCreateJobMutation,
+  useListFeaturedJobsQuery,
+  useListJobCategoriesQuery,
+  useListJobsQuery,
+  useUpdateJobMutation,
+} = jobsApi;

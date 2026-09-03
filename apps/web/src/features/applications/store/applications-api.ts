@@ -1,0 +1,103 @@
+import { api } from "@/services/api";
+import type { ApplicationStatusI } from "@job-portal/contracts/applications";
+import {
+  allApplicationsReceived,
+  applicationCreated,
+  applicationStatusUpdated,
+  myApplicationsReceived,
+} from "./applications-slice";
+import type { ApplicationDataI } from "@/types/applications";
+
+type ApplyToJobRequestI = {
+  jobId: string;
+};
+
+type ApplyToJobResponseI = {
+  message: string;
+  data: ApplicationDataI;
+};
+
+type MyApplicationsResponseI = {
+  data: ApplicationDataI[];
+};
+
+type UpdateApplicationStatusRequestI = {
+  id: string;
+  status: ApplicationStatusI;
+};
+
+export const applicationsApi = api.injectEndpoints({
+  endpoints: (builder) => ({
+    applyToJob: builder.mutation<ApplyToJobResponseI, ApplyToJobRequestI>({
+      query: ({ jobId }) => ({
+        url: `/jobs/${jobId}/apply`,
+        method: "POST",
+      }),
+      async onQueryStarted(_arg, { dispatch, queryFulfilled }) {
+        try {
+          const { data } = await queryFulfilled;
+          dispatch(applicationCreated(data.data));
+        } catch {
+          return;
+        }
+      },
+      invalidatesTags: ["Application", "Job"],
+    }),
+    listMyApplications: builder.query<MyApplicationsResponseI, void>({
+      query: () => ({
+        url: "/applications/me",
+        method: "GET",
+      }),
+      async onQueryStarted(_arg, { dispatch, queryFulfilled }) {
+        try {
+          const { data } = await queryFulfilled;
+          dispatch(myApplicationsReceived(data.data));
+        } catch {
+          return;
+        }
+      },
+      providesTags: ["Application"],
+    }),
+    listAllApplications: builder.query<{ data: ApplicationDataI[] }, void>({
+      query: () => ({
+        url: "/applications/all",
+        method: "GET",
+      }),
+      async onQueryStarted(_arg, { dispatch, queryFulfilled }) {
+        try {
+          const { data } = await queryFulfilled;
+          dispatch(allApplicationsReceived(data.data));
+        } catch {
+          return;
+        }
+      },
+      providesTags: ["Application"],
+    }),
+    updateApplicationStatus: builder.mutation<
+      { data: ApplicationDataI },
+      UpdateApplicationStatusRequestI
+    >({
+      query: ({ id, status }) => ({
+        url: `/applications/${id}/status`,
+        method: "PATCH",
+        body: { status },
+      }),
+      async onQueryStarted({ id, status }, { dispatch, queryFulfilled }) {
+        try {
+          await queryFulfilled;
+          dispatch(applicationStatusUpdated({ id, status }));
+        } catch {
+          return;
+        }
+      },
+      invalidatesTags: ["Application"],
+    }),
+  }),
+});
+
+export const {
+  useApplyToJobMutation,
+  useListAllApplicationsQuery,
+  useListMyApplicationsQuery,
+  useUpdateApplicationStatusMutation,
+} = applicationsApi;

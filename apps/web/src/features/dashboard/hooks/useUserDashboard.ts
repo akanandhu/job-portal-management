@@ -1,12 +1,21 @@
 import { BriefcaseBusiness, ClipboardList, UserRoundPen } from "lucide-react";
+import toast from "react-hot-toast";
 
 import { useAppSelector } from "@/app/hook";
+import {
+  useApplyToJobMutation,
+  useListMyApplicationsQuery,
+} from "@/features/applications/store/applications-api";
+import {
+  selectHasAppliedToJob,
+  selectMyApplications,
+} from "@/features/applications/store/applications-slice";
 import {
   selectCurrentUser,
   selectIsAuthenticated,
   selectIsCandidate,
 } from "@/features/auth/store/auth-selectors";
-import { adminApplications, type AdminJobI } from "@/features/dashboard/data/dashboard-data";
+import type { AdminApplicationI, AdminJobI } from "@/features/dashboard/data/dashboard-data";
 import {
   applicationTabs,
   defaultApplicationTab,
@@ -26,10 +35,6 @@ const defaultProfileTab = "candidate-profile";
 const jobTabs: DashboardTabI[] = [{ id: defaultJobTab, label: "Suggested Jobs" }];
 const profileTabs: DashboardTabI[] = [{ id: defaultProfileTab, label: "Candidate Profile" }];
 
-const candidateApplications = adminApplications.filter(
-  (application) => application.candidate === "Ananthakrishnan",
-);
-
 const getDefaultTab = (section: string) =>
   section === "applications"
     ? defaultApplicationTab
@@ -47,7 +52,7 @@ const getView = ({
   searchParams,
 }: {
   activeNav: string;
-  applications: typeof candidateApplications;
+  applications: AdminApplicationI[];
   jobs: AdminJobI[];
   searchParams: URLSearchParams;
 }): UserDashboardViewI => {
@@ -57,14 +62,18 @@ const getView = ({
   }
 
   if (activeNav === "profile") {
-    return { type: "candidate-profile.form", application: applications[0] };
+    return { type: "candidate-profile.form" };
   }
 
   const application = applications.find((item) => item.id === searchParams.get("applicationId"));
   const job = jobs.find((item) => item.id === application?.jobId);
 
   return application && job
-    ? { type: "applications.detail", application, job }
+    ? {
+        type: "applications.detail",
+        application,
+        job,
+      }
     : { type: "applications.list" };
 };
 
@@ -74,6 +83,28 @@ export default function useUserDashboard(): UseUserDashboardResultI {
   const currentUser = useAppSelector(selectCurrentUser);
   const { error: jobsError, isLoading: isJobsLoading } = useListJobsQuery();
   const jobs = useAppSelector(selectJobs);
+
+  useListMyApplicationsQuery(undefined, { skip: !isCandidate });
+  const [applyToJob, { isLoading: isApplying }] = useApplyToJobMutation();
+
+  const myApplications = useAppSelector(selectMyApplications);
+
+  const formattedApplications: AdminApplicationI[] = myApplications.map((app) => ({
+    id: app.id,
+    jobId: app.jobId,
+    candidate: currentUser?.name ?? "Candidate",
+    status: app.status,
+    appliedAt: app.createdAt ? "Applied recently" : "Just now",
+    phone: "",
+    yearsOfExperience: app.yearsOfExperience ?? 0,
+    education: app.education ?? "",
+    currentCompany: app.currentCompany ?? null,
+    currentRole: app.currentRole ?? null,
+    expectedSalary: app.expectedSalary ?? 0,
+    noticePeriodDays: app.noticePeriodDays ?? 0,
+    skills: app.skills ?? [],
+  }));
+
   const navItems: DashboardNavItemI[] = [
     { id: "jobs", label: "Jobs", icon: BriefcaseBusiness },
     ...(isCandidate
@@ -89,18 +120,31 @@ export default function useUserDashboard(): UseUserDashboardResultI {
     getTabs,
     navItems,
   });
-  const applications =
+
+  const filteredApplications =
     dashboard.activeNav === "applications"
-      ? candidateApplications.filter((application) => application.status === dashboard.activeTab)
-      : candidateApplications;
+      ? formattedApplications.filter((application) => application.status === dashboard.activeTab)
+      : formattedApplications;
+
   const view = getView({
     activeNav: dashboard.activeNav,
-    applications: candidateApplications,
+    applications: formattedApplications,
     jobs,
     searchParams: dashboard.searchParams,
   });
 
-  const handleApply = () => undefined;
+  const currentJobId = view.type === "jobs.detail" ? view.job.id : undefined;
+  const hasApplied = useAppSelector((state) => selectHasAppliedToJob(state, currentJobId));
+
+  const handleApply = async (jobId: string) => {
+    try {
+      const response = await applyToJob({ jobId }).unwrap();
+      toast.success(response.message || "Application submitted successfully!");
+    } catch (error: unknown) {
+      const message = getApiErrorMessage(error, "Failed to submit application");
+      toast.error(message);
+    }
+  };
 
   return {
     accountInitial: getNameInitial(currentUser?.name),
@@ -108,7 +152,7 @@ export default function useUserDashboard(): UseUserDashboardResultI {
     accountSubtitle: isCandidate ? "Candidate" : isAuthenticated ? "" : "Login to apply for jobs",
     activeNav: dashboard.activeNav,
     activeTab: dashboard.activeTab,
-    applications,
+    applications: filteredApplications,
     currentTabs: dashboard.currentTabs,
     handleApply,
     handleBackToApplications: () => dashboard.handleNavChange("applications"),
@@ -118,6 +162,8 @@ export default function useUserDashboard(): UseUserDashboardResultI {
     handleTabChange: dashboard.handleTabChange,
     handleViewApplication: dashboard.handleViewApplication,
     handleViewJob: (jobId: string) => dashboard.handleViewJob(jobId, defaultJobTab),
+    hasApplied,
+    isApplying,
     hasValidParams: dashboard.hasValidParams,
     isAuthenticated,
     isCandidate,

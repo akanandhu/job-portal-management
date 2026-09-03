@@ -5,12 +5,21 @@ import type { RootStateI } from "@/app/store";
 import type { AdminJobI } from "@/features/dashboard/data/dashboard-data";
 import type { JobResponseDataI } from "@/types/jobs";
 
+export type JobCategoryCountI = {
+  category: string;
+  count: number;
+};
+
 type JobsStateI = {
   items: AdminJobI[];
+  featuredItems: AdminJobI[];
+  categories: JobCategoryCountI[];
 };
 
 const initialState: JobsStateI = {
   items: [],
+  featuredItems: [],
+  categories: [],
 };
 
 export const toJobListItem = (job: JobResponseDataI): AdminJobI => ({
@@ -41,6 +50,12 @@ const jobsSlice = createSlice({
     jobsReceived(state, action: PayloadAction<JobResponseDataI[]>) {
       state.items = action.payload.map(toJobListItem);
     },
+    featuredJobsReceived(state, action: PayloadAction<JobResponseDataI[]>) {
+      state.featuredItems = action.payload.map(toJobListItem);
+    },
+    categoriesReceived(state, action: PayloadAction<JobCategoryCountI[]>) {
+      state.categories = action.payload;
+    },
     jobCreated(state, action: PayloadAction<JobResponseDataI>) {
       upsertJob(state.items, toJobListItem(action.payload));
     },
@@ -50,9 +65,12 @@ const jobsSlice = createSlice({
   },
 });
 
-export const { jobCreated, jobEdited, jobsReceived } = jobsSlice.actions;
+export const { categoriesReceived, featuredJobsReceived, jobCreated, jobEdited, jobsReceived } =
+  jobsSlice.actions;
 export const jobsReducer = jobsSlice.reducer;
 
 export const selectJobs = (state: RootStateI) => state.jobs.items;
 export const selectPublishedJobs = (state: RootStateI) =>
   state.jobs.items.filter((job) => job.status === "PUBLISHED");
+export const selectFeaturedJobs = (state: RootStateI) => state.jobs.featuredItems;
+export const selectJobCategories = (state: RootStateI) => state.jobs.categories;

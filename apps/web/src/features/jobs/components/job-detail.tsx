@@ -1,4 +1,4 @@
-import { ArrowLeft, LogIn, Pencil, Send } from "lucide-react";
+import { ArrowLeft, Check, Loader2, LogIn, Pencil, Send } from "lucide-react";
 import { Link } from "react-router";
 
 import { Button, buttonVariants } from "@/components/ui/button";
@@ -12,6 +12,8 @@ export function JobDetail({
   applyHref,
   applyLabel,
   backLabel = "All jobs",
+  hasApplied = false,
+  isApplying = false,
   isLoading = false,
   job,
   onBack,
@@ -54,11 +56,38 @@ export function JobDetail({
               </Link>
             ) : null}
             {onApply ? (
-              <Button type="button" className="w-full sm:w-fit" onClick={() => onApply(job.id)}>
-                <Send className="size-4" />
-                {applyLabel ?? "Apply"}
-              </Button>
+              hasApplied ? (
+                <Button
+                  type="button"
+                  variant="secondary"
+                  disabled
+                  className="w-full sm:w-fit cursor-not-allowed font-medium opacity-90"
+                >
+                  <Check className="size-4 text-emerald-600 dark:text-emerald-400" />
+                  Applied
+                </Button>
+              ) : (
+                <Button
+                  type="button"
+                  disabled={isApplying}
+                  className="w-full sm:w-fit"
+                  onClick={() => onApply(job.id)}
+                >
+                  {isApplying ? (
+                    <>
+                      <Loader2 className="size-4 animate-spin" />
+                      Applying...
+                    </>
+                  ) : (
+                    <>
+                      <Send className="size-4" />
+                      {applyLabel ?? "Apply"}
+                    </>
+                  )}
+                </Button>
+              )
             ) : null}
+
             {onEdit ? (
               <Button
                 type="button"

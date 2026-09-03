@@ -1,6 +1,7 @@
 import type { AdminApplicationI, AdminJobI } from "@/features/dashboard/data/dashboard-data";
+import type { JobCategoryCountI } from "@/features/jobs/store/jobs-slice";
 import type { ApplicationStatusI } from "@job-portal/contracts";
-import type { CreateJobInputI } from "@job-portal/contracts/jobs";
+import type { CreateJobInputI, JobStatusI, UpdateJobInputI } from "@job-portal/contracts/jobs";
 
 export type JobResponseDataI = CreateJobInputI & {
   id: string;
@@ -31,6 +32,8 @@ export type JobDetailPropsI = {
   applyHref?: string;
   applyLabel?: string;
   backLabel?: string;
+  hasApplied?: boolean;
+  isApplying?: boolean;
   job: AdminJobI;
   onBack: () => void;
   onApply?: (jobId: string) => void;
@@ -39,4 +42,41 @@ export type JobDetailPropsI = {
   onViewApplication?: (applicationId: string) => void;
   showApplications?: boolean;
   isLoading?: boolean;
+};
+
+type JobsListResponseMetaI = {
+  page: number;
+  limit: number;
+  total: number;
+  totalPages: number;
+};
+
+export type JobsListApiResponseI = {
+  data: JobResponseDataI[];
+  meta: JobsListResponseMetaI;
+};
+
+export type ListJobsQueryI = {
+  status?: JobStatusI | "all";
+};
+
+export type JobResponseI = {
+  data: JobResponseDataI;
+};
+
+export type UpdateJobRequestI = {
+  id: string;
+  data: UpdateJobInputI;
+};
+
+export type JobCategoryCountResponseI = {
+  data: JobCategoryCountI[];
+};
+
+export type FeaturedJobsQueryRequestI = {
+  limit?: number;
+};
+
+export type FeaturedJobsApiResponseI = {
+  data: JobResponseDataI[];
 };
