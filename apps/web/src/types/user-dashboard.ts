@@ -10,18 +10,8 @@ export type UserDashboardViewI =
 
 export type UserDashboardContentPropsI = {
   activeTab: string;
-  applications: AdminApplicationI[];
-  hasApplied?: boolean;
-  isApplying?: boolean;
-  isJobsLoading?: boolean;
-  isJobsFetching?: boolean;
-  hasMoreJobs?: boolean;
-  onLoadMoreJobs?: () => void;
-  jobsErrorMessage?: string;
   isCandidate: boolean;
   isAuthenticated: boolean;
-  jobs: AdminJobI[];
-  onApply: (jobId: string) => void;
   onBackToApplications: () => void;
   onBackToJobs: () => void;
   onNavChange: (value: string) => void;
@@ -38,7 +28,6 @@ export type UseUserDashboardResultI = {
   activeTab: string;
   applications: AdminApplicationI[];
   currentTabs: DashboardTabI[];
-  handleApply: (jobId: string) => void;
   handleBackToApplications: () => void;
   handleBackToJobs: () => void;
   handleLogout: () => Promise<void>;
@@ -46,16 +35,9 @@ export type UseUserDashboardResultI = {
   handleTabChange: (value: string) => void;
   handleViewApplication: (applicationId: string) => void;
   handleViewJob: (jobId: string) => void;
-  hasApplied?: boolean;
-  isApplying?: boolean;
   hasValidParams: boolean;
   isAuthenticated: boolean;
   isCandidate: boolean;
-  isJobsLoading: boolean;
-  isJobsFetching?: boolean;
-  hasMoreJobs?: boolean;
-  onLoadMoreJobs?: () => void;
-  jobsErrorMessage?: string;
   jobs: AdminJobI[];
   navItems: DashboardNavItemI[];
   redirectTo: string;

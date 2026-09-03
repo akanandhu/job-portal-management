@@ -12,7 +12,6 @@ export function AdminDashboard() {
     accountSubtitle,
     activeNav,
     activeTab,
-    applications,
     hasValidParams,
     searchParams,
     view,
@@ -29,21 +28,7 @@ export function AdminDashboard() {
     navItems,
     handleViewApplication,
     handleViewJob,
-    hasMoreApplications,
-    hasMoreJobs,
-    isApplicationsFetching,
-    isApplicationsLoading,
-    isJobsFetching,
-    isJobsLoading,
-    jobsErrorMessage,
-    jobs,
-    onLoadMoreApplications,
-    onLoadMoreJobs,
   } = useAdminDashboard();
-  const visibleApplications =
-    activeNav === "applications"
-      ? applications.filter((application) => application.status === activeTab)
-      : applications;
 
   if (!hasValidParams) {
     const nextParams = new URLSearchParams(searchParams);
@@ -67,23 +52,12 @@ export function AdminDashboard() {
     >
       <DashboardTabs activeTab={activeTab} tabs={currentTabs} onTabChange={handleTabChange} />
       <AdminDashboardContent
-        applications={visibleApplications}
-        hasMoreApplications={hasMoreApplications}
-        hasMoreJobs={hasMoreJobs}
-        isApplicationsFetching={isApplicationsFetching}
-        isApplicationsLoading={isApplicationsLoading}
-        isJobsFetching={isJobsFetching}
-        isJobsLoading={isJobsLoading}
-        jobsErrorMessage={jobsErrorMessage}
-        jobs={jobs}
         onChangeApplicationStatus={handleChangeApplicationStatus}
         onAddJob={handleAddJob}
         onBackToApplications={handleBackToApplications}
         onBackToJobs={handleBackToJobs}
         onJobSaved={handleJobSaved}
         onEditJob={handleEditJob}
-        onLoadMoreApplications={onLoadMoreApplications}
-        onLoadMoreJobs={onLoadMoreJobs}
         onViewApplication={handleViewApplication}
         onViewJob={handleViewJob}
         view={view}

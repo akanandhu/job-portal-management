@@ -1,16 +1,12 @@
-import { useState } from "react";
 import { BriefcaseBusiness, ClipboardList } from "lucide-react";
 import toast from "react-hot-toast";
 
 import { useAppSelector } from "@/app/hook";
-import {
-  useListAllApplicationsQuery,
-  useUpdateApplicationStatusMutation,
-} from "@/features/applications/store/applications-api";
+import { useUpdateApplicationStatusMutation } from "@/features/applications/store/applications-api";
 import { selectAllApplications } from "@/features/applications/store/applications-slice";
+import { formatApplications } from "@/features/applications/utils/format-application";
 import { selectCurrentUser } from "@/features/auth/store/auth-selectors";
 import type { AdminApplicationI } from "@/features/dashboard/data/dashboard-data";
-import { useListJobsQuery } from "@/features/jobs/store/jobs-api";
 import { selectJobs } from "@/features/jobs/store/jobs-slice";
 import { getNameInitial } from "@/lib/utils";
 import { getApiErrorMessage } from "@/services/api-error";
@@ -31,42 +27,6 @@ const navItems: DashboardNavItemI[] = [
 ];
 
 const useAdminDashboard = () => {
-  const [jobsPage, setJobsPage] = useState(1);
-  const [applicationsPage, setApplicationsPage] = useState(1);
-
-  const {
-    data: jobsResponse,
-    error: jobsError,
-    isLoading: isJobsLoading,
-    isFetching: isJobsFetching,
-  } = useListJobsQuery({ status: "all", page: jobsPage });
-  const jobs = useAppSelector(selectJobs);
-
-  const {
-    data: applicationsResponse,
-    isLoading: isApplicationsLoading,
-    isFetching: isApplicationsFetching,
-  } = useListAllApplicationsQuery({ page: applicationsPage });
-  const [updateApplicationStatus] = useUpdateApplicationStatusMutation();
-
-  const allApplications = useAppSelector(selectAllApplications);
-
-  const formattedApplications: AdminApplicationI[] = allApplications.map((app) => ({
-    id: app.id,
-    jobId: app.jobId,
-    candidate: app.user?.name ?? "Candidate",
-    status: app.status,
-    appliedAt: app.createdAt ? "Applied recently" : "Just now",
-    phone: "",
-    yearsOfExperience: app.yearsOfExperience ?? 0,
-    education: app.education ?? "",
-    currentCompany: app.currentCompany ?? null,
-    currentRole: app.currentRole ?? null,
-    expectedSalary: app.expectedSalary ?? 0,
-    noticePeriodDays: app.noticePeriodDays ?? 0,
-    skills: app.skills ?? [],
-  }));
-
   const currentUser = useAppSelector(selectCurrentUser);
   const dashboard = useDashboard({
     defaultSection,
@@ -74,6 +34,12 @@ const useAdminDashboard = () => {
     getTabs: getDashboardTabs,
     navItems,
   });
+
+  const jobs = useAppSelector(selectJobs);
+  const allApplications = useAppSelector(selectAllApplications);
+  const [updateApplicationStatus] = useUpdateApplicationStatusMutation();
+
+  const formattedApplications: AdminApplicationI[] = formatApplications(allApplications);
 
   const view = getAdminDashboardView({
     activeNav: dashboard.activeNav,
@@ -118,14 +84,6 @@ const useAdminDashboard = () => {
     dashboard.handleBackToJobs(defaultJobTab);
   };
 
-  const jobsMeta = jobsResponse?.meta;
-  const hasMoreJobs = Boolean(jobsMeta && jobsMeta.page < jobsMeta.totalPages);
-
-  const applicationsMeta = applicationsResponse?.meta;
-  const hasMoreApplications = Boolean(
-    applicationsMeta && applicationsMeta.page < applicationsMeta.totalPages,
-  );
-
   return {
     accountInitial: getNameInitial(currentUser?.name, "A"),
     accountName: currentUser?.name ?? "Admin",
@@ -148,15 +106,6 @@ const useAdminDashboard = () => {
     handleViewApplication: dashboard.handleViewApplication,
     handleViewJob: dashboard.handleViewJob,
     hasValidParams: dashboard.hasValidParams,
-    isJobsLoading,
-    isJobsFetching,
-    hasMoreJobs,
-    onLoadMoreJobs: () => setJobsPage((prev) => prev + 1),
-    isApplicationsLoading,
-    isApplicationsFetching,
-    hasMoreApplications,
-    onLoadMoreApplications: () => setApplicationsPage((prev) => prev + 1),
-    jobsErrorMessage: jobsError ? getApiErrorMessage(jobsError, "Failed to load jobs") : undefined,
     jobs,
     view,
     navItems,

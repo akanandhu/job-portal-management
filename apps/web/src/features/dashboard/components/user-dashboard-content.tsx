@@ -1,5 +1,5 @@
-import { ApplicationDetail } from "@/features/dashboard/components/application-detail";
-import { ApplicationList } from "@/features/dashboard/components/application-list";
+import { ApplicationDetail } from "@/features/applications/components/application-detail";
+import { ApplicationList } from "@/features/applications/components/application-list";
 import { CandidateProfileEditor } from "@/features/dashboard/components/candidate-profile-editor";
 import { JobDetail } from "@/features/jobs/components/job-detail";
 import { JobList } from "@/features/jobs/components/job-list";
@@ -8,20 +8,10 @@ import type { UserDashboardContentPropsI } from "@/types/user-dashboard";
 
 export function UserDashboardContent({
   activeTab,
-  applications,
-  hasApplied,
-  hasMoreJobs,
-  isApplying,
   isAuthenticated,
-  isJobsFetching = false,
-  isJobsLoading = false,
-  jobsErrorMessage,
   isCandidate,
-  jobs,
-  onApply,
   onBackToApplications,
   onBackToJobs,
-  onLoadMoreJobs,
   onNavChange,
   onViewApplication,
   onViewJob,
@@ -35,10 +25,7 @@ export function UserDashboardContent({
           applyHref={!isAuthenticated ? "/login" : undefined}
           applyLabel={isCandidate ? "Apply" : "Login to apply"}
           backLabel="Suggested jobs"
-          hasApplied={hasApplied}
-          isApplying={isApplying}
           job={view.job}
-          onApply={isCandidate ? onApply : undefined}
           onBack={onBackToJobs}
           showApplications={false}
         />
@@ -62,12 +49,11 @@ export function UserDashboardContent({
     case "applications.list":
       return (
         <ApplicationList
-          applications={applications}
           description="Status filtering is handled by the application tabs."
           emptyMessage={`No ${formatOptionLabel(activeTab)} applications yet.`}
-          jobs={jobs}
           onViewApplication={onViewApplication}
           showStatusEditor={false}
+          status={activeTab}
           title="My applications"
         />
       );
@@ -76,12 +62,6 @@ export function UserDashboardContent({
       return (
         <JobList
           description="Browse open roles and read the complete job description before applying."
-          errorMessage={jobsErrorMessage}
-          hasMore={hasMoreJobs}
-          isFetchingMore={isJobsFetching}
-          isLoading={isJobsLoading}
-          jobs={jobs}
-          onLoadMore={onLoadMoreJobs}
           onViewJob={onViewJob}
           showApplicationsCount={false}
           title="Suggested jobs"

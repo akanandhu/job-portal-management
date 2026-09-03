@@ -1,16 +1,8 @@
-import { useState } from "react";
 import { BriefcaseBusiness, ClipboardList, UserRoundPen } from "lucide-react";
-import toast from "react-hot-toast";
 
 import { useAppSelector } from "@/app/hook";
-import {
-  useApplyToJobMutation,
-  useListMyApplicationsQuery,
-} from "@/features/applications/store/applications-api";
-import {
-  selectHasAppliedToJob,
-  selectMyApplications,
-} from "@/features/applications/store/applications-slice";
+import { selectMyApplications } from "@/features/applications/store/applications-slice";
+import { formatApplications } from "@/features/applications/utils/format-application";
 import {
   selectCurrentUser,
   selectIsAuthenticated,
@@ -21,10 +13,8 @@ import {
   applicationTabs,
   defaultApplicationTab,
 } from "@/features/dashboard/utils/admin-dashboard-view";
-import { useListJobsQuery } from "@/features/jobs/store/jobs-api";
 import { selectJobs } from "@/features/jobs/store/jobs-slice";
 import { getNameInitial } from "@/lib/utils";
-import { getApiErrorMessage } from "@/services/api-error";
 import type { DashboardNavItemI, DashboardTabI } from "@/types/dashboard";
 import type { UseUserDashboardResultI, UserDashboardViewI } from "@/types/user-dashboard";
 import { useDashboard } from "./useDashboard";
@@ -79,41 +69,16 @@ const getView = ({
 };
 
 export default function useUserDashboard(): UseUserDashboardResultI {
-  const [jobsPage, setJobsPage] = useState(1);
   const isAuthenticated = useAppSelector(selectIsAuthenticated);
   const isCandidate = useAppSelector(selectIsCandidate);
   const currentUser = useAppSelector(selectCurrentUser);
-  const {
-    data: jobsResponse,
-    error: jobsError,
-    isLoading: isJobsLoading,
-    isFetching: isJobsFetching,
-  } = useListJobsQuery({ page: jobsPage });
   const jobs = useAppSelector(selectJobs);
-
-  const jobsMeta = jobsResponse?.meta;
-  const hasMoreJobs = Boolean(jobsMeta && jobsMeta.page < jobsMeta.totalPages);
-
-  useListMyApplicationsQuery(undefined, { skip: !isCandidate });
-  const [applyToJob, { isLoading: isApplying }] = useApplyToJobMutation();
-
   const myApplications = useAppSelector(selectMyApplications);
 
-  const formattedApplications: AdminApplicationI[] = myApplications.map((app) => ({
-    id: app.id,
-    jobId: app.jobId,
-    candidate: currentUser?.name ?? "Candidate",
-    status: app.status,
-    appliedAt: app.createdAt ? "Applied recently" : "Just now",
-    phone: "",
-    yearsOfExperience: app.yearsOfExperience ?? 0,
-    education: app.education ?? "",
-    currentCompany: app.currentCompany ?? null,
-    currentRole: app.currentRole ?? null,
-    expectedSalary: app.expectedSalary ?? 0,
-    noticePeriodDays: app.noticePeriodDays ?? 0,
-    skills: app.skills ?? [],
-  }));
+  const formattedApplications: AdminApplicationI[] = formatApplications(
+    myApplications,
+    currentUser?.name ?? "Candidate",
+  );
 
   const navItems: DashboardNavItemI[] = [
     { id: "jobs", label: "Jobs", icon: BriefcaseBusiness },
@@ -124,6 +89,7 @@ export default function useUserDashboard(): UseUserDashboardResultI {
         ]
       : []),
   ];
+
   const dashboard = useDashboard({
     defaultSection,
     getDefaultTab,
@@ -143,19 +109,6 @@ export default function useUserDashboard(): UseUserDashboardResultI {
     searchParams: dashboard.searchParams,
   });
 
-  const currentJobId = view.type === "jobs.detail" ? view.job.id : undefined;
-  const hasApplied = useAppSelector((state) => selectHasAppliedToJob(state, currentJobId));
-
-  const handleApply = async (jobId: string) => {
-    try {
-      const response = await applyToJob({ jobId }).unwrap();
-      toast.success(response.message || "Application submitted successfully!");
-    } catch (error: unknown) {
-      const message = getApiErrorMessage(error, "Failed to submit application");
-      toast.error(message);
-    }
-  };
-
   return {
     accountInitial: getNameInitial(currentUser?.name),
     accountName: currentUser?.name ?? "Guest",
@@ -164,7 +117,6 @@ export default function useUserDashboard(): UseUserDashboardResultI {
     activeTab: dashboard.activeTab,
     applications: filteredApplications,
     currentTabs: dashboard.currentTabs,
-    handleApply,
     handleBackToApplications: () => dashboard.handleNavChange("applications"),
     handleBackToJobs: () => dashboard.handleNavChange("jobs"),
     handleLogout: dashboard.handleLogout,
@@ -172,18 +124,9 @@ export default function useUserDashboard(): UseUserDashboardResultI {
     handleTabChange: dashboard.handleTabChange,
     handleViewApplication: dashboard.handleViewApplication,
     handleViewJob: (jobId: string) => dashboard.handleViewJob(jobId, defaultJobTab),
-    hasApplied,
-    isApplying,
     hasValidParams: dashboard.hasValidParams,
     isAuthenticated,
     isCandidate,
-    isJobsLoading,
-    isJobsFetching,
-    hasMoreJobs,
-    onLoadMoreJobs: () => setJobsPage((prev: number) => prev + 1),
-    jobsErrorMessage: jobsError
-      ? getApiErrorMessage(jobsError, "Failed to load open jobs")
-      : undefined,
     jobs,
     navItems,
     redirectTo: dashboard.getRedirectTo("/listing"),

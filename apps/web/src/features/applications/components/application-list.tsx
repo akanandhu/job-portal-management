@@ -3,47 +3,41 @@ import type { ApplicationStatusI } from "@job-portal/contracts/applications";
 
 import { Button } from "@/components/ui/button";
 import { InfiniteScrollTrigger } from "@/components/ui/infinite-scroll-trigger";
-import { ApplicationStatusSelect } from "@/features/dashboard/components/application-status-select";
+import { ApplicationStatusSelect } from "@/features/applications/components/application-status-select";
+import { useApplicationList } from "@/features/applications/hooks/useApplicationList";
 import { ListingShimmer } from "@/features/dashboard/components/listing-shimmer";
-import type { AdminApplicationI, AdminJobI } from "@/features/dashboard/data/dashboard-data";
 import { useInfiniteScroll } from "@/hooks/use-infinite-scroll";
 import { formatOptionLabel } from "@/lib/utils";
 
 type ApplicationListPropsI = {
-  applications: AdminApplicationI[];
   description?: string;
   emptyMessage?: string;
-  hasMore?: boolean;
-  isFetchingMore?: boolean;
-  isLoading?: boolean;
-  jobs: AdminJobI[];
   onChangeApplicationStatus?: (applicationId: string, status: ApplicationStatusI) => void;
-  onLoadMore?: () => void;
   onViewApplication: (applicationId: string) => void;
   showStatusEditor?: boolean;
+  status?: string;
   title?: string;
 };
 
 export function ApplicationList({
-  applications,
   description = "Review candidates who submitted applications.",
   emptyMessage = "No applications match this view.",
-  hasMore = false,
-  isFetchingMore = false,
-  isLoading = false,
-  jobs,
   onChangeApplicationStatus,
-  onLoadMore,
   onViewApplication,
   showStatusEditor = true,
+  status,
   title = "Applied candidates",
 }: ApplicationListPropsI) {
+  const { applications, hasMore, isFetchingMore, isLoading, jobs, onLoadMore } = useApplicationList(
+    { status },
+  );
+
   const jobsById = new Map(jobs.map((job) => [job.id, job]));
 
   const { triggerRef } = useInfiniteScroll({
     hasMore,
     isLoading: isFetchingMore,
-    onLoadMore: onLoadMore ?? (() => undefined),
+    onLoadMore,
   });
 
   return (

@@ -3,43 +3,38 @@ import { Button } from "@/components/ui/button";
 import ErrorBox from "@/components/ui/error-box";
 import { InfiniteScrollTrigger } from "@/components/ui/infinite-scroll-trigger";
 import { ListingShimmer } from "@/features/dashboard/components/listing-shimmer";
-import type { AdminJobI } from "@/features/dashboard/data/dashboard-data";
+import { useJobList } from "@/features/jobs/hooks/useJobList";
 import { useInfiniteScroll } from "@/hooks/use-infinite-scroll";
 import { formatOptionLabel } from "@/lib/utils";
+import type { JobStatusI } from "@job-portal/contracts/jobs";
 
 type JobListPropsI = {
-  jobs: AdminJobI[];
   description?: string;
-  errorMessage?: string;
-  hasMore?: boolean;
-  isFetchingMore?: boolean;
-  isLoading?: boolean;
   onAddJob?: () => void;
   onEditJob?: (jobId: string) => void;
-  onLoadMore?: () => void;
   onViewJob: (jobId: string) => void;
   showApplicationsCount?: boolean;
+  status?: JobStatusI | "all";
   title?: string;
 };
 
 export function JobList({
-  errorMessage,
-  hasMore = false,
-  isFetchingMore = false,
-  isLoading = false,
-  jobs,
   description = "Manage active job posts and candidate visibility.",
   onAddJob,
   onEditJob,
-  onLoadMore,
   onViewJob,
   showApplicationsCount = true,
+  status,
   title = "All jobs",
 }: JobListPropsI) {
+  const { errorMessage, hasMore, isFetchingMore, isLoading, jobs, onLoadMore } = useJobList({
+    status,
+  });
+
   const { triggerRef } = useInfiniteScroll({
     hasMore,
     isLoading: isFetchingMore,
-    onLoadMore: onLoadMore ?? (() => undefined),
+    onLoadMore,
   });
 
   return (

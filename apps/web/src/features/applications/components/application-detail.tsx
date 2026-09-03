@@ -3,9 +3,9 @@ import type * as React from "react";
 import type { ApplicationStatusI } from "@job-portal/contracts/applications";
 
 import { Button } from "@/components/ui/button";
-import { ApplicationStatusSelect } from "@/features/dashboard/components/application-status-select";
+import { ApplicationStatusSelect } from "@/features/applications/components/application-status-select";
+import type { AdminApplicationI } from "@/features/dashboard/data/dashboard-data";
 import { formatOptionLabel } from "@/lib/utils";
-import type { AdminApplicationI } from "../data/dashboard-data";
 
 type ApplicationDetailPropsI = {
   application: AdminApplicationI;
@@ -18,7 +18,7 @@ type ApplicationDetailPropsI = {
 function DetailItem({ label, value }: { label: string; value: React.ReactNode }) {
   return (
     <div>
-      <dt className="text-xs font-semibold text-muted-foreground uppercase">{label}</dt>
+      <dt className="text-xs font-semibold uppercase text-muted-foreground">{label}</dt>
       <dd className="mt-1 text-sm font-medium">{value}</dd>
     </div>
   );

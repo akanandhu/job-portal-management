@@ -3,26 +3,33 @@ import { Link } from "react-router";
 
 import { Button, buttonVariants } from "@/components/ui/button";
 import { JobApplicationsPanel } from "@/features/jobs/components/job-applications-panel";
+import { useJobDetail } from "@/features/jobs/hooks/useJobDetail";
+import { formatOptionLabel } from "@/lib/utils";
 import type { JobDetailPropsI } from "@/types/jobs";
 import DetailItem from "./job-detail-item";
-import { formatOptionLabel } from "@/lib/utils";
 
 export function JobDetail({
-  applications,
+  applications: providedApplications = [],
   applyHref,
   applyLabel,
   backLabel = "All jobs",
-  hasApplied = false,
-  isApplying = false,
+  hasApplied: customHasApplied,
+  isApplying: customIsApplying,
   isLoading = false,
   job,
   onBack,
-  onApply,
+  onApply: customOnApply,
   onChangeApplicationStatus,
   onEdit,
   onViewApplication,
   showApplications = true,
 }: JobDetailPropsI) {
+  const detail = useJobDetail({ jobId: job.id, applications: providedApplications });
+
+  const hasApplied = customHasApplied ?? detail.hasApplied;
+  const isApplying = customIsApplying ?? detail.isApplying;
+  const onApply = customOnApply ?? (applyHref ? undefined : detail.handleApply);
+
   return (
     <div className="py-5">
       <div className="border-b pb-5">
@@ -133,7 +140,7 @@ export function JobDetail({
 
       {showApplications ? (
         <JobApplicationsPanel
-          applications={applications}
+          applications={providedApplications}
           isLoading={isLoading}
           onChangeApplicationStatus={onChangeApplicationStatus}
           onViewApplication={onViewApplication}

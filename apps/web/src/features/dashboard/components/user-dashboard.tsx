@@ -15,9 +15,7 @@ export function UserDashboard() {
     accountSubtitle,
     activeNav,
     activeTab,
-    applications,
     currentTabs,
-    handleApply,
     handleBackToApplications,
     handleBackToJobs,
     handleLogout,
@@ -25,18 +23,10 @@ export function UserDashboard() {
     handleTabChange,
     handleViewApplication,
     handleViewJob,
-    hasApplied,
-    hasMoreJobs,
-    isApplying,
     hasValidParams,
     isAuthenticated,
     isCandidate,
-    isJobsFetching,
-    isJobsLoading,
-    jobsErrorMessage,
-    jobs,
     navItems,
-    onLoadMoreJobs,
     redirectTo,
     showFilters,
     view,
@@ -86,20 +76,10 @@ export function UserDashboard() {
       <DashboardTabs activeTab={activeTab} tabs={currentTabs} onTabChange={handleTabChange} />
       <UserDashboardContent
         activeTab={activeTab}
-        applications={applications}
-        hasApplied={hasApplied}
-        hasMoreJobs={hasMoreJobs}
-        isApplying={isApplying}
         isAuthenticated={isAuthenticated}
-        isJobsFetching={isJobsFetching}
-        isJobsLoading={isJobsLoading}
-        jobsErrorMessage={jobsErrorMessage}
         isCandidate={isCandidate}
-        jobs={jobs}
-        onApply={handleApply}
         onBackToApplications={handleBackToApplications}
         onBackToJobs={handleBackToJobs}
-        onLoadMoreJobs={onLoadMoreJobs}
         onNavChange={handleNavChange}
         onViewApplication={handleViewApplication}
         onViewJob={handleViewJob}

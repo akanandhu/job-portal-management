@@ -28,7 +28,7 @@ export type JobSelectPropsI = {
 };
 
 export type JobDetailPropsI = {
-  applications: AdminApplicationI[];
+  applications?: AdminApplicationI[];
   applyHref?: string;
   applyLabel?: string;
   backLabel?: string;
