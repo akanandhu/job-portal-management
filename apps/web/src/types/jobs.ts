@@ -1,7 +1,14 @@
 import type { AdminApplicationI, AdminJobI } from "@/features/dashboard/data/dashboard-data";
 import type { JobCategoryCountI } from "@/features/jobs/store/jobs-slice";
 import type { ApplicationStatusI } from "@job-portal/contracts";
-import type { CreateJobInputI, JobStatusI, UpdateJobInputI } from "@job-portal/contracts/jobs";
+import type {
+  CreateJobInputI,
+  ExperienceLevelI,
+  JobCategoryI,
+  JobStatusI,
+  UpdateJobInputI,
+  WorkplaceTypeI,
+} from "@job-portal/contracts/jobs";
 
 export type JobResponseDataI = CreateJobInputI & {
   id: string;
@@ -61,7 +68,10 @@ export type JobsListApiResponseI = {
 export type ListJobsQueryI = {
   page?: number;
   limit?: number;
+  category?: JobCategoryI;
+  experienceLevel?: ExperienceLevelI;
   status?: JobStatusI | "all";
+  workplaceType?: WorkplaceTypeI;
 };
 
 export type JobResponseI = {

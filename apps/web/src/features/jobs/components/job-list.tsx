@@ -1,12 +1,13 @@
 import { BriefcaseBusiness, Pencil, Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import ErrorBox from "@/components/ui/error-box";
 import { InfiniteScrollTrigger } from "@/components/ui/infinite-scroll-trigger";
 import { ListingShimmer } from "@/components/ui/shimmer";
 import { useJobList } from "@/features/jobs/hooks/useJobList";
 import { useInfiniteScroll } from "@/hooks/use-infinite-scroll";
 import { formatOptionLabel } from "@/lib/utils";
 import type { JobStatusI } from "@job-portal/contracts/jobs";
+import JobListErrorCard from "./job-list-error-card";
+import JobListEmptyCard from "./job-list-empty-card";
 
 type JobListPropsI = {
   description?: string;
@@ -27,7 +28,18 @@ export function JobList({
   status,
   title = "All jobs",
 }: JobListPropsI) {
-  const { errorMessage, hasMore, isFetchingMore, isLoading, jobs, onLoadMore } = useJobList({
+  const {
+    errorMessage,
+    hasActiveFilters,
+    hasMore,
+    isError,
+    isFetchingMore,
+    isLoading,
+    jobs,
+    onClearFilters,
+    onLoadMore,
+    onRetry,
+  } = useJobList({
     status,
   });
 
@@ -54,10 +66,10 @@ export function JobList({
 
       {isLoading ? (
         <ListingShimmer count={6} />
-      ) : errorMessage ? (
-        <div className="rounded-xl border bg-muted/30 p-4">
-          <ErrorBox message={errorMessage} />
-        </div>
+      ) : isError ? (
+        <JobListErrorCard errorMessage={errorMessage} onRetry={onRetry} />
+      ) : jobs.length === 0 ? (
+        <JobListEmptyCard hasActiveFilters={hasActiveFilters} onClearFilters={onClearFilters} />
       ) : (
         <>
           <div className="divide-y">
