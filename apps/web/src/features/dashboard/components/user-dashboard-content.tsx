@@ -64,7 +64,7 @@ export function UserDashboardContent({
           description="Browse open roles and read the complete job description before applying."
           onViewJob={onViewJob}
           showApplicationsCount={false}
-          title="Suggested jobs"
+          title="Recommended jobs"
         />
       );
   }
