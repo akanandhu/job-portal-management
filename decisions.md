@@ -10,10 +10,12 @@ Engineering decisions for the TNP Job Portal assignment.
 
 **Decision:** The portal has two role-based experiences.
 
-- **Admin:** create, edit, delete, filter, and manage jobs.
-- **User:** discover jobs, view details, and submit applications.
+- **Admin:** create, edit, delete, status toggle, filter, and manage job applications.
+- **User (Candidate):** profile completion, discover jobs, search/category filter, view details, and submit applications.
 
-Both experiences share the same frontend, API, authentication, and database.
+Both experiences share the same frontend, API, authentication, and PostgreSQL database.
+
+**Why:** Clear separation of responsibilities ensures recruiters can manage listings and applications efficiently without polluting job-seeker discovery workflows.
 
 ---
 
@@ -23,13 +25,13 @@ Both experiences share the same frontend, API, authentication, and database.
 
 **Decision:** Use a conventional three-layer architecture.
 
-| Layer         | Responsibility                                                       |
-| ------------- | -------------------------------------------------------------------- |
-| React web app | UI, forms, routing, shadcn/Tailwind composition, planned Redux state |
-| Express API   | Auth, authorization, validation, and business logic                  |
-| PostgreSQL    | Users, jobs, applications, and refresh tokens                        |
+| Layer             | Responsibility                                                                                    |
+| :---------------- | :------------------------------------------------------------------------------------------------ |
+| **React web app** | UI, forms, routing, Redux Toolkit state, RTK Query API caching, Tailwind composition              |
+| **Express API**   | Auth, authorization, Zod validation, and business logic                                           |
+| **PostgreSQL**    | Relational data persistence for Users, Candidate Profiles, Jobs, Applications, and Refresh Tokens |
 
-**Tradeoff:** This is more structure than a frontend-only implementation, but the responsibilities are explicit and independently testable.
+**Tradeoff:** This requires more initial setup and boilerplate than a monolithic server-rendered framework or frontend-only mock, but responsibilities are explicit, decoupled, and independently testable.
 
 ---
 
@@ -37,270 +39,152 @@ Both experiences share the same frontend, API, authentication, and database.
 
 **Decision:** Keep the project as a workspace monorepo with `apps/web`, `apps/api`, and reserved `packages/*`.
 
-**Why:** The web and API can evolve independently while still sharing one install, one lockfile, and room for future shared contracts.
+**Why:** Web and API evolve independently while sharing a single repository, single install step (`npm install`), unified lockfile, and room for shared contract packages.
+
+**Tradeoff:** Requires workspace-aware script execution (`--workspace=web`), but avoids code duplication across separate repositories.
 
 ---
 
 ### REST API
 
-**Decision:** Expose authentication, jobs, and applications as REST resources.
+**Decision:** Expose authentication, jobs, applications, and candidate profiles as predictable REST resources.
 
-**Current state:** `/health` and `/auth/login` are implemented. Jobs, applications, refresh, and logout endpoints are planned/in progress.
+**Alternative:** GraphQL was considered but deemed unnecessary for this application scope.
 
-**Alternative:** GraphQL was unnecessary for the assignment scope.
-
-**Tradeoff:** Filtering and pagination require query parameters, but endpoints remain simple and predictable.
+**Tradeoff:** Filtering and pagination require query parameters (`status`, `page`, `limit`), but API endpoints remain simple, standard, and easy to inspect.
 
 ---
 
-## Authentication
+## Authentication & Authorization
 
-### Access and refresh tokens
+### Access and Refresh Tokens
 
-**Decision:** Use short-lived JWT access tokens with persisted, revocable refresh tokens.
+**Decision:** Use short-lived JWT access tokens with persisted, revocable refresh tokens stored in PostgreSQL.
 
-**Current state:** Access-token generation/verification is implemented. The `RefreshToken` model exists, and refresh/logout lifecycle work is in progress.
+**Why:** Allows active sessions to be renewed seamlessly while keeping access tokens short-lived. Refresh tokens can be revoked immediately upon logout or password invalidation.
 
-**Why:** Sessions can be renewed while access tokens stay short-lived, and refresh sessions can be revoked.
-
-**Tradeoff:** Requires additional token storage, rotation, expiry, and logout logic.
+**Tradeoff:** Requires database persistence, rotation, expiry tracking, and cookie lifecycle logic on the server.
 
 ---
 
-### Backend-enforced roles
+### Backend-Enforced Roles
 
-**Decision:** Admin permissions are enforced by API authorization middleware.
+**Decision:** Admin permissions are strictly enforced by backend API authorization middleware (`requireRole("ADMIN")`).
 
-The frontend may hide admin actions, but the backend remains the authorization source of truth.
+**Why:** The frontend hides admin controls for non-admin users, but client-side UI hiding is not security. The backend remains the sole authorization source of truth.
 
----
-
-## Database
-
-### PostgreSQL
-
-**Decision:** PostgreSQL is the source of truth.
-
-The domain is naturally relational: `User -> Application -> Job`, with refresh tokens belonging to users.
-
-**Alternative:** MongoDB was considered unnecessary for strongly related entities.
+**Tradeoff:** Authorization checks must run on every protected route handler.
 
 ---
 
-### Prisma
+## Database & Data Integrity
 
-**Decision:** Use Prisma's PostgreSQL tooling and generated contract for typed database access and reproducible schema changes.
+### PostgreSQL Source of Truth
 
-**Tradeoff:** Adds schema generation/migration steps but avoids scattered raw SQL and keeps database access typed.
+**Decision:** PostgreSQL is the single source of truth for all entities.
+
+The domain is naturally relational (`User -> CandidateProfile`, `User -> Application -> Job`, `User -> RefreshToken`).
+
+**Alternative:** MongoDB was considered unnecessary for strongly related entities with strict schema constraints.
 
 ---
 
-### Prevent duplicate applications
+### Prisma ORM & Migrations
+
+**Decision:** Use Prisma PostgreSQL ORM and schema tools for typed database access and reproducible migration history (`apps/api/migrations`).
+
+**Tradeoff:** Introduces a build and contract generation step (`npx prisma generate`), but avoids raw SQL string vulnerabilities and keeps database access typed across TypeScript modules.
+
+---
+
+### Prevent Duplicate Applications
 
 **Decision:** Enforce a unique database constraint on `(userId, jobId)`.
 
-**Why:** Application-level checks alone can fail under concurrent requests.
+**Why:** Application-level validation checks can fail under race conditions or concurrent HTTP requests. A database uniqueness constraint guarantees duplicate application prevention at the storage layer.
+
+**Tradeoff:** Application submission handlers must catch constraint violation errors and return clear HTTP 409 responses.
 
 ---
 
-## Jobs
+## Candidate Profile Guard
 
-### Server-side filtering and pagination
+### Mandatory Candidate Profile Completion
 
-**Decision:** Job filtering and pagination happen through API queries against PostgreSQL.
+**Decision:** Candidates must complete a candidate profile (experience, education, expected salary, notice period, skills) before submitting job applications.
 
-**Current state:** The job model and indexes exist in the Prisma contract. API route implementation is planned/in progress.
+**Why:** Ensures application snapshots delivered to recruiters contain valid contact, experience, and salary expectations.
 
-**Alternative:** Fetching every job and filtering in React.
-
-**Tradeoff:** More API state to manage, but response size stays bounded as job volume grows.
+**Tradeoff:** Adds a prerequisite step for new candidates, which is handled via automatic navigation guards (`ProfileRequiredRoute`).
 
 ---
 
-### Admin-owned CRUD
+## Job Detail & Candidate Actions
 
-**Decision:** Creating, updating, and deleting jobs requires an authenticated admin.
+### Job Detail DB Sync
 
-Validation runs on both the frontend for immediate feedback and backend for data integrity.
+**Decision:** Opening a job detail view automatically queries `GET /jobs/:id` and syncs live application status directly from PostgreSQL DB.
 
----
-
-## Applications
-
-### Authentication required to apply
-
-**Decision:** Jobs can be browsed publicly, but submitting an application requires authentication.
-
-The API derives the applicant from the authenticated session instead of accepting a trusted `userId` from the client.
+**Why:** Ensures job status (PUBLISHED, CLOSED, DRAFT) and candidate application state (`hasApplied`) are 100% accurate against the database source of truth.
 
 ---
 
-### Backend owns application integrity
+### Scoped Action Visibility
 
-**Decision:** Before creating an application, the API verifies user authentication, job existence, and duplicate application state.
+**Decision:** The "Apply" and "Edit Profile" buttons on job detail pages are strictly visible to authenticated candidate users (`isAuthenticated && isCandidate`).
 
-The database uniqueness constraint provides the final duplicate protection.
+**Why:** Admins manage postings and candidate applications; they do not submit job applications or edit candidate profiles. Unauthenticated users cannot submit applications without logging in.
 
----
-
-## Frontend
-
-### React Router for page routing
-
-**Decision:** Use `react-router` for frontend routes.
-
-**Current state:** The app routes `/`, `/auth`, and a fallback 404 from `App.tsx`.
-
-**Tradeoff:** Keeps routing explicit without introducing a framework-level router.
-
----
-
-### shadcn/ui and Tailwind CSS
-
-**Decision:** Use shadcn/ui primitives with Tailwind CSS v4 for the UI system.
-
-**Why:** shadcn gives accessible, copy-owned primitives while Tailwind keeps composition fast and local to the component.
-
-**Tradeoff:** Generated primitives are source code in the app, so changes must be maintained like any other local component.
-
----
-
-### Folder boundaries
-
-**Decision:** Keep shared UI, layout, brand, pages, and feature-specific components separate.
-
-- `components/ui` is for shadcn primitives only.
-- `components/layout` is for shared app chrome such as header/footer.
-- `components/brand` is for reusable brand identity.
-- `features/<feature>/components` is for feature-specific sections.
-- `pages` is for route-level composition.
-
-**Why:** A header/footer is general layout, not a landing feature, while landing sections should stay close to the landing feature.
-
----
-
-### Reuse before rebuild
-
-**Decision:** Before writing a new component, check whether an existing shadcn primitive or shared component can serve it with props/classes.
-
-**Tradeoff:** Shared components can accumulate options, but that is cheaper than near-duplicate UI drifting apart.
-
----
-
-### Explicit async states
-
-**Decision:** API-driven screens explicitly handle `loading -> success -> empty -> error`.
-
-This prevents silent failures and stale UI during API operations.
-
----
-
-### No effect-per-state-change
-
-**Decision:** `useEffect` is for actual side effects only: mount fetches, subscriptions, and cross-tab storage listeners. User actions call plain handlers directly.
-
-**Tradeoff:** The handler may contain more explicit work, but the flow stays traceable.
-
----
-
-### Accessibility
-
-**Decision:** Semantic HTML and native labelling come first. ARIA is added only where semantics cannot express the state accurately.
-
-**Why:** A wrong or stale ARIA label is worse than a smaller, correct ARIA surface.
+**Tradeoff:** Action buttons must be conditionally passed based on user auth state.
 
 ---
 
 ## State Management
 
-### Redux for shared API state
+### Redux Toolkit & RTK Query
 
-**Decision:** Redux is the planned shared state layer for authentication, jobs, applications, and API lifecycle states.
+**Decision:** Redux Toolkit with RTK Query handles all shared state, backend API caching, tag invalidation (`User`, `Job`, `Application`, `CandidateProfile`), and auth slices.
 
-**Current state:** Redux is intended/in progress and should remain part of the architecture until explicitly replaced.
+**Alternative:** React Context or component-local state.
 
-**Alternative:** Context or component-local state.
-
-**Tradeoff:** More structure and boilerplate, but CRUD state and asynchronous transitions remain explicit.
+**Tradeoff:** Requires slice and API builder boilerplate, but API lifecycle states (`isLoading`, `isError`), query caching, and invalidations remain explicit and predictable.
 
 ---
 
-### Keep UI state local
+### Keep UI State Local
 
-**Decision:** Component-specific state such as modal visibility, inputs, and dropdowns stays local rather than being pushed into Redux.
+**Decision:** Component-specific state such as modal visibility, search input text, and active dropdown tabs stay local in React component state (`useState`).
 
----
-
-### Cross-tab auth state sync
-
-**Decision:** Auth state syncs across open tabs via the `storage` event on an auth/session marker, dispatching a Redux reset action in every tab where it fires.
-
-**Current state:** This is part of the planned Redux/auth implementation.
-
-**Alternative:** BroadcastChannel API is cleaner but less necessary for this assignment.
-
-**Tradeoff:** `storage` does not fire in the tab that made the change, so that tab also dispatches the reset locally.
+**Why:** Pushing transient UI state into global Redux unnecessarily bloats the store and triggers unnecessary re-renders.
 
 ---
 
-## Engineering
+## Engineering Conventions
 
-### `type`, not `interface`
+### `type`, Not `interface`
 
 **Decision:** Domain and app type definitions use `type`, never `interface`, with the existing `I` suffix convention (`JobI`, `UserI`, `ApplicationI`).
 
-**Exception:** Ambient declaration files may use `interface` where TypeScript declaration merging requires it, such as Express request augmentation.
+**Exception:** Ambient declaration files may use `interface` where TypeScript declaration merging requires it.
 
-**Tradeoff:** Loses declaration merging for ordinary app types, which this project does not need.
-
----
-
-### Export style
-
-**Decision:** Pages and single route modules may use default exports. Shared components, utilities, and multi-export files use named exports.
-
-**Why:** This matches the current codebase: route/page files are imported as page modules, while reusable components are easier to refactor with named exports.
+**Tradeoff:** Disables ambient declaration merging for ordinary app types, which is intentional for predictability.
 
 ---
 
-### File size cap
+### File Size Extraction Signal
 
-**Decision:** Around 150 lines is the extraction signal.
+**Decision:** Around 150 lines is the code extraction signal to decompose large modules into focused sub-components.
 
-**Why:** It catches a component or module doing too many jobs before it becomes hard to review.
-
----
-
-### Conventional commits
-
-**Decision:** Commit history follows Conventional Commits: `feat:`, `fix:`, `refactor:`, `chore:`, `docs:`.
-
-**Why:** The commit history is part of the machine-test deliverable and should show the order of decisions clearly.
+**Why:** Catches components doing too many jobs before they become hard to review or maintain.
 
 ---
 
-### Migrations and seeders
+### Conventional Commits
 
-**Decision:** Database changes are reproducible through migrations, and seeders stay isolated from runtime business logic.
-
----
-
-### Environment configuration
-
-**Decision:** Database URLs, token secrets, ports, and environment-specific settings come from environment variables and are excluded from source control.
-
-Commit example env files only.
-
----
-
-### Job Detail Candidate Actions Visibility
-
-**Decision:** The "Apply" and "Edit Profile" buttons on job detail pages are strictly scoped to authorized candidate (APPLICANT) users only.
-
-**Why:** Admins manage jobs and applications; they do not apply to open roles or edit candidate profiles. Unauthenticated/unauthorized users cannot submit applications without logging in. Restricting these controls ensures correct role authorization boundaries and prevents unexpected behavior across user and admin flows.
+**Decision:** Commit history follows Conventional Commits (`feat:`, `fix:`, `refactor:`, `chore:`, `docs:`).
 
 ---
 
 ## Principle
 
-Keep the implementation typed, relational, predictable, and intentionally simple. The assignment needs clear boundaries, correct authorization, data integrity, and an app that remains easy to read after the machine test is over.
+Keep the implementation typed, relational, predictable, and intentionally simple. The assignment needs clear boundaries, correct authorization, data integrity, and an app that remains easy to read and operate.
