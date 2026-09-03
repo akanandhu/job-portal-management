@@ -69,10 +69,7 @@ function parseApplicationStatus(body: unknown): ApplicationStatusI {
   );
 }
 
-export async function applyToJob(
-  userId: string,
-  params: Record<string, unknown>,
-) {
+export async function applyToJob(userId: string, params: Record<string, unknown>) {
   const jobId = parseApplyJobId(params);
   const job = await findJobById(jobId);
 
@@ -89,9 +86,7 @@ export async function applyToJob(
   const profile = await findCandidateProfileByUserId(userId);
 
   if (!profile) {
-    throw new ApplicationValidationError(
-      "Complete your profile before applying",
-    );
+    throw new ApplicationValidationError("Complete your profile before applying");
   }
 
   return await createApplication({
@@ -169,10 +164,7 @@ export async function listJobApplications(params: Record<string, unknown>) {
   }));
 }
 
-export async function changeApplicationStatus(
-  params: Record<string, unknown>,
-  body: unknown,
-) {
+export async function changeApplicationStatus(params: Record<string, unknown>, body: unknown) {
   const id = parseApplicationId(params);
   const status = parseApplicationStatus(body);
   const application = await findApplicationById(id);

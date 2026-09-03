@@ -1,10 +1,7 @@
 import { Router } from "express";
 import { authenticate } from "../../middleware/authenticate";
 import { requireRole } from "../../middleware/require-role";
-import {
-  getProfileController,
-  updateProfileController,
-} from "./profile.controller";
+import { getProfileController, updateProfileController } from "./profile.controller";
 
 const router = Router();
 

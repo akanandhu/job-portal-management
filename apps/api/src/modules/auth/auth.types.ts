@@ -8,4 +8,4 @@ export type CreateRefreshTokenI = {
   tokenHash: string;
   userId: string;
   expiresAt: string;
-}
+};

@@ -5,10 +5,7 @@ import type {
   ListAllApplicationsQueryI,
 } from "./application.types";
 
-export async function findApplicationByUserAndJob(
-  userId: string,
-  jobId: string,
-) {
+export async function findApplicationByUserAndJob(userId: string, jobId: string) {
   return await db.orm.public.Application.where({
     userId,
     jobId,
@@ -20,11 +17,10 @@ export async function createApplication(data: ApplicationSnapshotInputI) {
 }
 
 export async function listAllApplications(query: ListAllApplicationsQueryI) {
-  return await db.orm.public.Application
-    .include("user", (user) => user.select("id", "name", "email"))
-    .include("job", (job) =>
-      job.select("id", "title", "company", "location", "category"),
-    )
+  return await db.orm.public.Application.include("user", (user) =>
+    user.select("id", "name", "email"),
+  )
+    .include("job", (job) => job.select("id", "title", "company", "location", "category"))
     .orderBy([
       (application) => application.createdAt.desc(),
       (application) => application.id.desc(),
@@ -70,10 +66,7 @@ export async function findApplicationById(id: string) {
   }).first();
 }
 
-export async function updateApplicationStatus(
-  id: string,
-  status: ApplicationStatusI,
-) {
+export async function updateApplicationStatus(id: string, status: ApplicationStatusI) {
   return await db.orm.public.Application.where({
     id,
   }).update({

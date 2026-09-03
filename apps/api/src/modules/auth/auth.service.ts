@@ -6,11 +6,7 @@ import {
   revokeRefreshToken,
 } from "./auth.repository";
 import bcrypt from "bcrypt";
-import {
-  generateAccessToken,
-  generateRefreshToken,
-  hashRefreshToken,
-} from "./token.service";
+import { generateAccessToken, generateRefreshToken, hashRefreshToken } from "./token.service";
 
 export async function loginUser(email: string, password: string) {
   const user = await findUserByEmail(email);
@@ -34,10 +30,7 @@ export async function loginUser(email: string, password: string) {
 
   const refreshToken = generateRefreshToken();
   const refreshTokenHash = hashRefreshToken(refreshToken);
-  const refreshTokenExpiresInDays = parseInt(
-    process.env.REFRESH_TOKEN_EXPIRES_IN_DAYS || "7",
-    10,
-  );
+  const refreshTokenExpiresInDays = parseInt(process.env.REFRESH_TOKEN_EXPIRES_IN_DAYS || "7", 10);
 
   const refreshTokenExpiresAt = new Date(
     Date.now() + refreshTokenExpiresInDays * 24 * 60 * 60 * 1000,

@@ -7,20 +7,14 @@ export async function findCandidateProfileByUserId(userId: string) {
   }).first();
 }
 
-export async function createCandidateProfile(
-  userId: string,
-  data: CandidateProfileInputI,
-) {
+export async function createCandidateProfile(userId: string, data: CandidateProfileInputI) {
   return await db.orm.public.CandidateProfile.create({
     userId,
     ...data,
   });
 }
 
-export async function updateCandidateProfile(
-  userId: string,
-  data: CandidateProfileInputI,
-) {
+export async function updateCandidateProfile(userId: string, data: CandidateProfileInputI) {
   return await db.orm.public.CandidateProfile.where({
     userId,
   }).update(data);

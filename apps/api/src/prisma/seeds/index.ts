@@ -11,9 +11,11 @@ async function main() {
   console.log("Seeding completed.");
 }
 
-main().catch((err) => {
-  console.error("Error occurred while seeding database:", err);
-  process.exit(1);
-}).finally(async () => {
-  await db.close();
-});
+main()
+  .catch((err) => {
+    console.error("Error occurred while seeding database:", err);
+    process.exit(1);
+  })
+  .finally(async () => {
+    await db.close();
+  });

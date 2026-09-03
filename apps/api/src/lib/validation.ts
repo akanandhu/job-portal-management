@@ -5,10 +5,7 @@ type ZodValidationOptionsI = {
   fallbackPath: string;
 };
 
-function getZodValidationMessage(
-  error: ZodError,
-  options: ZodValidationOptionsI,
-) {
+function getZodValidationMessage(error: ZodError, options: ZodValidationOptionsI) {
   const issue = error.issues[0];
 
   if (!issue) {

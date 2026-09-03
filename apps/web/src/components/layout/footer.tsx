@@ -1,4 +1,4 @@
-import { BrandLogo } from '@/components/brand/brand-logo'
+import { BrandLogo } from "@/components/brand/brand-logo";
 
 export function Footer() {
   return (
@@ -7,8 +7,8 @@ export function Footer() {
         <div className="space-y-3">
           <BrandLogo />
           <p className="max-w-md text-sm text-muted-foreground">
-            A professional network and job marketplace for people who want their
-            work to speak first.
+            A professional network and job marketplace for people who want their work to speak
+            first.
           </p>
         </div>
         <div className="flex flex-wrap gap-5 text-sm font-medium text-muted-foreground">
@@ -27,5 +27,5 @@ export function Footer() {
         </div>
       </div>
     </footer>
-  )
+  );
 }

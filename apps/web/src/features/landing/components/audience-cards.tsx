@@ -1,35 +1,30 @@
-import { BriefcaseBusiness, Sparkles, UsersRound } from 'lucide-react'
+import { BriefcaseBusiness, Sparkles, UsersRound } from "lucide-react";
 
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card'
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 const audienceCards = [
   {
     icon: UsersRound,
-    title: 'For professionals',
-    copy: 'Build a profile that proves what you can do before anyone asks for a resume.',
+    title: "For professionals",
+    copy: "Build a profile that proves what you can do before anyone asks for a resume.",
   },
   {
     icon: BriefcaseBusiness,
-    title: 'For founders',
-    copy: 'Post roles where ambitious builders already maintain proof and reputation.',
+    title: "For founders",
+    copy: "Post roles where ambitious builders already maintain proof and reputation.",
   },
   {
     icon: Sparkles,
-    title: 'For teams',
-    copy: 'Discover talent through shared context, mutual peers, and demonstrated work.',
+    title: "For teams",
+    copy: "Discover talent through shared context, mutual peers, and demonstrated work.",
   },
-]
+];
 
 export function AudienceCards() {
   return (
     <section className="mx-auto grid max-w-7xl gap-4 px-6 py-16 md:grid-cols-3 md:px-10">
       {audienceCards.map((item) => {
-        const Icon = item.icon
+        const Icon = item.icon;
 
         return (
           <Card key={item.title}>
@@ -43,8 +38,8 @@ export function AudienceCards() {
               <p className="text-sm leading-6 text-muted-foreground">{item.copy}</p>
             </CardContent>
           </Card>
-        )
+        );
       })}
     </section>
-  )
+  );
 }

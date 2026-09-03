@@ -7,7 +7,7 @@ export function requireRole(role: UserRoleI) {
       return res.status(401).json({ message: "Authentication required" });
     }
 
-    if(req.user.role !== role) {
+    if (req.user.role !== role) {
       return res.status(403).json({ message: "Forbidden: Insufficient role" });
     }
 

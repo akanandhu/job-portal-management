@@ -16,11 +16,7 @@ export function Header() {
         <BrandLogo />
         <div className="hidden items-center gap-7 text-sm font-medium text-muted-foreground md:flex">
           {navLinks.map((link) => (
-            <a
-              key={link.href}
-              href={link.href}
-              className="transition hover:text-foreground"
-            >
+            <a key={link.href} href={link.href} className="transition hover:text-foreground">
               {link.label}
             </a>
           ))}

@@ -23,11 +23,11 @@ Both experiences share the same frontend, API, authentication, and database.
 
 **Decision:** Use a conventional three-layer architecture.
 
-| Layer | Responsibility |
-| --- | --- |
+| Layer         | Responsibility                                                       |
+| ------------- | -------------------------------------------------------------------- |
 | React web app | UI, forms, routing, shadcn/Tailwind composition, planned Redux state |
-| Express API | Auth, authorization, validation, and business logic |
-| PostgreSQL | Users, jobs, applications, and refresh tokens |
+| Express API   | Auth, authorization, validation, and business logic                  |
+| PostgreSQL    | Users, jobs, applications, and refresh tokens                        |
 
 **Tradeoff:** This is more structure than a frontend-only implementation, but the responsibilities are explicit and independently testable.
 

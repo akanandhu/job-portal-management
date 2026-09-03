@@ -5,10 +5,7 @@ import { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 
-type MultiTextInputPropsI = Omit<
-  React.ComponentProps<"input">,
-  "value" | "onChange"
-> & {
+type MultiTextInputPropsI = Omit<React.ComponentProps<"input">, "value" | "onChange"> & {
   value: string[];
   onValueChange: (value: string[]) => void;
 };

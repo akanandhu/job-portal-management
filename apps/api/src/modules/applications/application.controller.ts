@@ -90,10 +90,7 @@ export async function listJobApplicationsController(req: Request, res: Response)
   }
 }
 
-export async function updateApplicationStatusController(
-  req: Request,
-  res: Response,
-) {
+export async function updateApplicationStatusController(req: Request, res: Response) {
   try {
     const application = await changeApplicationStatus(req.params, req.body);
 

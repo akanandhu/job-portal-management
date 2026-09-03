@@ -6,13 +6,10 @@ export async function loginController(req: Request, res: Response) {
     const { email, password } = req.body;
 
     if (!email || !password) {
-      return res
-        .status(400)
-        .json({ message: "Email and password are required" });
+      return res.status(400).json({ message: "Email and password are required" });
     }
 
-    const { refreshToken, refreshTokenExpiresInDays, ...result } =
-      await loginUser(email, password);
+    const { refreshToken, refreshTokenExpiresInDays, ...result } = await loginUser(email, password);
 
     res.cookie("refreshToken", refreshToken, {
       httpOnly: true,
@@ -28,10 +25,7 @@ export async function loginController(req: Request, res: Response) {
   }
 }
 
-export async function refreshAccessTokenController(
-  req: Request,
-  res: Response,
-) {
+export async function refreshAccessTokenController(req: Request, res: Response) {
   try {
     const refreshToken = req.cookies?.refreshToken;
 
@@ -40,9 +34,7 @@ export async function refreshAccessTokenController(
     }
 
     const result = await refreshAccessToken(refreshToken);
-    return res
-      .status(200)
-      .json({ message: "Access token refreshed successfully", ...result });
+    return res.status(200).json({ message: "Access token refreshed successfully", ...result });
   } catch (error) {
     res.clearCookie("refreshToken", {
       httpOnly: true,
@@ -50,9 +42,7 @@ export async function refreshAccessTokenController(
       sameSite: "strict",
       path: "/auth",
     });
-    return res
-      .status(401)
-      .json({ message: "Invalid or expired refresh token" });
+    return res.status(401).json({ message: "Invalid or expired refresh token" });
   }
 }
 

@@ -63,17 +63,17 @@ A Job Portal Management System for TNP's machine test. The app models users, job
 
 ## Conventions
 
-| Rule | Convention |
-| --- | --- |
-| Types | Prefer `type`, not `interface`; keep the existing `I` suffix convention for domain/auth types. Ambient declaration files may use `interface` where TypeScript requires merging. |
-| Exports | Default exports for pages and single route modules are acceptable. Use named exports for shared components, utilities, and files with multiple exports. |
-| Components | Shared product components go under `components/layout`, `components/brand`, or another shared folder. Feature-specific UI goes under `features/<feature>/components`. |
-| shadcn | `components/ui` is reserved for generated shadcn primitives and local shadcn-compatible primitives. |
-| File size | Around 150 lines is the extraction signal. Split route pages into feature components before they become hard to scan. |
-| Effects | `useEffect` is for real side effects such as mount fetches and subscriptions. User actions should call handlers directly. |
-| Accessibility | Prefer semantic HTML and native labels. Add ARIA only when semantics cannot express the behavior accurately. |
-| State | Redux is the planned shared API/auth state layer; local-only UI state stays in components. |
-| Commits | Conventional Commits: `feat:`, `fix:`, `refactor:`, `chore:`, `docs:`. |
+| Rule          | Convention                                                                                                                                                                      |
+| ------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Types         | Prefer `type`, not `interface`; keep the existing `I` suffix convention for domain/auth types. Ambient declaration files may use `interface` where TypeScript requires merging. |
+| Exports       | Default exports for pages and single route modules are acceptable. Use named exports for shared components, utilities, and files with multiple exports.                         |
+| Components    | Shared product components go under `components/layout`, `components/brand`, or another shared folder. Feature-specific UI goes under `features/<feature>/components`.           |
+| shadcn        | `components/ui` is reserved for generated shadcn primitives and local shadcn-compatible primitives.                                                                             |
+| File size     | Around 150 lines is the extraction signal. Split route pages into feature components before they become hard to scan.                                                           |
+| Effects       | `useEffect` is for real side effects such as mount fetches and subscriptions. User actions should call handlers directly.                                                       |
+| Accessibility | Prefer semantic HTML and native labels. Add ARIA only when semantics cannot express the behavior accurately.                                                                    |
+| State         | Redux is the planned shared API/auth state layer; local-only UI state stays in components.                                                                                      |
+| Commits       | Conventional Commits: `feat:`, `fix:`, `refactor:`, `chore:`, `docs:`.                                                                                                          |
 
 ## Environment
 
