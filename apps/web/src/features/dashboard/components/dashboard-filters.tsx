@@ -2,6 +2,7 @@ import { useSearchParams } from "react-router";
 
 import { useAppDispatch, useAppSelector } from "@/app/hook";
 import { Button } from "@/components/ui/button";
+import { selectIsAdmin } from "@/features/auth/store/auth-selectors";
 import {
   clearFilters as clearFiltersAction,
   selectJobFilters,
@@ -25,6 +26,7 @@ const applicationExperienceOptions = ["0", "1", "2", "3", "4", "5+"] as const;
 
 export function DashboardFilters({ section }: DashboardFiltersPropsI) {
   const dispatch = useAppDispatch();
+  const isAdmin = useAppSelector(selectIsAdmin);
   const reduxFilters = useAppSelector(selectJobFilters);
   const [searchParams, setSearchParams] = useSearchParams();
 
@@ -96,13 +98,15 @@ export function DashboardFilters({ section }: DashboardFiltersPropsI) {
             value={workplaceType}
             onValueChange={(value) => handleFilterChange("workplaceType", value)}
           />
-          <FilterSelect
-            label="Status"
-            options={jobStatuses}
-            placeholder="All statuses"
-            value={jobStatus}
-            onValueChange={(value) => handleFilterChange("status", value)}
-          />
+          {isAdmin ? (
+            <FilterSelect
+              label="Status"
+              options={jobStatuses}
+              placeholder="All statuses"
+              value={jobStatus}
+              onValueChange={(value) => handleFilterChange("status", value)}
+            />
+          ) : null}
         </>
       ) : (
         <FilterSelect

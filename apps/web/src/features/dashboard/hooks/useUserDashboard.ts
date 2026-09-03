@@ -130,7 +130,7 @@ export default function useUserDashboard(): UseUserDashboardResultI {
     jobs,
     navItems,
     redirectTo: dashboard.getRedirectTo("/listing"),
-    showFilters: dashboard.activeNav !== "profile" && view.type.endsWith(".list"),
+    showFilters: dashboard.activeNav === "jobs" && view.type.endsWith(".list"),
     view,
   };
 }

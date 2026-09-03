@@ -1,12 +1,14 @@
 import { ChevronRight, ClipboardX, RotateCcw } from "lucide-react";
 import type { ApplicationStatusI } from "@job-portal/contracts/applications";
 
+import { useAppSelector } from "@/app/hook";
 import { Button } from "@/components/ui/button";
 import { InfiniteScrollTrigger } from "@/components/ui/infinite-scroll-trigger";
 import { ListStateCard } from "@/components/ui/list-state-card";
 import { ListingShimmer } from "@/components/ui/shimmer";
 import { ApplicationStatusSelect } from "@/features/applications/components/application-status-select";
 import { useApplicationList } from "@/features/applications/hooks/useApplicationList";
+import { selectIsAdmin } from "@/features/auth/store/auth-selectors";
 import { useInfiniteScroll } from "@/hooks/use-infinite-scroll";
 import { formatOptionLabel } from "@/lib/utils";
 
@@ -29,6 +31,7 @@ export function ApplicationList({
   status,
   title = "Applied candidates",
 }: ApplicationListPropsI) {
+  const isAdmin = useAppSelector(selectIsAdmin);
   const {
     applications,
     errorMessage,
@@ -112,7 +115,9 @@ export function ApplicationList({
                           {application.candidate}
                         </h2>
                         <p className="mt-1 text-sm text-muted-foreground">
-                          {job?.title} at {job?.company} • {application.yearsOfExperience} years
+                          {job?.title}
+                          {job?.company ? ` at ${job.company}` : ""} •{" "}
+                          {application.yearsOfExperience} years
                         </p>
                         <p className="mt-1 text-xs text-muted-foreground sm:hidden">
                           {application.appliedAt}
@@ -135,19 +140,21 @@ export function ApplicationList({
                             {formatOptionLabel(application.status)}
                           </span>
                         )}
-                        <Button
-                          type="button"
-                          variant="ghost"
-                          size="icon"
-                          className="shrink-0"
-                          aria-label={`View ${application.candidate} application`}
-                          onClick={(event) => {
-                            event.stopPropagation();
-                            onViewApplication(application.id);
-                          }}
-                        >
-                          <ChevronRight className="size-4" />
-                        </Button>
+                        {isAdmin ? (
+                          <Button
+                            type="button"
+                            variant="ghost"
+                            size="icon"
+                            className="shrink-0"
+                            aria-label={`View ${application.candidate} application`}
+                            onClick={(event) => {
+                              event.stopPropagation();
+                              onViewApplication(application.id);
+                            }}
+                          >
+                            <ChevronRight className="size-4" />
+                          </Button>
+                        ) : null}
                       </div>
                     </div>
                   </div>

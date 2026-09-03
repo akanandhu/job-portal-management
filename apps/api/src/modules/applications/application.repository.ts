@@ -30,9 +30,13 @@ function applyApplicationFilters(
   if (query.yearsOfExperience && query.yearsOfExperience !== "all") {
     const minYears = parseInt(query.yearsOfExperience, 10);
     if (!isNaN(minYears)) {
-      appQuery = appQuery.where({
-        yearsOfExperience: minYears,
-      });
+      if (query.yearsOfExperience.includes("+")) {
+        appQuery = appQuery.where((app) => app.yearsOfExperience.gte(minYears));
+      } else {
+        appQuery = appQuery.where({
+          yearsOfExperience: minYears,
+        });
+      }
     }
   }
 
@@ -71,9 +75,13 @@ export async function findApplicationsByUserId(userId: string, query?: ListMyApp
   if (query?.yearsOfExperience && query.yearsOfExperience !== "all") {
     const minYears = parseInt(query.yearsOfExperience, 10);
     if (!isNaN(minYears)) {
-      appQuery = appQuery.where({
-        yearsOfExperience: minYears,
-      });
+      if (query.yearsOfExperience.includes("+")) {
+        appQuery = appQuery.where((app) => app.yearsOfExperience.gte(minYears));
+      } else {
+        appQuery = appQuery.where({
+          yearsOfExperience: minYears,
+        });
+      }
     }
   }
 

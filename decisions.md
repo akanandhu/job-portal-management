@@ -77,6 +77,16 @@ Both experiences share the same frontend, API, authentication, and PostgreSQL da
 
 ---
 
+### Cross-Tab Login Session & Token Rotation
+
+**Decision:** Maintain cross-tab authenticated session continuity via HttpOnly refresh token cookies with automatic silent access token renewal (`POST /auth/refresh`).
+
+**Why:** Users who log in or refresh tokens in one browser tab remain seamlessly authenticated across other tabs without requiring manual re-login. Upon logout or token revocation, sessions are invalidated globally.
+
+**Tradeoff:** Requires HTTP-only cookie configuration (`sameSite: "lax"`, `httpOnly: true`) and automatic token re-authentication handling in RTK Query base query middleware.
+
+---
+
 ## Database & Data Integrity
 
 ### PostgreSQL Source of Truth
