@@ -9,28 +9,9 @@ import {
 import ErrorBox from "@/components/ui/error-box";
 import { Input } from "@/components/ui/input";
 import { MultiTextInput } from "@/components/ui/multi-text-input";
-import type { CandidateProfileFormPropsI, CandidateProfileFormValuesI } from "@/types/profile";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { candidateProfileSchema } from "@job-portal/contracts/profile";
-import type { CandidateProfileInputI } from "@job-portal/contracts/profile";
-import { Controller, useForm } from "react-hook-form";
-import { useNavigate } from "react-router";
-
-const defaultValues: CandidateProfileFormValuesI = {
-  phone: "",
-  education: "",
-  yearsOfExperience: 0,
-  currentCompany: null,
-  currentRole: null,
-  expectedSalary: 0,
-  noticePeriodDays: 0,
-  skills: [],
-};
-
-const emptyToNull = (value: unknown) => {
-  const trimmedValue = String(value).trim();
-  return trimmedValue ? trimmedValue : null;
-};
+import type { CandidateProfileFormPropsI } from "@/types/profile";
+import { Controller } from "react-hook-form";
+import useCandidateProfileForm from "../hooks/useCandidateProfileForm";
 
 export function CandidateProfileForm({
   initialValues,
@@ -39,29 +20,18 @@ export function CandidateProfileForm({
   onSubmit,
 }: CandidateProfileFormPropsI) {
   const {
-    register,
     control,
+    errors,
+    register,
     handleSubmit,
-    formState: { errors },
-  } = useForm<CandidateProfileFormValuesI, unknown, CandidateProfileInputI>({
-    defaultValues: initialValues ?? defaultValues,
-    resolver: zodResolver(candidateProfileSchema),
+    handleProfileSubmit,
+    onBack,
+    emptyToNull
+  } = useCandidateProfileForm({
+    initialValues,
+    onCancel,
+    onSubmit,
   });
-
-  const navigate = useNavigate();
-
-  const handleProfileSubmit = (values: CandidateProfileInputI) => {
-    onSubmit?.(values);
-  };
-
-  const onBack = () => {
-    if (onCancel) {
-      onCancel();
-      return;
-    }
-
-    navigate("/register");
-  };
 
   return (
     <Card>
