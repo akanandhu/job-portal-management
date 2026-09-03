@@ -24,7 +24,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import type { AdminJobI } from "@/features/dashboard/data/dashboard-data";
-import { useCreateJobMutation } from "@/features/jobs/store/jobs-api";
+import { useCreateJobMutation, useUpdateJobMutation } from "@/features/jobs/store/jobs-api";
 import { cn, formatOptionLabel } from "@/lib/utils";
 import { getApiErrorMessage } from "@/services/api-error";
 import type { JobFormPropsI, JobSelectPropsI } from "@/types/jobs";
@@ -40,7 +40,7 @@ const defaultValues: JobFormValuesI = {
   category: "ENGINEERING",
   experienceLevel: "ENTRY",
   skills: [],
-  status: "DRAFT",
+  status: "PUBLISHED",
   isFeatured: false,
 };
 
@@ -77,8 +77,9 @@ function JobSelect({
   );
 }
 
-export function JobForm({ job, mode, onCancel, onCreated }: JobFormPropsI) {
+export function JobForm({ job, mode, onCancel, onSaved }: JobFormPropsI) {
   const [createJob, { isLoading: isCreating }] = useCreateJobMutation();
+  const [updateJob, { isLoading: isUpdating }] = useUpdateJobMutation();
   const {
     control,
     register,
@@ -91,20 +92,19 @@ export function JobForm({ job, mode, onCancel, onCreated }: JobFormPropsI) {
   });
 
   const onSubmit = async (values: CreateJobInputI) => {
-    if (mode !== "add") {
-      const message = "Job updates are not connected yet.";
-      toast.error(message);
-      setError("root", { type: "server", message });
-      return;
-    }
-
     try {
-      const result = await createJob(values).unwrap();
+      const result =
+        mode === "add"
+          ? await createJob(values).unwrap()
+          : await updateJob({ id: job?.id ?? "", data: values }).unwrap();
 
-      toast.success("Job opening created.");
-      onCreated?.(result.data);
+      toast.success(mode === "add" ? "Job opening created." : "Job opening updated.");
+      onSaved?.(result.data);
     } catch (error) {
-      const message = getApiErrorMessage(error, "Failed to create job opening");
+      const message = getApiErrorMessage(
+        error,
+        mode === "add" ? "Failed to create job opening" : "Failed to update job opening",
+      );
 
       setError("root", {
         type: "server",
@@ -115,6 +115,7 @@ export function JobForm({ job, mode, onCancel, onCreated }: JobFormPropsI) {
   };
   const title = mode === "add" ? "Add job" : "Edit job";
   const submitLabel = mode === "add" ? "Create job" : "Save changes";
+  const isSaving = isCreating || isUpdating;
 
   return (
     <div className="py-5">
@@ -276,17 +277,11 @@ export function JobForm({ job, mode, onCancel, onCreated }: JobFormPropsI) {
         <ErrorBox message={errors.root?.message} />
 
         <div className="flex flex-col gap-3 border-t pt-6 sm:flex-row sm:justify-end">
-          <Button
-            type="button"
-            variant="outline"
-            size="lg"
-            onClick={onCancel}
-            disabled={isCreating}
-          >
+          <Button type="button" variant="outline" size="lg" onClick={onCancel} disabled={isSaving}>
             Cancel
           </Button>
-          <Button type="submit" size="lg" disabled={isCreating}>
-            {isCreating ? "Creating..." : submitLabel}
+          <Button type="submit" size="lg" disabled={isSaving}>
+            {isSaving ? "Saving..." : submitLabel}
           </Button>
         </div>
       </form>

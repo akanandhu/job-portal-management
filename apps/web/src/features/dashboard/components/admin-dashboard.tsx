@@ -22,13 +22,15 @@ export function AdminDashboard() {
     handleBackToJobs,
     handleChangeApplicationStatus,
     handleEditJob,
-    handleJobCreated,
+    handleJobSaved,
     handleLogout,
     handleNavChange,
     handleTabChange,
     navItems,
     handleViewApplication,
     handleViewJob,
+    isJobsLoading,
+    jobsErrorMessage,
     jobs,
   } = useAdminDashboard();
   const visibleApplications =
@@ -59,12 +61,14 @@ export function AdminDashboard() {
       <DashboardTabs activeTab={activeTab} tabs={currentTabs} onTabChange={handleTabChange} />
       <AdminDashboardContent
         applications={visibleApplications}
+        isJobsLoading={isJobsLoading}
+        jobsErrorMessage={jobsErrorMessage}
         jobs={jobs}
         onChangeApplicationStatus={handleChangeApplicationStatus}
         onAddJob={handleAddJob}
         onBackToApplications={handleBackToApplications}
         onBackToJobs={handleBackToJobs}
-        onJobCreated={handleJobCreated}
+        onJobSaved={handleJobSaved}
         onEditJob={handleEditJob}
         onViewApplication={handleViewApplication}
         onViewJob={handleViewJob}

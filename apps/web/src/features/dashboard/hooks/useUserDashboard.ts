@@ -6,12 +6,15 @@ import {
   selectIsAuthenticated,
   selectIsCandidate,
 } from "@/features/auth/store/auth-selectors";
-import { adminApplications, adminJobs } from "@/features/dashboard/data/dashboard-data";
+import { adminApplications, type AdminJobI } from "@/features/dashboard/data/dashboard-data";
 import {
   applicationTabs,
   defaultApplicationTab,
 } from "@/features/dashboard/utils/admin-dashboard-view";
+import { useListJobsQuery } from "@/features/jobs/store/jobs-api";
+import { selectJobs } from "@/features/jobs/store/jobs-slice";
 import { getNameInitial } from "@/lib/utils";
+import { getApiErrorMessage } from "@/services/api-error";
 import type { DashboardNavItemI, DashboardTabI } from "@/types/dashboard";
 import type { UseUserDashboardResultI, UserDashboardViewI } from "@/types/user-dashboard";
 import { useDashboard } from "./useDashboard";
@@ -45,7 +48,7 @@ const getView = ({
 }: {
   activeNav: string;
   applications: typeof candidateApplications;
-  jobs: typeof adminJobs;
+  jobs: AdminJobI[];
   searchParams: URLSearchParams;
 }): UserDashboardViewI => {
   if (activeNav === "jobs") {
@@ -69,6 +72,8 @@ export default function useUserDashboard(): UseUserDashboardResultI {
   const isAuthenticated = useAppSelector(selectIsAuthenticated);
   const isCandidate = useAppSelector(selectIsCandidate);
   const currentUser = useAppSelector(selectCurrentUser);
+  const { error: jobsError, isLoading: isJobsLoading } = useListJobsQuery();
+  const jobs = useAppSelector(selectJobs);
   const navItems: DashboardNavItemI[] = [
     { id: "jobs", label: "Jobs", icon: BriefcaseBusiness },
     ...(isCandidate
@@ -84,7 +89,6 @@ export default function useUserDashboard(): UseUserDashboardResultI {
     getTabs,
     navItems,
   });
-  const jobs = adminJobs.filter((job) => job.status === "PUBLISHED");
   const applications =
     dashboard.activeNav === "applications"
       ? candidateApplications.filter((application) => application.status === dashboard.activeTab)
@@ -117,6 +121,10 @@ export default function useUserDashboard(): UseUserDashboardResultI {
     hasValidParams: dashboard.hasValidParams,
     isAuthenticated,
     isCandidate,
+    isJobsLoading,
+    jobsErrorMessage: jobsError
+      ? getApiErrorMessage(jobsError, "Failed to load open jobs")
+      : undefined,
     jobs,
     navItems,
     redirectTo: dashboard.getRedirectTo("/listing"),

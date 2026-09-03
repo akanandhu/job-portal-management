@@ -28,6 +28,8 @@ export function UserDashboard() {
     hasValidParams,
     isAuthenticated,
     isCandidate,
+    isJobsLoading,
+    jobsErrorMessage,
     jobs,
     navItems,
     redirectTo,
@@ -81,6 +83,8 @@ export function UserDashboard() {
         activeTab={activeTab}
         applications={applications}
         isAuthenticated={isAuthenticated}
+        isJobsLoading={isJobsLoading}
+        jobsErrorMessage={jobsErrorMessage}
         isCandidate={isCandidate}
         jobs={jobs}
         onApply={handleApply}

@@ -1,4 +1,5 @@
 import { Button } from "@/components/ui/button";
+import ErrorBox from "@/components/ui/error-box";
 import { ListingShimmer } from "@/features/dashboard/components/listing-shimmer";
 import { formatOptionLabel } from "@/lib/utils";
 import { BriefcaseBusiness, Pencil, Plus } from "lucide-react";
@@ -7,6 +8,7 @@ import type { AdminJobI } from "@/features/dashboard/data/dashboard-data";
 type JobListPropsI = {
   jobs: AdminJobI[];
   description?: string;
+  errorMessage?: string;
   onAddJob?: () => void;
   onEditJob?: (jobId: string) => void;
   onViewJob: (jobId: string) => void;
@@ -16,6 +18,7 @@ type JobListPropsI = {
 };
 
 export function JobList({
+  errorMessage,
   isLoading = false,
   jobs,
   description = "Manage active job posts and candidate visibility.",
@@ -42,6 +45,10 @@ export function JobList({
 
       {isLoading ? (
         <ListingShimmer count={6} />
+      ) : errorMessage ? (
+        <div className="rounded-xl border bg-muted/30 p-4">
+          <ErrorBox message={errorMessage} />
+        </div>
       ) : (
         <div className="divide-y">
           {jobs.map((job) => (

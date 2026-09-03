@@ -6,10 +6,13 @@ import type {
   UpdateJobInputI,
 } from "./job.types";
 
-function applyJobFilters(query: ListJobsQueryI) {
-  let jobsQuery = db.orm.public.Job.where({
-    status: "PUBLISHED" as const,
-  });
+function applyJobFilters(query: ListJobsQueryI, options: { includeAllStatuses?: boolean } = {}) {
+  let jobsQuery =
+    options.includeAllStatuses || query.status === "all"
+      ? db.orm.public.Job
+      : db.orm.public.Job.where({
+          status: query.status ?? ("PUBLISHED" as const),
+        });
 
   if (query.category) {
     jobsQuery = jobsQuery.where({
@@ -26,16 +29,16 @@ function applyJobFilters(query: ListJobsQueryI) {
   return jobsQuery;
 }
 
-export async function findJobs(query: ListJobsQueryI) {
-  return await applyJobFilters(query)
+export async function findJobs(query: ListJobsQueryI, options?: { includeAllStatuses?: boolean }) {
+  return await applyJobFilters(query, options)
     .orderBy([(job) => job.createdAt.desc(), (job) => job.id.desc()])
     .offset((query.page - 1) * query.limit)
     .limit(query.limit)
     .all();
 }
 
-export async function countJobs(query: ListJobsQueryI) {
-  return await applyJobFilters(query).aggregate((aggregate) => ({
+export async function countJobs(query: ListJobsQueryI, options?: { includeAllStatuses?: boolean }) {
+  return await applyJobFilters(query, options).aggregate((aggregate) => ({
     total: aggregate.count(),
   }));
 }

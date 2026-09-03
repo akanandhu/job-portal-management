@@ -29,6 +29,7 @@ export const listJobsQuerySchema = z.object({
   limit: positiveIntegerSchema(DEFAULT_LIMIT).transform((limit) => Math.min(limit, MAX_LIMIT)),
   category: queryValueSchema(z.enum(jobCategories).optional()),
   experienceLevel: queryValueSchema(z.enum(experienceLevels).optional()),
+  status: queryValueSchema(z.union([z.enum(jobStatuses), z.literal("all")]).optional()),
 });
 
 export const featuredJobsQuerySchema = z.object({
@@ -52,7 +53,7 @@ export const createJobSchema = z.object({
   skills: z
     .array(z.string().trim().min(1, "Skill cannot be empty"))
     .min(1, "Add at least one skill"),
-  status: z.enum(jobStatuses).default("DRAFT"),
+  status: z.enum(jobStatuses).default("PUBLISHED"),
   isFeatured: z.boolean().default(false),
 });
 

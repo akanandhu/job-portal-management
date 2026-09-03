@@ -11,6 +11,8 @@ export type UserDashboardViewI =
 export type UserDashboardContentPropsI = {
   activeTab: string;
   applications: AdminApplicationI[];
+  isJobsLoading?: boolean;
+  jobsErrorMessage?: string;
   isCandidate: boolean;
   isAuthenticated: boolean;
   jobs: AdminJobI[];
@@ -42,6 +44,8 @@ export type UseUserDashboardResultI = {
   hasValidParams: boolean;
   isAuthenticated: boolean;
   isCandidate: boolean;
+  isJobsLoading: boolean;
+  jobsErrorMessage?: string;
   jobs: AdminJobI[];
   navItems: DashboardNavItemI[];
   redirectTo: string;

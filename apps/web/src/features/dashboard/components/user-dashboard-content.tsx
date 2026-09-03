@@ -10,6 +10,8 @@ export function UserDashboardContent({
   activeTab,
   applications,
   isAuthenticated,
+  isJobsLoading = false,
+  jobsErrorMessage,
   isCandidate,
   jobs,
   onApply,
@@ -67,6 +69,8 @@ export function UserDashboardContent({
       return (
         <JobList
           description="Browse open roles and read the complete job description before applying."
+          errorMessage={jobsErrorMessage}
+          isLoading={isJobsLoading}
           jobs={jobs}
           onViewJob={onViewJob}
           showApplicationsCount={false}

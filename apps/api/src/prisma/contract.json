@@ -1269,7 +1269,7 @@
                   "codecId": "pg/text@1",
                   "default": {
                     "kind": "literal",
-                    "value": "DRAFT"
+                    "value": "PUBLISHED"
                   },
                   "nativeType": "text",
                   "nullable": false,
@@ -1561,7 +1561,7 @@
         "kind": "postgres-schema"
       }
     },
-    "storageHash": "4d022ac0cb0f4bf62c4e0be712f34f1171c238c4505050d1f1e0d133e117f771"
+    "storageHash": "3781c338a83c17362347cd086eb735ab92414835fb05422e4768d92fd2f41f45"
   },
   "execution": {
     "executionHash": "2a46a1697980a4854f9c9cd7515802a76bcf2e79a304bffcbc281c52de9773b6",

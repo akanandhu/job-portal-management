@@ -10,13 +10,15 @@ import type { JobFormPropsI } from "@/types/jobs";
 
 type AdminDashboardContentPropsI = {
   applications: AdminApplicationI[];
+  isJobsLoading?: boolean;
+  jobsErrorMessage?: string;
   jobs: AdminJobI[];
   onChangeApplicationStatus: (applicationId: string, status: ApplicationStatusI) => void;
   onAddJob: () => void;
   onBackToApplications: () => void;
   onBackToJobs: () => void;
   onEditJob: (jobId: string) => void;
-  onJobCreated: JobFormPropsI["onCreated"];
+  onJobSaved: JobFormPropsI["onSaved"];
   onViewApplication: (applicationId: string) => void;
   onViewJob: (jobId: string) => void;
   view: AdminDashboardViewI;
@@ -24,13 +26,15 @@ type AdminDashboardContentPropsI = {
 
 export function AdminDashboardContent({
   applications,
+  isJobsLoading = false,
+  jobsErrorMessage,
   jobs,
   onChangeApplicationStatus,
   onAddJob,
   onBackToApplications,
   onBackToJobs,
   onEditJob,
-  onJobCreated,
+  onJobSaved,
   onViewApplication,
   onViewJob,
   view,
@@ -50,12 +54,19 @@ export function AdminDashboardContent({
 
     case "jobs.form":
       return (
-        <JobForm job={view.job} mode={view.mode} onCancel={onBackToJobs} onCreated={onJobCreated} />
+        <JobForm job={view.job} mode={view.mode} onCancel={onBackToJobs} onSaved={onJobSaved} />
       );
 
     case "jobs.list":
       return (
-        <JobList jobs={jobs} onAddJob={onAddJob} onEditJob={onEditJob} onViewJob={onViewJob} />
+        <JobList
+          errorMessage={jobsErrorMessage}
+          isLoading={isJobsLoading}
+          jobs={jobs}
+          onAddJob={onAddJob}
+          onEditJob={onEditJob}
+          onViewJob={onViewJob}
+        />
       );
 
     case "applications.detail":

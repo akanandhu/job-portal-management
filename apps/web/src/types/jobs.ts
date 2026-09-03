@@ -4,6 +4,7 @@ import type { CreateJobInputI } from "@job-portal/contracts/jobs";
 
 export type JobResponseDataI = CreateJobInputI & {
   id: string;
+  applicationsCount?: number;
   createdAt?: string;
   updatedAt?: string;
 };
@@ -12,7 +13,7 @@ export type JobFormPropsI = {
   job?: AdminJobI;
   mode: "add" | "edit";
   onCancel: () => void;
-  onCreated?: (job: JobResponseDataI) => void;
+  onSaved?: (job: JobResponseDataI) => void;
 };
 
 export type JobSelectPropsI = {

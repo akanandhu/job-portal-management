@@ -85,7 +85,7 @@ model Job {
   category        JobCategory
   experienceLevel ExperienceLevel
   skills          String[]        @default([])
-  status          JobStatus       @default(DRAFT)
+  status          JobStatus       @default(PUBLISHED)
   isFeatured      Boolean         @default(false)
 
   applications    Application[]

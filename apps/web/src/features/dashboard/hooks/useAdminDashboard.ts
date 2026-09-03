@@ -1,8 +1,11 @@
 import { useState } from "react";
 import { useAppSelector } from "@/app/hook";
 import { selectCurrentUser } from "@/features/auth/store/auth-selectors";
+import { useListJobsQuery } from "@/features/jobs/store/jobs-api";
+import { selectJobs } from "@/features/jobs/store/jobs-slice";
 import { getNameInitial } from "@/lib/utils";
-import { adminApplications, adminJobs } from "../data/dashboard-data";
+import { getApiErrorMessage } from "@/services/api-error";
+import { adminApplications } from "../data/dashboard-data";
 import {
   defaultJobTab,
   defaultSection,
@@ -14,22 +17,15 @@ import type { ApplicationStatusI } from "@job-portal/contracts";
 import type { DashboardNavItemI } from "@/types/dashboard";
 import { BriefcaseBusiness, ClipboardList } from "lucide-react";
 import { useDashboard } from "./useDashboard";
-import type { JobResponseDataI } from "@/types/jobs";
 
 const navItems: DashboardNavItemI[] = [
   { id: "jobs", label: "Jobs", icon: BriefcaseBusiness },
   { id: "applications", label: "Applications", icon: ClipboardList },
 ];
 
-const toAdminJob = (job: JobResponseDataI) => ({
-  ...job,
-  applicationsCount: 0,
-  logo: getNameInitial(job.company, "J"),
-  postedAt: "Just now",
-});
-
 const useAdminDashboard = () => {
-  const [jobs, setJobs] = useState(adminJobs);
+  const { error: jobsError, isLoading: isJobsLoading } = useListJobsQuery({ status: "all" });
+  const jobs = useAppSelector(selectJobs);
   const [applications, setApplications] = useState(adminApplications);
   const currentUser = useAppSelector(selectCurrentUser);
   const dashboard = useDashboard({
@@ -73,8 +69,7 @@ const useAdminDashboard = () => {
     );
   };
 
-  const handleJobCreated = (job: JobResponseDataI) => {
-    setJobs((currentJobs) => [toAdminJob(job), ...currentJobs]);
+  const handleJobSaved = () => {
     dashboard.handleBackToJobs(defaultJobTab);
   };
 
@@ -93,13 +88,15 @@ const useAdminDashboard = () => {
     handleBackToJobs: dashboard.handleBackToJobs,
     handleChangeApplicationStatus,
     handleEditJob,
-    handleJobCreated,
+    handleJobSaved,
     handleLogout: dashboard.handleLogout,
     handleNavChange: dashboard.handleNavChange,
     handleTabChange: dashboard.handleTabChange,
     handleViewApplication: dashboard.handleViewApplication,
     handleViewJob: dashboard.handleViewJob,
     hasValidParams: dashboard.hasValidParams,
+    isJobsLoading,
+    jobsErrorMessage: jobsError ? getApiErrorMessage(jobsError, "Failed to load jobs") : undefined,
     jobs,
     view,
     navItems,

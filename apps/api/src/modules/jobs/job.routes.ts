@@ -1,5 +1,6 @@
 import { Router } from "express";
 import { authenticate } from "../../middleware/authenticate";
+import { optionalAuthenticate } from "../../middleware/optional-authenticate";
 import { requireRole } from "../../middleware/require-role";
 import {
   applyToJobController,
@@ -17,7 +18,7 @@ import {
 
 const router = Router();
 
-router.get("/", listJobsController);
+router.get("/", optionalAuthenticate, listJobsController);
 router.get("/featured", listFeaturedJobsController);
 router.get("/categories", listJobCategoriesController);
 router.post("/:jobId/apply", authenticate, requireRole("USER"), applyToJobController);
