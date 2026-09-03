@@ -57,6 +57,8 @@ export type JobsListApiResponseI = {
 };
 
 export type ListJobsQueryI = {
+  page?: number;
+  limit?: number;
   status?: JobStatusI | "all";
 };
 

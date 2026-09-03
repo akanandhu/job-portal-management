@@ -26,6 +26,21 @@ type UpdateApplicationStatusRequestI = {
   status: ApplicationStatusI;
 };
 
+type ListAllApplicationsQueryRequestI = {
+  page?: number;
+  limit?: number;
+};
+
+type ListAllApplicationsApiResponseI = {
+  data: ApplicationDataI[];
+  meta: {
+    page: number;
+    limit: number;
+    total: number;
+    totalPages: number;
+  };
+};
+
 export const applicationsApi = api.injectEndpoints({
   endpoints: (builder) => ({
     applyToJob: builder.mutation<ApplyToJobResponseI, ApplyToJobRequestI>({
@@ -58,15 +73,19 @@ export const applicationsApi = api.injectEndpoints({
       },
       providesTags: ["Application"],
     }),
-    listAllApplications: builder.query<{ data: ApplicationDataI[] }, void>({
-      query: () => ({
+    listAllApplications: builder.query<
+      ListAllApplicationsApiResponseI,
+      ListAllApplicationsQueryRequestI | void
+    >({
+      query: (query) => ({
         url: "/applications/all",
         method: "GET",
+        params: query ?? undefined,
       }),
-      async onQueryStarted(_arg, { dispatch, queryFulfilled }) {
+      async onQueryStarted(query, { dispatch, queryFulfilled }) {
         try {
           const { data } = await queryFulfilled;
-          dispatch(allApplicationsReceived(data.data));
+          dispatch(allApplicationsReceived({ items: data.data, page: query?.page }));
         } catch {
           return;
         }

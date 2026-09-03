@@ -14,6 +14,9 @@ export type UserDashboardContentPropsI = {
   hasApplied?: boolean;
   isApplying?: boolean;
   isJobsLoading?: boolean;
+  isJobsFetching?: boolean;
+  hasMoreJobs?: boolean;
+  onLoadMoreJobs?: () => void;
   jobsErrorMessage?: string;
   isCandidate: boolean;
   isAuthenticated: boolean;
@@ -49,6 +52,9 @@ export type UseUserDashboardResultI = {
   isAuthenticated: boolean;
   isCandidate: boolean;
   isJobsLoading: boolean;
+  isJobsFetching?: boolean;
+  hasMoreJobs?: boolean;
+  onLoadMoreJobs?: () => void;
   jobsErrorMessage?: string;
   jobs: AdminJobI[];
   navItems: DashboardNavItemI[];

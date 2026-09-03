@@ -15,8 +15,26 @@ const applicationsSlice = createSlice({
     myApplicationsReceived(state, action: PayloadAction<ApplicationDataI[]>) {
       state.myApplications = action.payload;
     },
-    allApplicationsReceived(state, action: PayloadAction<ApplicationDataI[]>) {
-      state.allApplications = action.payload;
+    allApplicationsReceived(
+      state,
+      action: PayloadAction<{ items: ApplicationDataI[]; page?: number } | ApplicationDataI[]>,
+    ) {
+      const payload = Array.isArray(action.payload)
+        ? { items: action.payload, page: 1 }
+        : action.payload;
+
+      if (payload.page && payload.page > 1) {
+        payload.items.forEach((item) => {
+          const index = state.allApplications.findIndex((existing) => existing.id === item.id);
+          if (index === -1) {
+            state.allApplications.push(item);
+          } else {
+            state.allApplications[index] = item;
+          }
+        });
+      } else {
+        state.allApplications = payload.items;
+      }
     },
     applicationCreated(state, action: PayloadAction<ApplicationDataI>) {
       const exists = state.myApplications.some(

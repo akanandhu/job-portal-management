@@ -14,6 +14,18 @@ export type ApplicationDataI = {
   skills?: string[];
   createdAt?: string;
   updatedAt?: string;
+  user?: {
+    id: string;
+    name: string;
+    email: string;
+  };
+  job?: {
+    id: string;
+    title: string;
+    company: string;
+    location: string;
+    category?: string;
+  };
 };
 
 export type ApplicationsStateI = {

@@ -47,8 +47,21 @@ const jobsSlice = createSlice({
   name: "jobs",
   initialState,
   reducers: {
-    jobsReceived(state, action: PayloadAction<JobResponseDataI[]>) {
-      state.items = action.payload.map(toJobListItem);
+    jobsReceived(
+      state,
+      action: PayloadAction<{ items: JobResponseDataI[]; page?: number } | JobResponseDataI[]>,
+    ) {
+      const payload = Array.isArray(action.payload)
+        ? { items: action.payload, page: 1 }
+        : action.payload;
+
+      const newItems = payload.items.map(toJobListItem);
+
+      if (payload.page && payload.page > 1) {
+        newItems.forEach((job) => upsertJob(state.items, job));
+      } else {
+        state.items = newItems;
+      }
     },
     featuredJobsReceived(state, action: PayloadAction<JobResponseDataI[]>) {
       state.featuredItems = action.payload.map(toJobListItem);

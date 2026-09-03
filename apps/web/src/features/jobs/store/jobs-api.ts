@@ -25,10 +25,10 @@ export const jobsApi = api.injectEndpoints({
         method: "GET",
         params: query ?? undefined,
       }),
-      async onQueryStarted(_query, { dispatch, queryFulfilled }) {
+      async onQueryStarted(query, { dispatch, queryFulfilled }) {
         try {
           const { data } = await queryFulfilled;
-          dispatch(jobsReceived(data.data));
+          dispatch(jobsReceived({ items: data.data, page: query?.page }));
         } catch {
           return;
         }

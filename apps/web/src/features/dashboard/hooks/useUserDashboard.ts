@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { BriefcaseBusiness, ClipboardList, UserRoundPen } from "lucide-react";
 import toast from "react-hot-toast";
 
@@ -78,11 +79,20 @@ const getView = ({
 };
 
 export default function useUserDashboard(): UseUserDashboardResultI {
+  const [jobsPage, setJobsPage] = useState(1);
   const isAuthenticated = useAppSelector(selectIsAuthenticated);
   const isCandidate = useAppSelector(selectIsCandidate);
   const currentUser = useAppSelector(selectCurrentUser);
-  const { error: jobsError, isLoading: isJobsLoading } = useListJobsQuery();
+  const {
+    data: jobsResponse,
+    error: jobsError,
+    isLoading: isJobsLoading,
+    isFetching: isJobsFetching,
+  } = useListJobsQuery({ page: jobsPage });
   const jobs = useAppSelector(selectJobs);
+
+  const jobsMeta = jobsResponse?.meta;
+  const hasMoreJobs = Boolean(jobsMeta && jobsMeta.page < jobsMeta.totalPages);
 
   useListMyApplicationsQuery(undefined, { skip: !isCandidate });
   const [applyToJob, { isLoading: isApplying }] = useApplyToJobMutation();
@@ -168,6 +178,9 @@ export default function useUserDashboard(): UseUserDashboardResultI {
     isAuthenticated,
     isCandidate,
     isJobsLoading,
+    isJobsFetching,
+    hasMoreJobs,
+    onLoadMoreJobs: () => setJobsPage((prev: number) => prev + 1),
     jobsErrorMessage: jobsError
       ? getApiErrorMessage(jobsError, "Failed to load open jobs")
       : undefined,

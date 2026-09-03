@@ -10,15 +10,22 @@ import type { JobFormPropsI } from "@/types/jobs";
 
 type AdminDashboardContentPropsI = {
   applications: AdminApplicationI[];
+  hasMoreApplications?: boolean;
+  hasMoreJobs?: boolean;
+  isApplicationsFetching?: boolean;
+  isApplicationsLoading?: boolean;
+  isJobsFetching?: boolean;
   isJobsLoading?: boolean;
   jobsErrorMessage?: string;
   jobs: AdminJobI[];
-  onChangeApplicationStatus: (applicationId: string, status: ApplicationStatusI) => void;
   onAddJob: () => void;
   onBackToApplications: () => void;
   onBackToJobs: () => void;
+  onChangeApplicationStatus: (applicationId: string, status: ApplicationStatusI) => void;
   onEditJob: (jobId: string) => void;
   onJobSaved: JobFormPropsI["onSaved"];
+  onLoadMoreApplications?: () => void;
+  onLoadMoreJobs?: () => void;
   onViewApplication: (applicationId: string) => void;
   onViewJob: (jobId: string) => void;
   view: AdminDashboardViewI;
@@ -26,6 +33,11 @@ type AdminDashboardContentPropsI = {
 
 export function AdminDashboardContent({
   applications,
+  hasMoreApplications,
+  hasMoreJobs,
+  isApplicationsFetching = false,
+  isApplicationsLoading = false,
+  isJobsFetching = false,
   isJobsLoading = false,
   jobsErrorMessage,
   jobs,
@@ -35,6 +47,8 @@ export function AdminDashboardContent({
   onBackToJobs,
   onEditJob,
   onJobSaved,
+  onLoadMoreApplications,
+  onLoadMoreJobs,
   onViewApplication,
   onViewJob,
   view,
@@ -61,10 +75,13 @@ export function AdminDashboardContent({
       return (
         <JobList
           errorMessage={jobsErrorMessage}
+          hasMore={hasMoreJobs}
+          isFetchingMore={isJobsFetching}
           isLoading={isJobsLoading}
           jobs={jobs}
           onAddJob={onAddJob}
           onEditJob={onEditJob}
+          onLoadMore={onLoadMoreJobs}
           onViewJob={onViewJob}
         />
       );
@@ -84,8 +101,12 @@ export function AdminDashboardContent({
       return (
         <ApplicationList
           applications={applications}
+          hasMore={hasMoreApplications}
+          isFetchingMore={isApplicationsFetching}
+          isLoading={isApplicationsLoading}
           jobs={jobs}
           onChangeApplicationStatus={onChangeApplicationStatus}
+          onLoadMore={onLoadMoreApplications}
           onViewApplication={onViewApplication}
         />
       );

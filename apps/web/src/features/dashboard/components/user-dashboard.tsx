@@ -26,14 +26,17 @@ export function UserDashboard() {
     handleViewApplication,
     handleViewJob,
     hasApplied,
+    hasMoreJobs,
     isApplying,
     hasValidParams,
     isAuthenticated,
     isCandidate,
+    isJobsFetching,
     isJobsLoading,
     jobsErrorMessage,
     jobs,
     navItems,
+    onLoadMoreJobs,
     redirectTo,
     showFilters,
     view,
@@ -85,8 +88,10 @@ export function UserDashboard() {
         activeTab={activeTab}
         applications={applications}
         hasApplied={hasApplied}
+        hasMoreJobs={hasMoreJobs}
         isApplying={isApplying}
         isAuthenticated={isAuthenticated}
+        isJobsFetching={isJobsFetching}
         isJobsLoading={isJobsLoading}
         jobsErrorMessage={jobsErrorMessage}
         isCandidate={isCandidate}
@@ -94,6 +99,7 @@ export function UserDashboard() {
         onApply={handleApply}
         onBackToApplications={handleBackToApplications}
         onBackToJobs={handleBackToJobs}
+        onLoadMoreJobs={onLoadMoreJobs}
         onNavChange={handleNavChange}
         onViewApplication={handleViewApplication}
         onViewJob={handleViewJob}

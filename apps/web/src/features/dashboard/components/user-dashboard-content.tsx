@@ -10,8 +10,10 @@ export function UserDashboardContent({
   activeTab,
   applications,
   hasApplied,
+  hasMoreJobs,
   isApplying,
   isAuthenticated,
+  isJobsFetching = false,
   isJobsLoading = false,
   jobsErrorMessage,
   isCandidate,
@@ -19,6 +21,7 @@ export function UserDashboardContent({
   onApply,
   onBackToApplications,
   onBackToJobs,
+  onLoadMoreJobs,
   onNavChange,
   onViewApplication,
   onViewJob,
@@ -74,8 +77,11 @@ export function UserDashboardContent({
         <JobList
           description="Browse open roles and read the complete job description before applying."
           errorMessage={jobsErrorMessage}
+          hasMore={hasMoreJobs}
+          isFetchingMore={isJobsFetching}
           isLoading={isJobsLoading}
           jobs={jobs}
+          onLoadMore={onLoadMoreJobs}
           onViewJob={onViewJob}
           showApplicationsCount={false}
           title="Suggested jobs"
