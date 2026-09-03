@@ -1,4 +1,5 @@
 import {
+  createUser,
   createRefreshToken,
   findRefreshTokenByHash,
   findUserByEmail,
@@ -6,7 +7,40 @@ import {
   revokeRefreshToken,
 } from "./auth.repository";
 import bcrypt from "bcrypt";
+import { registerSchema } from "@job-portal/contracts/auth";
+import { parseWithZodValidation } from "../../lib/validation";
 import { generateAccessToken, generateRefreshToken, hashRefreshToken } from "./token.service";
+
+export class AuthValidationError extends Error {}
+
+export class AuthConflictError extends Error {}
+
+function createAuthSession(user: {
+  id: string;
+  email: string;
+  name: string;
+  role: "USER" | "ADMIN";
+}) {
+  const payload = {
+    userId: user.id,
+    role: user.role,
+  };
+
+  const accessToken = generateAccessToken(payload);
+  const refreshToken = generateRefreshToken();
+  const refreshTokenExpiresInDays = parseInt(process.env.REFRESH_TOKEN_EXPIRES_IN_DAYS || "7", 10);
+
+  const refreshTokenExpiresAt = new Date(
+    Date.now() + refreshTokenExpiresInDays * 24 * 60 * 60 * 1000,
+  ).toISOString();
+
+  return {
+    accessToken,
+    refreshToken,
+    refreshTokenExpiresAt,
+    refreshTokenExpiresInDays,
+  };
+}
 
 export async function loginUser(email: string, password: string) {
   const user = await findUserByEmail(email);
@@ -21,32 +55,58 @@ export async function loginUser(email: string, password: string) {
     throw new Error("Invalid email or password");
   }
 
-  const payload = {
-    userId: user.id,
-    role: user.role,
-  };
-
-  const accessToken = generateAccessToken(payload);
-
-  const refreshToken = generateRefreshToken();
-  const refreshTokenHash = hashRefreshToken(refreshToken);
-  const refreshTokenExpiresInDays = parseInt(process.env.REFRESH_TOKEN_EXPIRES_IN_DAYS || "7", 10);
-
-  const refreshTokenExpiresAt = new Date(
-    Date.now() + refreshTokenExpiresInDays * 24 * 60 * 60 * 1000,
-  ).toISOString();
+  const session = createAuthSession(user);
 
   await createRefreshToken({
-    tokenHash: refreshTokenHash,
+    tokenHash: hashRefreshToken(session.refreshToken),
     userId: user.id,
-    expiresAt: refreshTokenExpiresAt,
+    expiresAt: session.refreshTokenExpiresAt,
   });
 
   return {
     user: { id: user.id, email: user.email, name: user.name, role: user.role },
-    accessToken,
-    refreshToken,
-    refreshTokenExpiresInDays,
+    accessToken: session.accessToken,
+    refreshToken: session.refreshToken,
+    refreshTokenExpiresInDays: session.refreshTokenExpiresInDays,
+  };
+}
+
+export async function registerUser(body: unknown) {
+  const parsedBody = parseWithZodValidation(
+    () => registerSchema.parse(body),
+    (message) => new AuthValidationError(message),
+    {
+      fallbackMessage: "Invalid registration",
+      fallbackPath: "registration",
+    },
+  );
+
+  const existingUser = await findUserByEmail(parsedBody.email);
+
+  if (existingUser) {
+    throw new AuthConflictError("Email is already registered");
+  }
+
+  const passwordHash = await bcrypt.hash(parsedBody.password, 12);
+  const user = await createUser({
+    name: parsedBody.name,
+    email: parsedBody.email,
+    passwordHash,
+    role: "USER",
+  });
+  const session = createAuthSession(user);
+
+  await createRefreshToken({
+    tokenHash: hashRefreshToken(session.refreshToken),
+    userId: user.id,
+    expiresAt: session.refreshTokenExpiresAt,
+  });
+
+  return {
+    user: { id: user.id, email: user.email, name: user.name, role: user.role },
+    accessToken: session.accessToken,
+    refreshToken: session.refreshToken,
+    refreshTokenExpiresInDays: session.refreshTokenExpiresInDays,
   };
 }
 

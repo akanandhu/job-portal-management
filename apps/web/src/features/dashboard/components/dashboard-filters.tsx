@@ -1,87 +1,76 @@
-import { useState } from "react";
+import { useSearchParams } from "react-router";
 
+import { useAppDispatch, useAppSelector } from "@/app/hook";
 import { Button } from "@/components/ui/button";
-import { MultiTextInput } from "@/components/ui/multi-text-input";
+import { selectIsAdmin } from "@/features/auth/store/auth-selectors";
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+  clearFilters as clearFiltersAction,
+  selectJobFilters,
+  setFilter as setFilterAction,
+  type JobFilterStateI,
+} from "@/features/jobs/store/jobs-slice";
 import {
   experienceLevels,
   jobCategories,
   jobStatuses,
   workplaceTypes,
 } from "@job-portal/contracts/jobs";
-import { applicationStatuses } from "@job-portal/contracts/applications";
-
-type FilterSelectPropsI = {
-  label: string;
-  onValueChange: (value: string) => void;
-  options: readonly string[];
-  placeholder: string;
-  value: string;
-};
+import FilterSelect from "./filter-select";
 
 type DashboardFiltersPropsI = {
   section: string;
 };
 
-const emptyValue = "all";
-
-const formatOptionLabel = (value: string) =>
-  value
-    .toLowerCase()
-    .split("_")
-    .map((part) => part.slice(0, 1).toUpperCase() + part.slice(1))
-    .join(" ");
-
-function FilterSelect({ label, onValueChange, options, placeholder, value }: FilterSelectPropsI) {
-  return (
-    <div className="grid gap-2 text-sm font-semibold">
-      {label}
-      <Select value={value} onValueChange={(nextValue) => onValueChange(String(nextValue))}>
-        <SelectTrigger className="h-10 w-full">
-          <SelectValue placeholder={placeholder} />
-        </SelectTrigger>
-        <SelectContent>
-          <SelectItem value={emptyValue}>All</SelectItem>
-          {options.map((option) => (
-            <SelectItem key={option} value={option}>
-              {formatOptionLabel(option)}
-            </SelectItem>
-          ))}
-        </SelectContent>
-      </Select>
-    </div>
-  );
-}
+export const emptyValue = "all";
+const applicationExperienceOptions = ["0", "1", "2", "3", "4", "5+"] as const;
 
 export function DashboardFilters({ section }: DashboardFiltersPropsI) {
-  const [category, setCategory] = useState(emptyValue);
-  const [workplaceType, setWorkplaceType] = useState(emptyValue);
-  const [experienceLevel, setExperienceLevel] = useState(emptyValue);
-  const [jobStatus, setJobStatus] = useState(emptyValue);
-  const [applicationStatus, setApplicationStatus] = useState(emptyValue);
-  const [skills, setSkills] = useState<string[]>([]);
+  const dispatch = useAppDispatch();
+  const isAdmin = useAppSelector(selectIsAdmin);
+  const reduxFilters = useAppSelector(selectJobFilters);
+  const [searchParams, setSearchParams] = useSearchParams();
+
   const isJobsSection = section === "jobs";
 
-  const clearFilters = () => {
-    setCategory(emptyValue);
-    setWorkplaceType(emptyValue);
-    setExperienceLevel(emptyValue);
-    setJobStatus(emptyValue);
-    setApplicationStatus(emptyValue);
-    setSkills([]);
+  const category = searchParams.get("category") ?? reduxFilters.category ?? emptyValue;
+  const experienceLevel =
+    searchParams.get("experienceLevel") ?? reduxFilters.experienceLevel ?? emptyValue;
+  const workplaceType =
+    searchParams.get("workplaceType") ?? reduxFilters.workplaceType ?? emptyValue;
+  const jobStatus = searchParams.get("status") ?? reduxFilters.status ?? emptyValue;
+  const applicationExperience =
+    searchParams.get("applicationExperience") ?? reduxFilters.applicationExperience ?? emptyValue;
+
+  const handleFilterChange = (key: keyof JobFilterStateI, value: string) => {
+    const nextValue = value === emptyValue ? undefined : value;
+    dispatch(setFilterAction({ key, value: nextValue }));
+
+    const nextParams = new URLSearchParams(searchParams);
+    if (nextValue) {
+      nextParams.set(key, nextValue);
+    } else {
+      nextParams.delete(key);
+    }
+    setSearchParams(nextParams);
+  };
+
+  const handleClearFilters = () => {
+    dispatch(clearFiltersAction());
+
+    const nextParams = new URLSearchParams(searchParams);
+    nextParams.delete("category");
+    nextParams.delete("experienceLevel");
+    nextParams.delete("workplaceType");
+    nextParams.delete("status");
+    nextParams.delete("applicationExperience");
+    setSearchParams(nextParams);
   };
 
   return (
     <div className="grid gap-7">
       <div className="flex items-center justify-between gap-4">
         <h2 className="text-lg font-semibold">Filters</h2>
-        <Button type="button" variant="outline" size="sm" onClick={clearFilters}>
+        <Button type="button" variant="outline" size="sm" onClick={handleClearFilters}>
           Clear
         </Button>
       </div>
@@ -93,44 +82,41 @@ export function DashboardFilters({ section }: DashboardFiltersPropsI) {
             options={jobCategories}
             placeholder="All categories"
             value={category}
-            onValueChange={setCategory}
-          />
-          <FilterSelect
-            label="Workplace"
-            options={workplaceTypes}
-            placeholder="All workplace types"
-            value={workplaceType}
-            onValueChange={setWorkplaceType}
+            onValueChange={(value) => handleFilterChange("category", value)}
           />
           <FilterSelect
             label="Experience"
             options={experienceLevels}
             placeholder="All levels"
             value={experienceLevel}
-            onValueChange={setExperienceLevel}
+            onValueChange={(value) => handleFilterChange("experienceLevel", value)}
           />
           <FilterSelect
-            label="Status"
-            options={jobStatuses}
-            placeholder="All statuses"
-            value={jobStatus}
-            onValueChange={setJobStatus}
+            label="Workplace type"
+            options={workplaceTypes}
+            placeholder="All types"
+            value={workplaceType}
+            onValueChange={(value) => handleFilterChange("workplaceType", value)}
           />
+          {isAdmin ? (
+            <FilterSelect
+              label="Status"
+              options={jobStatuses}
+              placeholder="All statuses"
+              value={jobStatus}
+              onValueChange={(value) => handleFilterChange("status", value)}
+            />
+          ) : null}
         </>
       ) : (
         <FilterSelect
-          label="Application status"
-          options={applicationStatuses}
-          placeholder="All statuses"
-          value={applicationStatus}
-          onValueChange={setApplicationStatus}
+          label="Years of experience"
+          options={applicationExperienceOptions}
+          placeholder="All experience"
+          value={applicationExperience}
+          onValueChange={(value) => handleFilterChange("applicationExperience", value)}
         />
       )}
-
-      <div className="grid gap-2 text-sm font-semibold">
-        Skills
-        <MultiTextInput value={skills} placeholder="React" onValueChange={setSkills} />
-      </div>
     </div>
   );
 }

@@ -9,7 +9,7 @@ function ShimmerBlock({ className }: { className: string }) {
   return (
     <div
       className={cn(
-        "animate-pulse rounded-md bg-muted bg-[linear-gradient(110deg,transparent,rgba(255,255,255,0.45),transparent)] bg-[length:200%_100%]",
+        "animate-pulse rounded-md bg-muted bg-[linear-gradient(110deg,transparent,rgba(255,255,255,0.45),transparent)] bg-size-[200%_100%]",
         className,
       )}
     />

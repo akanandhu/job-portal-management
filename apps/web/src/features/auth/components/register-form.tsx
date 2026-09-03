@@ -3,21 +3,43 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import ErrorBox from "@/components/ui/error-box";
 import { Input } from "@/components/ui/input";
 import { PasswordInput } from "@/components/ui/password-input";
+import { useRegisterMutation } from "@/features/auth/store/auth-api";
+import { getApiErrorMessage } from "@/services/api-error";
 import type { RegisterFormI } from "@/types/auth";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { registerFormSchema } from "@job-portal/contracts";
 import { useForm } from "react-hook-form";
 import { Link, useNavigate } from "react-router";
 
 const RegisterUserForm = () => {
   const navigate = useNavigate();
+  const [registerUser, { isLoading }] = useRegisterMutation();
   const {
     register,
     handleSubmit,
-    getValues,
+    setError,
     formState: { errors },
-  } = useForm<RegisterFormI>();
+  } = useForm<RegisterFormI>({
+    resolver: zodResolver(registerFormSchema),
+  });
 
-  const onSubmit = () => {
-    navigate("/profile");
+  const onSubmit = async (values: RegisterFormI) => {
+    try {
+      await registerUser({
+        name: values.name,
+        email: values.email,
+        password: values.password,
+      }).unwrap();
+      navigate("/profile", { replace: true });
+    } catch (error) {
+      setError("root", {
+        type: "server",
+        message: getApiErrorMessage(
+          error,
+          "Registration failed. Check your details and try again.",
+        ),
+      });
+    }
   };
 
   return (
@@ -35,7 +57,7 @@ const RegisterUserForm = () => {
               autoComplete="name"
               placeholder="Your name"
               aria-invalid={Boolean(errors.name)}
-              {...register("name", { required: "Name is required" })}
+              {...register("name")}
             />
             <ErrorBox message={errors.name?.message} />
           </label>
@@ -48,17 +70,9 @@ const RegisterUserForm = () => {
               autoComplete="email"
               placeholder="you@example.com"
               aria-invalid={Boolean(errors.email)}
-              {...register("email", {
-                required: "Email is required",
-                pattern: {
-                  value: /^\S+@\S+\.\S+$/,
-                  message: "Enter a valid email",
-                },
-              })}
+              {...register("email")}
             />
-            {errors.email && (
-              <span className="text-xs text-destructive">{errors.email.message}</span>
-            )}
+            <ErrorBox message={errors.email?.message} />
           </label>
 
           <label className="grid gap-2 text-sm font-medium" htmlFor="password">
@@ -68,10 +82,7 @@ const RegisterUserForm = () => {
               autoComplete="new-password"
               placeholder="Create a password"
               aria-invalid={Boolean(errors.password)}
-              {...register("password", {
-                required: "Password is required",
-                minLength: { value: 6, message: "Use at least 6 characters" },
-              })}
+              {...register("password")}
             />
             <ErrorBox message={errors.password?.message} />
           </label>
@@ -83,17 +94,15 @@ const RegisterUserForm = () => {
               autoComplete="new-password"
               placeholder="Repeat your password"
               aria-invalid={Boolean(errors.confirmPassword)}
-              {...register("confirmPassword", {
-                required: "Please confirm your password",
-                validate: (value) => value === getValues("password") || "Passwords do not match",
-              })}
+              {...register("confirmPassword")}
             />
             <ErrorBox message={errors.confirmPassword?.message} />
           </label>
 
-          <Button type="submit" size="lg" className="mt-1 w-full">
-            Create account
+          <Button type="submit" size="lg" className="mt-1 w-full" disabled={isLoading}>
+            {isLoading ? "Creating account..." : "Create account"}
           </Button>
+          <ErrorBox message={errors.root?.message} />
         </form>
         <p className="mt-6 text-center text-sm text-muted-foreground">
           Already have an account?{" "}

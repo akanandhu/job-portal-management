@@ -17,7 +17,7 @@ export function authenticate(req: Request, res: Response, next: NextFunction) {
       role: payload.role,
     };
     next();
-  } catch (error) {
+  } catch (_error) {
     return res.status(401).json({ message: "Invalid token" });
   }
 }

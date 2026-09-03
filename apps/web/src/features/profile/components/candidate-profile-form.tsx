@@ -1,24 +1,31 @@
+import type { CandidateProfileFormPropsI } from "@/types/profile";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import ErrorBox from "@/components/ui/error-box";
 import { Input } from "@/components/ui/input";
 import { MultiTextInput } from "@/components/ui/multi-text-input";
-import type { CandidateProfileFormPropsI } from "@/types/profile";
 import { Controller } from "react-hook-form";
 import useCandidateProfileForm from "../hooks/useCandidateProfileForm";
 
 export function CandidateProfileForm({
-  initialValues,
-  mode = "create",
+  mode = "edit",
   onCancel,
   onSubmit,
 }: CandidateProfileFormPropsI) {
-  const { control, errors, register, handleSubmit, handleProfileSubmit, onBack, emptyToNull } =
-    useCandidateProfileForm({
-      initialValues,
-      onCancel,
-      onSubmit,
-    });
+  const {
+    control,
+    errors,
+    register,
+    handleSubmit,
+    handleProfileSubmit,
+    isSubmitting,
+    onBack,
+    submitError,
+  } = useCandidateProfileForm({
+    mode,
+    onCancel,
+    onSubmit,
+  });
 
   return (
     <Card>
@@ -94,7 +101,7 @@ export function CandidateProfileForm({
                 id="currentCompany"
                 placeholder="Acme Labs"
                 aria-invalid={Boolean(errors.currentCompany)}
-                {...register("currentCompany", { setValueAs: emptyToNull })}
+                {...register("currentCompany")}
               />
               <ErrorBox message={errors.currentCompany?.message} />
             </label>
@@ -105,7 +112,7 @@ export function CandidateProfileForm({
                 id="currentRole"
                 placeholder="Frontend Developer"
                 aria-invalid={Boolean(errors.currentRole)}
-                {...register("currentRole", { setValueAs: emptyToNull })}
+                {...register("currentRole")}
               />
               <ErrorBox message={errors.currentRole?.message} />
             </label>
@@ -147,12 +154,19 @@ export function CandidateProfileForm({
 
           <div className="flex flex-col gap-3 border-t pt-6 sm:flex-row sm:justify-end">
             <Button onClick={onBack} type="button" variant="outline" size="lg">
-              {mode === "edit" ? "Cancel" : "Back to Register"}
+              {mode === "edit" ? "Cancel" : "Back to Home"}
             </Button>
-            <Button type="submit" size="lg">
-              {mode === "edit" ? "Update profile" : "Save profile"}
+            <Button type="submit" size="lg" disabled={isSubmitting}>
+              {isSubmitting
+                ? mode === "edit"
+                  ? "Updating profile..."
+                  : "Saving profile..."
+                : mode === "edit"
+                  ? "Update profile"
+                  : "Save profile"}
             </Button>
           </div>
+          <ErrorBox message={submitError} />
         </form>
       </CardContent>
     </Card>

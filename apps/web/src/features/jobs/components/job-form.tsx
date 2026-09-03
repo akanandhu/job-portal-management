@@ -9,6 +9,7 @@ import {
 import type { CreateJobInputI } from "@job-portal/contracts/jobs";
 import { ArrowLeft } from "lucide-react";
 import { Controller, useForm } from "react-hook-form";
+import toast from "react-hot-toast";
 import type { z } from "zod";
 
 import { Button } from "@/components/ui/button";
@@ -23,8 +24,9 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import type { AdminJobI } from "@/features/dashboard/data/dashboard-data";
-import { formatOptionLabel } from "@/features/dashboard/utils/admin-dashboard-view";
-import { cn } from "@/lib/utils";
+import { useCreateJobMutation, useUpdateJobMutation } from "@/features/jobs/store/jobs-api";
+import { cn, formatOptionLabel } from "@/lib/utils";
+import { getApiErrorMessage } from "@/services/api-error";
 import type { JobFormPropsI, JobSelectPropsI } from "@/types/jobs";
 
 export type JobFormValuesI = z.input<typeof createJobSchema>;
@@ -38,7 +40,7 @@ const defaultValues: JobFormValuesI = {
   category: "ENGINEERING",
   experienceLevel: "ENTRY",
   skills: [],
-  status: "DRAFT",
+  status: "PUBLISHED",
   isFeatured: false,
 };
 
@@ -64,8 +66,8 @@ function JobSelect({
         </SelectTrigger>
         <SelectContent>
           {options.map((option) => (
-            <SelectItem key={option} value={option}>
-              {formatOptionLabel(option)}
+            <SelectItem key={option} value={option} displayValue={formatOptionLabel(option)}>
+              {option}
             </SelectItem>
           ))}
         </SelectContent>
@@ -75,19 +77,45 @@ function JobSelect({
   );
 }
 
-export function JobForm({ job, mode, onCancel }: JobFormPropsI) {
+export function JobForm({ job, mode, onCancel, onSaved }: JobFormPropsI) {
+  const [createJob, { isLoading: isCreating }] = useCreateJobMutation();
+  const [updateJob, { isLoading: isUpdating }] = useUpdateJobMutation();
   const {
     control,
     register,
     handleSubmit,
-    formState: { errors, isSubmitSuccessful },
+    setError,
+    formState: { errors },
   } = useForm<JobFormValuesI, unknown, CreateJobInputI>({
     defaultValues: getJobFormValues(job),
     resolver: zodResolver(createJobSchema),
   });
 
-  const onSubmit = () => undefined;
+  const onSubmit = async (values: CreateJobInputI) => {
+    try {
+      const result =
+        mode === "add"
+          ? await createJob(values).unwrap()
+          : await updateJob({ id: job?.id ?? "", data: values }).unwrap();
+
+      toast.success(mode === "add" ? "Job opening created." : "Job opening updated.");
+      onSaved?.(result.data);
+    } catch (error) {
+      const message = getApiErrorMessage(
+        error,
+        mode === "add" ? "Failed to create job opening" : "Failed to update job opening",
+      );
+
+      setError("root", {
+        type: "server",
+        message,
+      });
+      toast.error(message);
+    }
+  };
   const title = mode === "add" ? "Add job" : "Edit job";
+  const submitLabel = mode === "add" ? "Create job" : "Save changes";
+  const isSaving = isCreating || isUpdating;
 
   return (
     <div className="py-5">
@@ -246,18 +274,14 @@ export function JobForm({ job, mode, onCancel }: JobFormPropsI) {
           <ErrorBox message={errors.skills?.message} />
         </div>
 
-        {isSubmitSuccessful && (
-          <p className="rounded-lg border border-primary/25 bg-primary/10 px-3 py-2 text-sm text-primary">
-            Job details are valid and ready to save when the API is connected.
-          </p>
-        )}
+        <ErrorBox message={errors.root?.message} />
 
         <div className="flex flex-col gap-3 border-t pt-6 sm:flex-row sm:justify-end">
-          <Button type="button" variant="outline" size="lg" onClick={onCancel}>
+          <Button type="button" variant="outline" size="lg" onClick={onCancel} disabled={isSaving}>
             Cancel
           </Button>
-          <Button type="submit" size="lg">
-            {mode === "add" ? "Create job" : "Save changes"}
+          <Button type="submit" size="lg" disabled={isSaving}>
+            {isSaving ? "Saving..." : submitLabel}
           </Button>
         </div>
       </form>

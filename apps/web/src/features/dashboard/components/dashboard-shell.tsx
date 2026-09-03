@@ -8,8 +8,13 @@ import { cn } from "@/lib/utils";
 import type { DashboardShellPropsI } from "@/types/dashboard";
 
 export function DashboardShell({
+  accountAction,
+  accountInitial = "A",
+  accountName = "Admin",
+  accountSubtitle = "TNP Portal",
   activeNav,
   children,
+  header,
   filters,
   navItems,
   onLogout,
@@ -47,34 +52,37 @@ export function DashboardShell({
     </nav>
   );
 
-  const renderAdminCard = () => (
+  const renderAccountCard = () => (
     <div className="mt-auto rounded-xl border bg-muted/40 p-4">
       <div className="flex items-center gap-3">
         <div className="flex size-10 items-center justify-center rounded-full bg-primary text-sm font-semibold text-primary-foreground">
-          A
+          {accountInitial}
         </div>
         <div className="min-w-0 flex-1">
-          <p className="font-medium">Admin</p>
-          <p className="text-sm text-muted-foreground">TNP Portal</p>
+          <p className="truncate font-medium">{accountName}</p>
+          <p className="truncate text-sm text-muted-foreground">{accountSubtitle}</p>
         </div>
       </div>
-      <ConfirmDialog
-        title="Log out?"
-        description="You will be returned to the login screen."
-        confirmLabel="Log out"
-        onConfirm={onLogout}
-        trigger={({ onClick }) => (
-          <Button
-            type="button"
-            variant="outline"
-            className="mt-4 w-full justify-start"
-            onClick={onClick}
-          >
-            <LogOut className="size-4" />
-            Logout
-          </Button>
-        )}
-      />
+      {accountAction ? <div className="mt-4">{accountAction}</div> : null}
+      {onLogout ? (
+        <ConfirmDialog
+          title="Log out?"
+          description="You will be returned to the login screen."
+          confirmLabel="Log out"
+          onConfirm={onLogout}
+          trigger={({ onClick }) => (
+            <Button
+              type="button"
+              variant="outline"
+              className="mt-4 w-full justify-start"
+              onClick={onClick}
+            >
+              <LogOut className="size-4" />
+              Logout
+            </Button>
+          )}
+        />
+      ) : null}
     </div>
   );
 
@@ -90,36 +98,45 @@ export function DashboardShell({
           <div className="flex min-h-full flex-col gap-8">
             <BrandLogo />
             {renderNavItems()}
-            {renderAdminCard()}
+            {renderAccountCard()}
           </div>
         </aside>
 
-        <section className="min-w-0 px-5 py-4 lg:h-svh lg:overflow-y-auto lg:px-8">
-          <div className="mb-3 flex items-center justify-between lg:hidden">
-            <Button
-              type="button"
-              variant="outline"
-              size="icon"
-              aria-label="Open sidebar"
-              onClick={() => setSidebarOpen(true)}
+        <section className="flex min-w-0 flex-col h-svh overflow-hidden lg:h-svh">
+          <header className="sticky top-0 z-10 shrink-0 bg-background/95 px-5 py-3 backdrop-blur-xs lg:px-8">
+            <div
+              className={cn(
+                "flex items-center justify-between",
+                header ? "mb-3 lg:hidden" : "lg:hidden",
+              )}
             >
-              <Menu className="size-4" />
-            </Button>
-            {showFilters ? (
               <Button
                 type="button"
                 variant="outline"
                 size="icon"
-                aria-label="Open filters"
-                onClick={() => setFiltersOpen(true)}
+                aria-label="Open sidebar"
+                onClick={() => setSidebarOpen(true)}
               >
-                <Filter className="size-4" />
+                <Menu className="size-4" />
               </Button>
-            ) : (
-              <span />
-            )}
-          </div>
-          {children}
+              {showFilters ? (
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="icon"
+                  aria-label="Open filters"
+                  onClick={() => setFiltersOpen(true)}
+                >
+                  <Filter className="size-4" />
+                </Button>
+              ) : (
+                <span />
+              )}
+            </div>
+            {header}
+          </header>
+
+          <div className="flex-1 min-h-0 overflow-y-auto px-5 py-4 lg:px-8">{children}</div>
         </section>
 
         {((filtersOpen && showFilters) || sidebarOpen) && (
@@ -153,7 +170,7 @@ export function DashboardShell({
             </Button>
           </div>
           {renderNavItems(() => setSidebarOpen(false))}
-          {renderAdminCard()}
+          {renderAccountCard()}
         </aside>
 
         <aside

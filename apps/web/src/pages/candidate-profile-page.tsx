@@ -8,7 +8,7 @@ const CandidateProfilePage = () => {
         <div className="mb-8 flex justify-center">
           <BrandLogo />
         </div>
-        <CandidateProfileForm />
+        <CandidateProfileForm mode="create" />
       </div>
     </main>
   );

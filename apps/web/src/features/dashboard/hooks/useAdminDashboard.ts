@@ -1,0 +1,117 @@
+import { BriefcaseBusiness, ClipboardList } from "lucide-react";
+import toast from "react-hot-toast";
+
+import { useAppSelector } from "@/app/hook";
+import { useUpdateApplicationStatusMutation } from "@/features/applications/store/applications-api";
+import { selectAllApplications } from "@/features/applications/store/applications-slice";
+import { formatApplications } from "@/features/applications/utils/format-application";
+import { selectCurrentUser } from "@/features/auth/store/auth-selectors";
+import type { AdminApplicationI } from "@/features/dashboard/data/dashboard-data";
+import { selectJobs } from "@/features/jobs/store/jobs-slice";
+import { getNameInitial } from "@/lib/utils";
+import { getApiErrorMessage } from "@/services/api-error";
+import type { ApplicationStatusI } from "@job-portal/contracts";
+import type { DashboardNavItemI } from "@/types/dashboard";
+import {
+  defaultJobTab,
+  defaultSection,
+  getAdminDashboardView,
+  getDashboardTabs,
+  getDefaultTab,
+} from "../utils/admin-dashboard-view";
+import { useDashboard } from "./useDashboard";
+
+const navItems: DashboardNavItemI[] = [
+  { id: "jobs", label: "Jobs", icon: BriefcaseBusiness },
+  { id: "applications", label: "Applications", icon: ClipboardList },
+];
+
+const useAdminDashboard = () => {
+  const currentUser = useAppSelector(selectCurrentUser);
+  const dashboard = useDashboard({
+    defaultSection,
+    getDefaultTab,
+    getTabs: getDashboardTabs,
+    navItems,
+  });
+
+  const jobs = useAppSelector(selectJobs);
+  const allApplications = useAppSelector(selectAllApplications);
+  const [updateApplicationStatus] = useUpdateApplicationStatusMutation();
+
+  const formattedApplications: AdminApplicationI[] = formatApplications(allApplications);
+
+  const view = getAdminDashboardView({
+    activeNav: dashboard.activeNav,
+    applications: formattedApplications,
+    jobs,
+    searchParams: dashboard.searchParams,
+  });
+
+  const handleAddJob = () => {
+    dashboard.updateParams({
+      section: "jobs",
+      tab: defaultJobTab,
+      mode: "add",
+      jobId: undefined,
+      applicationId: undefined,
+    });
+  };
+
+  const handleEditJob = (jobId: string) => {
+    dashboard.updateParams({
+      section: "jobs",
+      tab: defaultJobTab,
+      mode: "edit",
+      jobId,
+      applicationId: undefined,
+    });
+  };
+
+  const handleChangeApplicationStatus = async (
+    applicationId: string,
+    status: ApplicationStatusI,
+  ) => {
+    try {
+      await updateApplicationStatus({ id: applicationId, status }).unwrap();
+      toast.success(`Application status updated to ${status}`);
+    } catch (err: unknown) {
+      toast.error(getApiErrorMessage(err, "Failed to update application status"));
+    }
+  };
+
+  const handleJobSaved = () => {
+    dashboard.handleBackToJobs(defaultJobTab);
+  };
+
+  return {
+    accountInitial: getNameInitial(currentUser?.name, "A"),
+    accountName: currentUser?.name ?? "Admin",
+    accountSubtitle: "Admin",
+    activeNav: dashboard.activeNav,
+    activeTab: dashboard.activeTab,
+    applications: formattedApplications,
+    currentTabs: dashboard.currentTabs,
+    handleAddJob,
+    handleBackToApplicationDetail: dashboard.handleViewApplication,
+    handleBackToApplications: dashboard.handleBackToApplications,
+    handleBackToJobDetail: dashboard.handleViewJob,
+    handleBackToJobs: dashboard.handleBackToJobs,
+    handleChangeApplicationStatus,
+    handleEditJob,
+    handleJobSaved,
+    handleLogout: dashboard.handleLogout,
+    handleNavChange: dashboard.handleNavChange,
+    handleTabChange: dashboard.handleTabChange,
+    handleViewApplication: dashboard.handleViewApplication,
+    handleViewJob: dashboard.handleViewJob,
+    hasValidParams: dashboard.hasValidParams,
+    jobs,
+    view,
+    navItems,
+    updateParams: dashboard.updateParams,
+    searchParams: dashboard.searchParams,
+  };
+};
+
+export default useAdminDashboard;

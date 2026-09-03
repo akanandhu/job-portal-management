@@ -1,23 +1,9 @@
 import { ArrowLeft } from "lucide-react";
-import type { CandidateProfileInputI } from "@job-portal/contracts/profile";
-
 import { Button } from "@/components/ui/button";
 import { CandidateProfileForm } from "@/features/profile/components/candidate-profile-form";
-import type { AdminApplicationI } from "@/features/dashboard/data/dashboard-data";
 import type { CandidateProfileEditorPropsI } from "@/types/profile";
 
-const getInitialValues = (application: AdminApplicationI): CandidateProfileInputI => ({
-  phone: application.phone,
-  education: application.education,
-  yearsOfExperience: application.yearsOfExperience,
-  currentCompany: application.currentCompany,
-  currentRole: application.currentRole,
-  expectedSalary: application.expectedSalary,
-  noticePeriodDays: application.noticePeriodDays,
-  skills: [...application.skills],
-});
-
-export function CandidateProfileEditor({ application, job, onBack }: CandidateProfileEditorPropsI) {
+export function CandidateProfileEditor({ job, onBack }: CandidateProfileEditorPropsI) {
   return (
     <div className="py-5">
       {onBack ? (
@@ -40,11 +26,7 @@ export function CandidateProfileEditor({ application, job, onBack }: CandidatePr
         )}
       </div>
 
-      <CandidateProfileForm
-        initialValues={application ? getInitialValues(application) : undefined}
-        mode="edit"
-        onCancel={onBack}
-      />
+      <CandidateProfileForm mode="edit" onCancel={onBack} />
     </div>
   );
 }

@@ -16,6 +16,7 @@ import {
   applicationIdParamsSchema,
   applyToJobParamsSchema,
   listAllApplicationsQuerySchema,
+  listMyApplicationsQuerySchema,
   listJobApplicationsParamsSchema,
   updateApplicationStatusSchema,
 } from "./application.validation";
@@ -102,8 +103,17 @@ export async function applyToJob(userId: string, params: Record<string, unknown>
   });
 }
 
-export async function listMyApplications(userId: string) {
-  return await findApplicationsByUserId(userId);
+export async function listMyApplications(userId: string, query: Record<string, unknown> = {}) {
+  const parsedQuery = parseWithZodValidation(
+    () => listMyApplicationsQuerySchema.parse(query),
+    (message) => new ApplicationValidationError(message),
+    {
+      fallbackMessage: "Invalid application request",
+      fallbackPath: "query",
+    },
+  );
+
+  return await findApplicationsByUserId(userId, parsedQuery);
 }
 
 export async function listAllApplications(query: Record<string, unknown>) {
@@ -118,7 +128,7 @@ export async function listAllApplications(query: Record<string, unknown>) {
 
   const [applications, countResult] = await Promise.all([
     findAllApplications(parsedQuery),
-    countAllApplications(),
+    countAllApplications(parsedQuery),
   ]);
   const total = countResult.total;
 
@@ -145,8 +155,22 @@ export async function listJobApplications(params: Record<string, unknown>) {
 
   return applications.map((application) => ({
     id: application.id,
+    jobId: application.jobId,
+    userId: application.userId,
     status: application.status,
     createdAt: application.createdAt,
+    yearsOfExperience: application.yearsOfExperience,
+    education: application.education,
+    currentCompany: application.currentCompany,
+    currentRole: application.currentRole,
+    expectedSalary: application.expectedSalary,
+    noticePeriodDays: application.noticePeriodDays,
+    skills: application.skills,
+    user: {
+      id: application.user.id,
+      name: application.user.name,
+      email: application.user.email,
+    },
     candidate: {
       id: application.user.id,
       name: application.user.name,

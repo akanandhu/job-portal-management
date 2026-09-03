@@ -25,7 +25,7 @@ function handleJobError(error: unknown, res: Response) {
 
 export async function listJobsController(req: Request, res: Response) {
   try {
-    const jobs = await listJobs(req.query);
+    const jobs = await listJobs(req.query, req.user?.role);
 
     return res.status(200).json(jobs);
   } catch (error) {
@@ -35,7 +35,7 @@ export async function listJobsController(req: Request, res: Response) {
 
 export async function getJobController(req: Request, res: Response) {
   try {
-    const job = await getJob(req.params);
+    const job = await getJob(req.params, req.user?.role);
 
     return res.status(200).json({ data: job });
   } catch (error) {

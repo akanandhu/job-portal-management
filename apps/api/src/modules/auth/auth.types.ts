@@ -9,3 +9,10 @@ export type CreateRefreshTokenI = {
   userId: string;
   expiresAt: string;
 };
+
+export type CreateUserI = {
+  name: string;
+  email: string;
+  passwordHash: string;
+  role: UserRoleI;
+};

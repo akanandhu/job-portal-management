@@ -10,8 +10,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { formatOptionLabel } from "@/features/dashboard/utils/admin-dashboard-view";
-import { cn } from "@/lib/utils";
+import { cn, formatOptionLabel } from "@/lib/utils";
 
 type ApplicationStatusSelectPropsI = {
   applicationId: string;
@@ -53,8 +52,8 @@ export function ApplicationStatusSelect({
         </SelectTrigger>
         <SelectContent>
           {applicationStatuses.map((status) => (
-            <SelectItem key={status} value={status}>
-              {formatOptionLabel(status)}
+            <SelectItem key={status} value={status} displayValue={formatOptionLabel(status)}>
+              {status}
             </SelectItem>
           ))}
         </SelectContent>

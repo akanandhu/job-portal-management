@@ -18,6 +18,7 @@ import {
   updateJobSchema,
 } from "./job.validation";
 import { parseWithZodValidation } from "../../lib/validation";
+import type { UserRoleI } from "../auth/auth.types";
 
 export class JobQueryValidationError extends Error {}
 export class JobNotFoundError extends Error {}
@@ -93,9 +94,20 @@ function parseUpdateJobBody(body: unknown): UpdateJobInputI {
   });
 }
 
-export async function listJobs(query: Record<string, unknown>) {
+export async function listJobs(query: Record<string, unknown>, role?: UserRoleI) {
   const parsedQuery = parseListJobsQuery(query);
-  const [jobs, countResult] = await Promise.all([findJobs(parsedQuery), countJobs(parsedQuery)]);
+  const includeAllStatuses = role === "ADMIN" && parsedQuery.status === "all";
+  const effectiveQuery =
+    role === "ADMIN"
+      ? parsedQuery
+      : {
+          ...parsedQuery,
+          status: "PUBLISHED" as const,
+        };
+  const [jobs, countResult] = await Promise.all([
+    findJobs(effectiveQuery, { includeAllStatuses }),
+    countJobs(effectiveQuery, { includeAllStatuses }),
+  ]);
   const total = countResult.total;
 
   return {
@@ -133,9 +145,9 @@ export async function listJobCategories() {
   };
 }
 
-export async function getJob(params: Record<string, unknown>) {
+export async function getJob(params: Record<string, unknown>, role?: UserRoleI) {
   const id = parseJobId(params);
-  const job = await findPublishedJobById(id);
+  const job = role === "ADMIN" ? await findJobById(id) : await findPublishedJobById(id);
 
   if (!job) {
     throw new JobNotFoundError("Job not found");
