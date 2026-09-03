@@ -156,14 +156,14 @@ export default function useUserDashboard(): UseUserDashboardResultI {
       .unwrap()
       .catch(() => undefined)
       .finally(() => {
-        navigate("/listing", { replace: true });
+        navigate("/login", { replace: true });
       });
   };
 
   return {
     accountInitial: getNameInitial(currentUser?.name),
     accountName: currentUser?.name ?? "Guest",
-    accountSubtitle: isCandidate ? "Candidate" : "Public listing access",
+    accountSubtitle: isCandidate ? "Candidate" : "Login to apply for jobs",
     activeNav,
     activeTab,
     applications,

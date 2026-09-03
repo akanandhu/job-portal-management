@@ -1,7 +1,10 @@
 import { ArrowRight, Briefcase, MapPin, Search, Sparkles } from "lucide-react";
+import { Link } from "react-router";
 
-import { Button } from "@/components/ui/button";
+import { useAppSelector } from "@/app/hook";
+import { buttonVariants } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { selectIsAdmin } from "@/features/auth/store/auth-selectors";
 
 const productSteps = [
   {
@@ -21,6 +24,8 @@ const productSteps = [
 const tags = ["Remote", "Full-time", "Posted 2 days ago"];
 
 export function Hero() {
+  const isAdmin = useAppSelector(selectIsAdmin);
+
   return (
     <section className="relative overflow-hidden border-b">
       <div className="absolute inset-y-0 left-0 w-full bg-[radial-gradient(circle_at_12%_8%,rgba(255,173,164,0.5),transparent_27%),radial-gradient(circle_at_26%_82%,rgba(128,205,255,0.42),transparent_25%)] lg:w-[47%]" />
@@ -43,14 +48,19 @@ export function Hero() {
           </div>
 
           <div className="flex flex-wrap items-center gap-3 pt-2">
-            <Button size="lg">
+            <Link to="/listing" className={buttonVariants({ size: "lg" })}>
               Browse open jobs
               <Search className="size-4" />
-            </Button>
-            <Button size="lg" variant="outline">
-              Post a job opening
-              <ArrowRight className="size-4" />
-            </Button>
+            </Link>
+            {isAdmin ? (
+              <Link
+                to="/dashboard?section=jobs&tab=all-jobs&mode=add"
+                className={buttonVariants({ size: "lg", variant: "outline" })}
+              >
+                Post a job opening
+                <ArrowRight className="size-4" />
+              </Link>
+            ) : null}
           </div>
         </div>
 

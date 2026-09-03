@@ -162,7 +162,7 @@ const useAdminDashboard = () => {
       .unwrap()
       .catch(() => undefined)
       .finally(() => {
-        navigate("/", { replace: true });
+        navigate("/login", { replace: true });
       });
   };
 
