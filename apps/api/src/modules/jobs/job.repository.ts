@@ -26,6 +26,12 @@ function applyJobFilters(query: ListJobsQueryI, options: { includeAllStatuses?: 
     });
   }
 
+  if (query.workplaceType) {
+    jobsQuery = jobsQuery.where({
+      workplaceType: query.workplaceType,
+    });
+  }
+
   return jobsQuery;
 }
 

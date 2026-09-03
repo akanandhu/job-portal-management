@@ -30,6 +30,7 @@ export const listJobsQuerySchema = z.object({
   category: queryValueSchema(z.enum(jobCategories).optional()),
   experienceLevel: queryValueSchema(z.enum(experienceLevels).optional()),
   status: queryValueSchema(z.union([z.enum(jobStatuses), z.literal("all")]).optional()),
+  workplaceType: queryValueSchema(z.enum(workplaceTypes).optional()),
 });
 
 export const featuredJobsQuerySchema = z.object({

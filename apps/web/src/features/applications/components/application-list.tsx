@@ -59,7 +59,16 @@ export function ApplicationList({
                 return (
                   <article
                     key={application.id}
-                    className="flex gap-4 py-5 transition-colors hover:bg-muted/30"
+                    role="button"
+                    tabIndex={0}
+                    className="flex cursor-pointer gap-4 py-5 transition-colors hover:bg-muted/30 focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-ring/50"
+                    onClick={() => onViewApplication(application.id)}
+                    onKeyDown={(event) => {
+                      if (event.key === "Enter" || event.key === " ") {
+                        event.preventDefault();
+                        onViewApplication(application.id);
+                      }
+                    }}
                   >
                     <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-secondary text-sm font-semibold text-secondary-foreground ring-1 ring-border">
                       {application.candidate.slice(0, 1)}
@@ -77,7 +86,11 @@ export function ApplicationList({
                             {application.appliedAt}
                           </p>
                         </div>
-                        <div className="flex items-center gap-2 sm:shrink-0">
+                        <div
+                          className="flex items-center gap-2 sm:shrink-0"
+                          onClick={(event) => event.stopPropagation()}
+                          onKeyDown={(event) => event.stopPropagation()}
+                        >
                           {showStatusEditor && onChangeApplicationStatus ? (
                             <ApplicationStatusSelect
                               applicationId={application.id}
@@ -96,7 +109,10 @@ export function ApplicationList({
                             size="icon"
                             className="shrink-0"
                             aria-label={`View ${application.candidate} application`}
-                            onClick={() => onViewApplication(application.id)}
+                            onClick={(event) => {
+                              event.stopPropagation();
+                              onViewApplication(application.id);
+                            }}
                           >
                             <ChevronRight className="size-4" />
                           </Button>
