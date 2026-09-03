@@ -4,7 +4,10 @@ import ErrorBox from "@/components/ui/error-box";
 import { Input } from "@/components/ui/input";
 import { PasswordInput } from "@/components/ui/password-input";
 import { useLoginMutation } from "@/features/auth/store/auth-api";
+import { getApiErrorMessage } from "@/services/api-error";
 import type { LoginFormI } from "@/types/auth";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { loginSchema } from "@job-portal/contracts";
 import { useForm } from "react-hook-form";
 import { Link, useNavigate } from "react-router";
 
@@ -16,7 +19,9 @@ const LoginForm = () => {
     handleSubmit,
     setError,
     formState: { errors },
-  } = useForm<LoginFormI>();
+  } = useForm<LoginFormI>({
+    resolver: zodResolver(loginSchema),
+  });
 
   const onSubmit = async (values: LoginFormI) => {
     try {
@@ -24,10 +29,10 @@ const LoginForm = () => {
       const nextRoute = result.user.role === "ADMIN" ? "/dashboard" : "/listings";
 
       navigate(nextRoute, { replace: true });
-    } catch {
+    } catch (error) {
       setError("root", {
         type: "server",
-        message: "Invalid email or password",
+        message: getApiErrorMessage(error, "Invalid email or password"),
       });
     }
   };
@@ -48,13 +53,7 @@ const LoginForm = () => {
               autoComplete="email"
               placeholder="you@example.com"
               aria-invalid={Boolean(errors.email)}
-              {...register("email", {
-                required: "Email is required",
-                pattern: {
-                  value: /^\S+@\S+\.\S+$/,
-                  message: "Enter a valid email",
-                },
-              })}
+              {...register("email")}
             />
             <ErrorBox message={errors.email?.message} />
           </label>
@@ -66,7 +65,7 @@ const LoginForm = () => {
               autoComplete="current-password"
               placeholder="Enter your password"
               aria-invalid={Boolean(errors.password)}
-              {...register("password", { required: "Password is required" })}
+              {...register("password")}
             />
             <ErrorBox message={errors.password?.message} />
           </label>

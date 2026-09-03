@@ -5,6 +5,7 @@
   "type": "module",
   "exports": {
     ".": "./src/index.ts",
+    "./auth": "./src/auth.ts",
     "./applications": "./src/applications.ts",
     "./jobs": "./src/jobs.ts",
     "./profile": "./src/profile.ts"

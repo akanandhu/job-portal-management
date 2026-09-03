@@ -1,5 +1,26 @@
 import type { Request, Response } from "express";
-import { loginUser, logoutUser, refreshAccessToken } from "./auth.service";
+import {
+  AuthConflictError,
+  AuthValidationError,
+  loginUser,
+  logoutUser,
+  refreshAccessToken,
+  registerUser,
+} from "./auth.service";
+
+function setRefreshTokenCookie(
+  res: Response,
+  refreshToken: string,
+  refreshTokenExpiresInDays: number,
+) {
+  res.cookie("refreshToken", refreshToken, {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    maxAge: refreshTokenExpiresInDays * 24 * 60 * 60 * 1000,
+    path: "/auth",
+    sameSite: "strict",
+  });
+}
 
 export async function loginController(req: Request, res: Response) {
   try {
@@ -11,17 +32,31 @@ export async function loginController(req: Request, res: Response) {
 
     const { refreshToken, refreshTokenExpiresInDays, ...result } = await loginUser(email, password);
 
-    res.cookie("refreshToken", refreshToken, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      maxAge: refreshTokenExpiresInDays * 24 * 60 * 60 * 1000,
-      path: "/auth",
-      sameSite: "strict",
-    });
+    setRefreshTokenCookie(res, refreshToken, refreshTokenExpiresInDays);
 
     return res.status(200).json({ message: "Login successful", ...result });
-  } catch (error) {
+  } catch {
     return res.status(401).json({ message: "Invalid email or password" });
+  }
+}
+
+export async function registerController(req: Request, res: Response) {
+  try {
+    const { refreshToken, refreshTokenExpiresInDays, ...result } = await registerUser(req.body);
+
+    setRefreshTokenCookie(res, refreshToken, refreshTokenExpiresInDays);
+
+    return res.status(201).json({ message: "Registration successful", ...result });
+  } catch (error) {
+    if (error instanceof AuthValidationError) {
+      return res.status(400).json({ message: error.message });
+    }
+
+    if (error instanceof AuthConflictError) {
+      return res.status(409).json({ message: error.message });
+    }
+
+    return res.status(500).json({ message: "Registration failed" });
   }
 }
 
@@ -35,7 +70,7 @@ export async function refreshAccessTokenController(req: Request, res: Response) 
 
     const result = await refreshAccessToken(refreshToken);
     return res.status(200).json({ message: "Access token refreshed successfully", ...result });
-  } catch (error) {
+  } catch {
     res.clearCookie("refreshToken", {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
@@ -62,7 +97,7 @@ export async function logoutController(req: Request, res: Response) {
     });
 
     return res.status(200).json({ message: "Logout successful" });
-  } catch (error) {
+  } catch {
     return res.status(500).json({ message: "An error occurred during logout" });
   }
 }

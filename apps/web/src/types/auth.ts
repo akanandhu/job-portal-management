@@ -1,14 +1,8 @@
-export type LoginFormI = {
-  email: string;
-  password: string;
-};
+import type { LoginInputI, RegisterFormInputI, RegisterInputI } from "@job-portal/contracts";
 
-export type RegisterFormI = {
-  name: string;
-  email: string;
-  password: string;
-  confirmPassword: string;
-};
+export type LoginFormI = LoginInputI;
+
+export type RegisterFormI = RegisterFormInputI;
 
 export type UserRoleI = "USER" | "ADMIN";
 
@@ -28,6 +22,8 @@ export type AuthStateI = {
 };
 
 export type LoginRequestI = LoginFormI;
+
+export type RegisterRequestI = RegisterInputI;
 
 export type AuthResponseI = {
   message: string;

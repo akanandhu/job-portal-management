@@ -8,6 +8,8 @@ import DashboardPage from "./pages/dashboard-page";
 import RegisterPage from "./pages/register-page";
 import { AuthSessionGate } from "./features/auth/components/guard/auth-session-gate";
 import { GuestRoute } from "./features/auth/components/guard/guest-route";
+import { ProfileCompletionRoute } from "./features/auth/components/guard/profile-completion-route";
+import { ProfileRequiredRoute } from "./features/auth/components/guard/profile-required-route";
 import { RoleRoute } from "./features/auth/components/guard/role-route";
 
 function App() {
@@ -31,12 +33,23 @@ function App() {
             </GuestRoute>
           }
         />
-        <Route path="/profile" element={<CandidateProfilePage />} />
+        <Route
+          path="/profile"
+          element={
+            <RoleRoute allowedRoles={["USER"]}>
+              <ProfileCompletionRoute>
+                <CandidateProfilePage />
+              </ProfileCompletionRoute>
+            </RoleRoute>
+          }
+        />
         <Route
           path="/listings"
           element={
             <RoleRoute allowedRoles={["USER"]}>
-              <ListingsPage />
+              <ProfileRequiredRoute>
+                <ListingsPage />
+              </ProfileRequiredRoute>
             </RoleRoute>
           }
         />

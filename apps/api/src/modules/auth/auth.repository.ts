@@ -1,5 +1,5 @@
 import { db } from "../../prisma/db";
-import type { CreateRefreshTokenI } from "./auth.types";
+import type { CreateRefreshTokenI, CreateUserI } from "./auth.types";
 
 export async function findUserByEmail(email: string) {
   return await db.orm.public.User.where({
@@ -11,6 +11,10 @@ export async function findUserById(id: string) {
   return db.orm.public.User.where({
     id,
   }).first();
+}
+
+export async function createUser(data: CreateUserI) {
+  return db.orm.public.User.create(data);
 }
 
 export async function createRefreshToken(data: CreateRefreshTokenI) {

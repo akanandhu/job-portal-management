@@ -8,8 +8,16 @@ import {
 
 import type { RootStateI } from "@/app/store";
 import { authCredentialsReceived, authSessionCleared } from "@/features/auth/store/auth-slice";
-
 import type { AuthResponseI } from "@/types/auth";
+
+const getRequestUrl = (args: string | FetchArgs) => (typeof args === "string" ? args : args.url);
+
+const authPathsWithoutRefresh = new Set([
+  "/auth/login",
+  "/auth/register",
+  "/auth/refresh",
+  "/auth/logout",
+]);
 
 const rawBaseQuery = fetchBaseQuery({
   baseUrl: import.meta.env.VITE_API_URL,
@@ -25,10 +33,6 @@ const rawBaseQuery = fetchBaseQuery({
     return headers;
   },
 });
-
-const getRequestUrl = (args: string | FetchArgs) => (typeof args === "string" ? args : args.url);
-
-const authPathsWithoutRefresh = new Set(["/auth/login", "/auth/refresh", "/auth/logout"]);
 
 const baseQueryWithReauth: BaseQueryFn<string | FetchArgs, unknown, FetchBaseQueryError> = async (
   args,
@@ -63,10 +67,7 @@ const baseQueryWithReauth: BaseQueryFn<string | FetchArgs, unknown, FetchBaseQue
 
 export const api = createApi({
   reducerPath: "api",
-
   baseQuery: baseQueryWithReauth,
-
   tagTypes: ["User", "Job", "Application", "CandidateProfile"],
-
   endpoints: () => ({}),
 });

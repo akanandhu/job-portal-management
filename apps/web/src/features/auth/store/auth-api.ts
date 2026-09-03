@@ -4,13 +4,34 @@ import {
   authSessionCleared,
 } from "@/features/auth/store/auth-slice";
 import { api } from "@/services/api";
-import type { ApiMessageResponseI, AuthResponseI, LoginRequestI } from "@/types/auth";
+import type {
+  ApiMessageResponseI,
+  AuthResponseI,
+  LoginRequestI,
+  RegisterRequestI,
+} from "@/types/auth";
 
 export const authApi = api.injectEndpoints({
   endpoints: (builder) => ({
     login: builder.mutation<AuthResponseI, LoginRequestI>({
       query: (credentials) => ({
         url: "/auth/login",
+        method: "POST",
+        body: credentials,
+      }),
+      async onQueryStarted(_credentials, { dispatch, queryFulfilled }) {
+        try {
+          const { data } = await queryFulfilled;
+          dispatch(authCredentialsReceived(data));
+        } catch {
+          dispatch(authSessionCleared());
+        }
+      },
+      invalidatesTags: ["User"],
+    }),
+    register: builder.mutation<AuthResponseI, RegisterRequestI>({
+      query: (credentials) => ({
+        url: "/auth/register",
         method: "POST",
         body: credentials,
       }),
@@ -59,4 +80,9 @@ export const authApi = api.injectEndpoints({
   }),
 });
 
-export const { useLoginMutation, useLogoutMutation, useRefreshSessionMutation } = authApi;
+export const {
+  useLoginMutation,
+  useLogoutMutation,
+  useRefreshSessionMutation,
+  useRegisterMutation,
+} = authApi;

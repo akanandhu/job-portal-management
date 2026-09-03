@@ -27,7 +27,7 @@ const useCandidateProfileForm = ({
 }: {
   initialValues?: CandidateProfileFormValuesI;
   onCancel?: () => void;
-  onSubmit?: (values: CandidateProfileInputI) => void;
+  onSubmit?: (values: CandidateProfileInputI) => Promise<void> | void;
 }) => {
   const {
     register,
@@ -41,8 +41,8 @@ const useCandidateProfileForm = ({
 
   const navigate = useNavigate();
 
-  const handleProfileSubmit = (values: CandidateProfileInputI) => {
-    onSubmit?.(values);
+  const handleProfileSubmit = async (values: CandidateProfileInputI) => {
+    await onSubmit?.(values);
   };
 
   const onBack = () => {

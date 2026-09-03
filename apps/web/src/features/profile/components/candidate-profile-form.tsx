@@ -9,9 +9,11 @@ import useCandidateProfileForm from "../hooks/useCandidateProfileForm";
 
 export function CandidateProfileForm({
   initialValues,
+  isSubmitting = false,
   mode = "create",
   onCancel,
   onSubmit,
+  submitError,
 }: CandidateProfileFormPropsI) {
   const { control, errors, register, handleSubmit, handleProfileSubmit, onBack, emptyToNull } =
     useCandidateProfileForm({
@@ -149,10 +151,17 @@ export function CandidateProfileForm({
             <Button onClick={onBack} type="button" variant="outline" size="lg">
               {mode === "edit" ? "Cancel" : "Back to Register"}
             </Button>
-            <Button type="submit" size="lg">
-              {mode === "edit" ? "Update profile" : "Save profile"}
+            <Button type="submit" size="lg" disabled={isSubmitting}>
+              {isSubmitting
+                ? mode === "edit"
+                  ? "Updating profile..."
+                  : "Saving profile..."
+                : mode === "edit"
+                  ? "Update profile"
+                  : "Save profile"}
             </Button>
           </div>
+          <ErrorBox message={submitError} />
         </form>
       </CardContent>
     </Card>
