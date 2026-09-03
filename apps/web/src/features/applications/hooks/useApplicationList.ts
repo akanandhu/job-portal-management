@@ -16,6 +16,8 @@ import { getApiErrorMessage } from "@/services/api-error";
 
 type UseApplicationListOptionsI = {
   status?: string;
+  yearsOfExperience?: string;
+  search?: string;
 };
 
 export function useApplicationList(options: UseApplicationListOptionsI = {}) {
@@ -23,19 +25,21 @@ export function useApplicationList(options: UseApplicationListOptionsI = {}) {
   const isAdmin = useAppSelector(selectIsAdmin);
   const currentUser = useAppSelector(selectCurrentUser);
 
-  const adminQuery = useListAllApplicationsQuery({ page }, { skip: !isAdmin });
-  const userQuery = useListMyApplicationsQuery(undefined, { skip: isAdmin });
+  const queryParams = {
+    status: options.status,
+    yearsOfExperience: options.yearsOfExperience,
+    search: options.search,
+  };
+
+  const adminQuery = useListAllApplicationsQuery({ page, ...queryParams }, { skip: !isAdmin });
+  const userQuery = useListMyApplicationsQuery(queryParams, { skip: isAdmin });
 
   const allApplications = useAppSelector(selectAllApplications);
   const myApplications = useAppSelector(selectMyApplications);
 
   const rawApplications = isAdmin ? allApplications : myApplications;
 
-  let applications = formatApplications(rawApplications, currentUser?.name ?? "Candidate");
-
-  if (options.status && options.status !== "all") {
-    applications = applications.filter((app) => app.status === options.status);
-  }
+  const applications = formatApplications(rawApplications, currentUser?.name ?? "Candidate");
 
   const meta = isAdmin ? adminQuery.data?.meta : undefined;
   const hasMore = Boolean(meta && meta.page < meta.totalPages);

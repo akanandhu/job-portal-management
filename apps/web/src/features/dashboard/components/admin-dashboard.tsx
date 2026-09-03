@@ -54,6 +54,7 @@ export function AdminDashboard() {
       showFilters={view.type.endsWith(".list")}
     >
       <AdminDashboardContent
+        activeTab={activeTab}
         onChangeApplicationStatus={handleChangeApplicationStatus}
         onAddJob={handleAddJob}
         onBackToApplications={handleBackToApplications}

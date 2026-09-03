@@ -4,4 +4,5 @@ export type {
   ApplicationSnapshotInputI,
   ApplicationStatusI,
   ListAllApplicationsQueryI,
+  ListMyApplicationsQueryI,
 } from "@job-portal/contracts/applications";

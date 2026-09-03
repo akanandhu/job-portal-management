@@ -6,8 +6,10 @@ import { JobList } from "@/features/jobs/components/job-list";
 import type { ApplicationStatusI } from "@job-portal/contracts/applications";
 import type { AdminDashboardViewI } from "@/features/dashboard/utils/admin-dashboard-view";
 import type { JobFormPropsI } from "@/types/jobs";
+import type { JobStatusI } from "@job-portal/contracts";
 
 type AdminDashboardContentPropsI = {
+  activeTab?: string;
   onAddJob: () => void;
   onBackToApplications: () => void;
   onBackToJobs: () => void;
@@ -20,6 +22,7 @@ type AdminDashboardContentPropsI = {
 };
 
 export function AdminDashboardContent({
+  activeTab,
   onChangeApplicationStatus,
   onAddJob,
   onBackToApplications,
@@ -49,7 +52,12 @@ export function AdminDashboardContent({
 
     case "jobs.list":
       return (
-        <JobList status="all" onAddJob={onAddJob} onEditJob={onEditJob} onViewJob={onViewJob} />
+        <JobList
+          status={activeTab === "all-jobs" ? "all" : (activeTab as JobStatusI)}
+          onAddJob={onAddJob}
+          onEditJob={onEditJob}
+          onViewJob={onViewJob}
+        />
       );
 
     case "applications.detail":
@@ -66,6 +74,7 @@ export function AdminDashboardContent({
     case "applications.list":
       return (
         <ApplicationList
+          status={activeTab}
           onChangeApplicationStatus={onChangeApplicationStatus}
           onViewApplication={onViewApplication}
         />

@@ -62,7 +62,7 @@ export async function listMyApplicationsController(req: Request, res: Response) 
   }
 
   try {
-    const applications = await listMyApplications(userId);
+    const applications = await listMyApplications(userId, req.query);
 
     return res.status(200).json({ data: applications });
   } catch (error) {

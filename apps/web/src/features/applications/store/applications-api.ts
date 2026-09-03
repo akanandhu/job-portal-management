@@ -26,9 +26,18 @@ type UpdateApplicationStatusRequestI = {
   status: ApplicationStatusI;
 };
 
+type ListMyApplicationsQueryRequestI = {
+  status?: string;
+  yearsOfExperience?: string;
+  search?: string;
+};
+
 type ListAllApplicationsQueryRequestI = {
   page?: number;
   limit?: number;
+  status?: string;
+  yearsOfExperience?: string;
+  search?: string;
 };
 
 type ListAllApplicationsApiResponseI = {
@@ -58,10 +67,14 @@ export const applicationsApi = api.injectEndpoints({
       },
       invalidatesTags: ["Application", "Job"],
     }),
-    listMyApplications: builder.query<MyApplicationsResponseI, void>({
-      query: () => ({
+    listMyApplications: builder.query<
+      MyApplicationsResponseI,
+      ListMyApplicationsQueryRequestI | void
+    >({
+      query: (query) => ({
         url: "/applications/me",
         method: "GET",
+        params: query ?? undefined,
       }),
       async onQueryStarted(_arg, { dispatch, queryFulfilled }) {
         try {
