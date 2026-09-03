@@ -16,7 +16,7 @@ const getFallbackRoute = (role: UserRoleI | undefined) => {
   }
 
   if (role === "USER") {
-    return "/candidate";
+    return "/listings";
   }
 
   return "/login";

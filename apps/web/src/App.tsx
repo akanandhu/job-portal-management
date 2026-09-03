@@ -1,6 +1,6 @@
 import { Route, Routes } from "react-router";
 
-import CandidatePage from "./pages/candidate-page";
+import ListingsPage from "./pages/listings-page";
 import HomePage from "./pages/home-page";
 import LoginPage from "./pages/login-page";
 import CandidateProfilePage from "./pages/candidate-profile-page";
@@ -33,10 +33,10 @@ function App() {
         />
         <Route path="/profile" element={<CandidateProfilePage />} />
         <Route
-          path="/candidate"
+          path="/listings"
           element={
             <RoleRoute allowedRoles={["USER"]}>
-              <CandidatePage />
+              <ListingsPage />
             </RoleRoute>
           }
         />

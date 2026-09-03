@@ -21,7 +21,7 @@ const LoginForm = () => {
   const onSubmit = async (values: LoginFormI) => {
     try {
       const result = await login(values).unwrap();
-      const nextRoute = result.user.role === "ADMIN" ? "/dashboard" : "/candidate";
+      const nextRoute = result.user.role === "ADMIN" ? "/dashboard" : "/listings";
 
       navigate(nextRoute, { replace: true });
     } catch {
