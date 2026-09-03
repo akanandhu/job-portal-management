@@ -1,4 +1,4 @@
-import { BriefcaseBusiness, ClipboardList } from "lucide-react";
+import { BriefcaseBusiness, ClipboardList, UserRoundPen } from "lucide-react";
 import { useState } from "react";
 import { Navigate, useNavigate, useSearchParams } from "react-router";
 import type { ApplicationStatusI } from "@job-portal/contracts/applications";
@@ -25,6 +25,7 @@ import type { DashboardNavItemI } from "@/types/dashboard";
 const navItems: DashboardNavItemI[] = [
   { id: "jobs", label: "Jobs", icon: BriefcaseBusiness },
   { id: "applications", label: "Applications", icon: ClipboardList },
+  { id: "profile", label: "Candidate Profile", icon: UserRoundPen },
 ];
 
 export function AdminDashboard() {
@@ -65,7 +66,7 @@ export function AdminDashboard() {
   const handleNavChange = (nextSection: string) => {
     updateParams({
       section: nextSection,
-      tab: nextSection === "jobs" ? defaultJobTab : defaultApplicationTab,
+      tab: getDefaultTab(nextSection),
       jobId: undefined,
       applicationId: undefined,
       mode: undefined,
@@ -117,6 +118,17 @@ export function AdminDashboard() {
     });
   };
 
+  const handleBackToJobDetail = (jobId: string) => {
+    updateParams({
+      section: "jobs",
+      tab: defaultJobTab,
+      jobId,
+      mode: undefined,
+      applicationId: undefined,
+      profileMode: undefined,
+    });
+  };
+
   const handleBackToJobs = () => {
     updateParams({
       section: "jobs",
@@ -136,17 +148,6 @@ export function AdminDashboard() {
       jobId: undefined,
       mode: undefined,
       profileMode: undefined,
-    });
-  };
-
-  const handleEditProfile = (applicationId: string) => {
-    updateParams({
-      section: "applications",
-      tab: activeTab,
-      applicationId,
-      jobId: undefined,
-      mode: undefined,
-      profileMode: "edit",
     });
   };
 
@@ -218,9 +219,9 @@ export function AdminDashboard() {
         onAddJob={handleAddJob}
         onBackToApplicationDetail={handleBackToApplicationDetail}
         onBackToApplications={handleBackToApplications}
+        onBackToJobDetail={handleBackToJobDetail}
         onBackToJobs={handleBackToJobs}
         onEditJob={handleEditJob}
-        onEditProfile={handleEditProfile}
         onViewApplication={handleViewApplication}
         onViewJob={handleViewJob}
         view={view}

@@ -26,27 +26,35 @@ export function CandidateProfileEditor({
 }: CandidateProfileEditorPropsI) {
   return (
     <div className="py-5">
-      <Button
-        type="button"
-        variant="ghost"
-        className="-ml-2 mb-3 w-fit"
-        onClick={onBack}
-      >
-        <ArrowLeft className="size-4" />
-        {application.candidate}
-      </Button>
+      {onBack ? (
+        <Button
+          type="button"
+          variant="ghost"
+          className="-ml-2 mb-3 w-fit"
+          onClick={onBack}
+        >
+          <ArrowLeft className="size-4" />
+          {job ? "Job detail" : "Dashboard"}
+        </Button>
+      ) : null}
 
       <div className="mb-5">
         <h1 className="text-2xl font-semibold leading-tight">
           Candidate profile
         </h1>
-        <p className="mt-1 text-sm text-muted-foreground">
-          {job.title} at {job.company}
-        </p>
+        {job ? (
+          <p className="mt-1 text-sm text-muted-foreground">
+            Update your profile before applying to {job.title} at {job.company}.
+          </p>
+        ) : (
+          <p className="mt-1 text-sm text-muted-foreground">
+            Keep your candidate profile ready for job applications.
+          </p>
+        )}
       </div>
 
       <CandidateProfileForm
-        initialValues={getInitialValues(application)}
+        initialValues={application ? getInitialValues(application) : undefined}
         mode="edit"
         onCancel={onBack}
       />

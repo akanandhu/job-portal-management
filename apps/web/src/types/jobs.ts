@@ -29,6 +29,7 @@ export type JobDetailPropsI = {
     status: ApplicationStatusI,
   ) => void;
   onEdit: (jobId: string) => void;
+  profileHref: string;
   onViewApplication: (applicationId: string) => void;
   isLoading?: boolean;
 };

@@ -19,8 +19,8 @@ export type AdminDashboardViewI =
     }
   | {
       type: "candidate-profile.form";
-      application: AdminApplicationI;
-      job: AdminJobI;
+      application?: AdminApplicationI;
+      job?: AdminJobI;
     };
 
 type AdminDashboardViewParamsI = {
@@ -33,6 +33,7 @@ type AdminDashboardViewParamsI = {
 export const defaultSection = "jobs";
 export const defaultJobTab = "all-jobs";
 export const defaultApplicationTab = applicationStatuses[0];
+export const defaultProfileTab = "candidate-profile";
 
 export const hasItem = <Item extends { id: string }>(
   items: readonly Item[],
@@ -57,6 +58,10 @@ export const applicationTabs: DashboardTabI[] = applicationStatuses.map(
   }),
 );
 
+export const profileTabs: DashboardTabI[] = [
+  { id: defaultProfileTab, label: "Candidate Profile" },
+];
+
 export function getAdminDashboardView({
   activeNav,
   applications,
@@ -79,6 +84,16 @@ export function getAdminDashboardView({
     return job ? { type: "jobs.detail", job } : { type: "jobs.list" };
   }
 
+  if (activeNav === "profile") {
+    const application = applications[0];
+    const profileJobId = searchParams.get("jobId");
+    const job = profileJobId
+      ? jobs.find((item) => item.id === profileJobId)
+      : undefined;
+
+    return { type: "candidate-profile.form", application, job };
+  }
+
   const application = applications.find(
     (item) => item.id === searchParams.get("applicationId"),
   );
@@ -96,9 +111,25 @@ export function getAdminDashboardView({
 }
 
 export function getDashboardTabs(activeNav: string) {
-  return activeNav === "jobs" ? jobTabs : applicationTabs;
+  if (activeNav === "jobs") {
+    return jobTabs;
+  }
+
+  if (activeNav === "profile") {
+    return profileTabs;
+  }
+
+  return applicationTabs;
 }
 
 export function getDefaultTab(activeNav: string) {
-  return activeNav === "jobs" ? defaultJobTab : defaultApplicationTab;
+  if (activeNav === "jobs") {
+    return defaultJobTab;
+  }
+
+  if (activeNav === "profile") {
+    return defaultProfileTab;
+  }
+
+  return defaultApplicationTab;
 }

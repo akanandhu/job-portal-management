@@ -1,4 +1,4 @@
-import { ArrowLeft, Pencil } from "lucide-react";
+import { ArrowLeft } from "lucide-react";
 import type * as React from "react";
 import type { ApplicationStatusI } from "@job-portal/contracts/applications";
 
@@ -12,7 +12,6 @@ type ApplicationDetailPropsI = {
   jobTitle: string;
   onBack: () => void;
   onChangeStatus: (applicationId: string, status: ApplicationStatusI) => void;
-  onEditProfile: (applicationId: string) => void;
 };
 
 const formatOptionLabel = (value: string) =>
@@ -39,7 +38,6 @@ export function ApplicationDetail({
   jobTitle,
   onBack,
   onChangeStatus,
-  onEditProfile,
 }: ApplicationDetailPropsI) {
   return (
     <div className="py-5">
@@ -75,15 +73,6 @@ export function ApplicationDetail({
               value={application.status}
               onChange={onChangeStatus}
             />
-            <Button
-              type="button"
-              variant="outline"
-              className="w-full sm:w-fit"
-              onClick={() => onEditProfile(application.id)}
-            >
-              <Pencil className="size-4" />
-              Edit profile
-            </Button>
           </div>
         </div>
       </div>

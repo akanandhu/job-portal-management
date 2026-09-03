@@ -23,9 +23,9 @@ type AdminDashboardContentPropsI = {
   onAddJob: () => void;
   onBackToApplications: () => void;
   onBackToApplicationDetail: (applicationId: string) => void;
+  onBackToJobDetail: (jobId: string) => void;
   onBackToJobs: () => void;
   onEditJob: (jobId: string) => void;
-  onEditProfile: (applicationId: string) => void;
   onViewApplication: (applicationId: string) => void;
   onViewJob: (jobId: string) => void;
   view: AdminDashboardViewI;
@@ -38,9 +38,9 @@ export function AdminDashboardContent({
   onAddJob,
   onBackToApplicationDetail,
   onBackToApplications,
+  onBackToJobDetail,
   onBackToJobs,
   onEditJob,
-  onEditProfile,
   onViewApplication,
   onViewJob,
   view,
@@ -56,6 +56,7 @@ export function AdminDashboardContent({
           onBack={onBackToJobs}
           onChangeApplicationStatus={onChangeApplicationStatus}
           onEdit={onEditJob}
+          profileHref={`/dashboard?section=profile&tab=candidate-profile&jobId=${view.job.id}`}
           onViewApplication={onViewApplication}
         />
       );
@@ -86,19 +87,27 @@ export function AdminDashboardContent({
           company={view.job.company}
           jobTitle={view.job.title}
           onChangeStatus={onChangeApplicationStatus}
-          onEditProfile={onEditProfile}
           onBack={onBackToApplications}
         />
       );
 
-    case "candidate-profile.form":
+    case "candidate-profile.form": {
+      const profileJob = view.job;
+      const profileApplication = view.application;
+      const onBack = profileJob
+        ? () => onBackToJobDetail(profileJob.id)
+        : profileApplication
+          ? () => onBackToApplicationDetail(profileApplication.id)
+          : undefined;
+
       return (
         <CandidateProfileEditor
-          application={view.application}
-          job={view.job}
-          onBack={() => onBackToApplicationDetail(view.application.id)}
+          application={profileApplication}
+          job={profileJob}
+          onBack={onBack}
         />
       );
+    }
 
     case "applications.list":
       return (

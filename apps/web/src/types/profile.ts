@@ -13,7 +13,7 @@ export type CandidateProfileFormPropsI = {
 };
 
 export type CandidateProfileEditorPropsI = {
-  application: AdminApplicationI;
-  job: AdminJobI;
-  onBack: () => void;
+  application?: AdminApplicationI;
+  job?: AdminJobI;
+  onBack?: () => void;
 };

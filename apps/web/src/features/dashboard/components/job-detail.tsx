@@ -1,5 +1,7 @@
-import { ArrowLeft, ChevronRight, Pencil } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { ArrowLeft, ChevronRight, Pencil, UserRoundPen } from "lucide-react";
+import { Link } from "react-router";
+
+import { Button, buttonVariants } from "@/components/ui/button";
 import { ApplicationStatusSelect } from "@/features/dashboard/components/application-status-select";
 import { ListingShimmer } from "@/features/dashboard/components/listing-shimmer";
 import type { JobDetailPropsI } from "@/types/jobs";
@@ -14,11 +16,13 @@ export function JobDetail({
   onBack,
   onChangeApplicationStatus,
   onEdit,
+  profileHref,
   onViewApplication,
 }: JobDetailPropsI) {
-  const { page, totalPages, visibleApplications,applicationsPerPage, setPage } = useJobDetail({
-    applications,
-  });
+  const { page, totalPages, visibleApplications, applicationsPerPage, setPage } =
+    useJobDetail({
+      applications,
+    });
 
   return (
     <div className="py-5">
@@ -46,15 +50,27 @@ export function JobDetail({
               </p>
             </div>
           </div>
-          <Button
-            type="button"
-            variant="outline"
-            className="w-full sm:w-fit"
-            onClick={() => onEdit(job.id)}
-          >
-            <Pencil className="size-4" />
-            Edit job
-          </Button>
+          <div className="flex w-full flex-col gap-2 sm:w-auto sm:flex-row sm:items-center">
+            <Link
+              to={profileHref}
+              className={buttonVariants({
+                variant: "outline",
+                className: "w-full sm:w-fit",
+              })}
+            >
+              <UserRoundPen className="size-4" />
+              Update profile
+            </Link>
+            <Button
+              type="button"
+              variant="outline"
+              className="w-full sm:w-fit"
+              onClick={() => onEdit(job.id)}
+            >
+              <Pencil className="size-4" />
+              Edit job
+            </Button>
+          </div>
         </div>
       </div>
 
