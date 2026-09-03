@@ -1,4 +1,8 @@
-import type { AdminJobI } from "@/features/dashboard/data/dashboard-data";
+import type {
+  AdminApplicationI,
+  AdminJobI,
+} from "@/features/dashboard/data/dashboard-data";
+import type { ApplicationStatusI } from "@job-portal/contracts";
 
 export type JobFormPropsI = {
   job?: AdminJobI;
@@ -14,4 +18,17 @@ export type JobSelectPropsI = {
   options: readonly string[];
   placeholder: string;
   value: string | undefined;
+};
+
+export type JobDetailPropsI = {
+  applications: AdminApplicationI[];
+  job: AdminJobI;
+  onBack: () => void;
+  onChangeApplicationStatus: (
+    applicationId: string,
+    status: ApplicationStatusI,
+  ) => void;
+  onEdit: (jobId: string) => void;
+  onViewApplication: (applicationId: string) => void;
+  isLoading?: boolean;
 };

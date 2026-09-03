@@ -1,45 +1,11 @@
 import { ArrowLeft, ChevronRight, Pencil } from "lucide-react";
-import type * as React from "react";
-import { useState } from "react";
-import type { ApplicationStatusI } from "@job-portal/contracts/applications";
-
 import { Button } from "@/components/ui/button";
 import { ApplicationStatusSelect } from "@/features/dashboard/components/application-status-select";
 import { ListingShimmer } from "@/features/dashboard/components/listing-shimmer";
-import type { AdminApplicationI, AdminJobI } from "../data/dashboard-data";
-
-type JobDetailPropsI = {
-  applications: AdminApplicationI[];
-  job: AdminJobI;
-  onBack: () => void;
-  onChangeApplicationStatus: (
-    applicationId: string,
-    status: ApplicationStatusI,
-  ) => void;
-  onEdit: (jobId: string) => void;
-  onViewApplication: (applicationId: string) => void;
-  isLoading?: boolean;
-};
-
-const applicationsPerPage = 10;
-
-const formatOptionLabel = (value: string) =>
-  value
-    .toLowerCase()
-    .split("_")
-    .map((part) => part.slice(0, 1).toUpperCase() + part.slice(1))
-    .join(" ");
-
-function DetailItem({ label, value }: { label: string; value: React.ReactNode }) {
-  return (
-    <div>
-      <dt className="text-xs font-semibold text-muted-foreground uppercase">
-        {label}
-      </dt>
-      <dd className="mt-1 text-sm font-medium">{value}</dd>
-    </div>
-  );
-}
+import type { JobDetailPropsI } from "@/types/jobs";
+import DetailItem from "./job-detail-item";
+import { formatOptionLabel } from "../utils/admin-dashboard-view";
+import useJobDetail from "../hooks/useJobDetail";
 
 export function JobDetail({
   applications,
@@ -50,15 +16,9 @@ export function JobDetail({
   onEdit,
   onViewApplication,
 }: JobDetailPropsI) {
-  const [page, setPage] = useState(1);
-  const totalPages = Math.max(
-    1,
-    Math.ceil(applications.length / applicationsPerPage),
-  );
-  const visibleApplications = applications.slice(
-    (page - 1) * applicationsPerPage,
-    page * applicationsPerPage,
-  );
+  const { page, totalPages, visibleApplications,applicationsPerPage, setPage } = useJobDetail({
+    applications,
+  });
 
   return (
     <div className="py-5">
@@ -107,7 +67,10 @@ export function JobDetail({
         </div>
 
         <dl className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-          <DetailItem label="Category" value={formatOptionLabel(job.category)} />
+          <DetailItem
+            label="Category"
+            value={formatOptionLabel(job.category)}
+          />
           <DetailItem
             label="Experience"
             value={formatOptionLabel(job.experienceLevel)}
