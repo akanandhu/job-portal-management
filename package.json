@@ -22,6 +22,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev:web": "npm run dev --workspace=web",
     "dev:api": "npm run dev --workspace=api",
+    "db:init:api": "npm run db:init --workspace=api",
     "seed:api": "npm run seed --workspace=api",
     "build:web": "npm run build --workspace=web",
     "build": "npm run build --workspace=web",

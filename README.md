@@ -66,11 +66,15 @@ _(If you are using your own existing PostgreSQL instance, update `DATABASE_URL` 
 
 ---
 
-### Step 4: Run Migrations & Seed Data
+### Step 4: Run Database Initialization & Seed Data
 
-Seed default admin/user accounts and sample job postings into PostgreSQL:
+Initialize PostgreSQL database tables and seed default admin/user accounts and sample job postings:
 
 ```bash
+# 1. Bootstrap database schema tables
+npm run db:init:api
+
+# 2. Seed default admin, user, and job records
 npm run seed:api
 ```
 
@@ -158,14 +162,15 @@ The database seed populates two pre-configured accounts for testing both roles:
 
 ## Available Commands
 
-| Command             | Description                                                       |
-| :------------------ | :---------------------------------------------------------------- |
-| `npm run dev:api`   | Starts the Express backend API server in watch mode               |
-| `npm run dev:web`   | Starts the React/Vite web application dev server                  |
-| `npm run seed:api`  | Seeds default users and initial job listings into PostgreSQL      |
-| `npm run build:web` | Compiles TypeScript and builds production assets for the frontend |
-| `npm run lint`      | Runs ESLint across all monorepo packages                          |
-| `npm run format`    | Formats code using Prettier                                       |
+| Command               | Description                                                       |
+| :-------------------- | :---------------------------------------------------------------- |
+| `npm run dev:api`     | Starts the Express backend API server in watch mode               |
+| `npm run dev:web`     | Starts the React/Vite web application dev server                  |
+| `npm run db:init:api` | Bootstraps PostgreSQL database schema tables                      |
+| `npm run seed:api`    | Seeds default users and initial job listings into PostgreSQL      |
+| `npm run build:web`   | Compiles TypeScript and builds production assets for the frontend |
+| `npm run lint`        | Runs ESLint across all monorepo packages                          |
+| `npm run format`      | Formats code using Prettier                                       |
 
 ---
 
