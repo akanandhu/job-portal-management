@@ -1,5 +1,5 @@
 import { useState } from "react";
-import type { AdminApplicationI } from "../data/dashboard-data";
+import type { AdminApplicationI } from "@/features/dashboard/data/dashboard-data";
 
 const applicationsPerPage = 10;
 

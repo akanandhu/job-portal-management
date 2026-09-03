@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { ApplicationStatusSelect } from "@/features/dashboard/components/application-status-select";
 import { ListingShimmer } from "@/features/dashboard/components/listing-shimmer";
 import type { AdminApplicationI } from "@/features/dashboard/data/dashboard-data";
-import useJobDetail from "@/features/dashboard/hooks/useJobDetail";
+import useJobDetail from "@/features/jobs/hooks/useJobDetail";
 
 type JobApplicationsPanelPropsI = {
   applications: AdminApplicationI[];

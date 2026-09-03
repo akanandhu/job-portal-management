@@ -1,8 +1,8 @@
 import { ApplicationDetail } from "@/features/dashboard/components/application-detail";
 import { ApplicationList } from "@/features/dashboard/components/application-list";
-import { JobDetail } from "@/features/dashboard/components/job-detail";
-import { JobForm } from "@/features/dashboard/components/job-form";
-import { JobList } from "@/features/dashboard/components/job-list";
+import { JobDetail } from "@/features/jobs/components/job-detail";
+import { JobForm } from "@/features/jobs/components/job-form";
+import { JobList } from "@/features/jobs/components/job-list";
 import type { ApplicationStatusI } from "@job-portal/contracts/applications";
 import type { AdminApplicationI, AdminJobI } from "@/features/dashboard/data/dashboard-data";
 import type { AdminDashboardViewI } from "@/features/dashboard/utils/admin-dashboard-view";

@@ -2,7 +2,7 @@ import { ArrowLeft, LogIn, Pencil, Send } from "lucide-react";
 import { Link } from "react-router";
 
 import { Button, buttonVariants } from "@/components/ui/button";
-import { JobApplicationsPanel } from "@/features/dashboard/components/job-applications-panel";
+import { JobApplicationsPanel } from "@/features/jobs/components/job-applications-panel";
 import type { JobDetailPropsI } from "@/types/jobs";
 import DetailItem from "./job-detail-item";
 import { formatOptionLabel } from "@/lib/utils";

@@ -1,8 +1,8 @@
 import { ApplicationDetail } from "@/features/dashboard/components/application-detail";
 import { ApplicationList } from "@/features/dashboard/components/application-list";
 import { CandidateProfileEditor } from "@/features/dashboard/components/candidate-profile-editor";
-import { JobDetail } from "@/features/dashboard/components/job-detail";
-import { JobList } from "@/features/dashboard/components/job-list";
+import { JobDetail } from "@/features/jobs/components/job-detail";
+import { JobList } from "@/features/jobs/components/job-list";
 import { formatOptionLabel } from "@/lib/utils";
 import type { UserDashboardContentPropsI } from "@/types/user-dashboard";
 

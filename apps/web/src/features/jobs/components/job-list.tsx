@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 import { ListingShimmer } from "@/features/dashboard/components/listing-shimmer";
 import { formatOptionLabel } from "@/lib/utils";
 import { BriefcaseBusiness, Pencil, Plus } from "lucide-react";
-import type { AdminJobI } from "../data/dashboard-data";
+import type { AdminJobI } from "@/features/dashboard/data/dashboard-data";
 
 type JobListPropsI = {
   jobs: AdminJobI[];
@@ -65,7 +65,7 @@ export function JobList({
                 <h2 className="truncate text-base font-semibold">
                   {job.title} <span className="font-normal text-foreground">at {job.company}</span>
                 </h2>
-                <p className="mt-1 text-sm text-muted-foreground break-words">
+                <p className="mt-1 text-sm text-muted-foreground wrap-break-word">
                   {formatOptionLabel(job.workplaceType)} ({job.location}) •{" "}
                   {formatOptionLabel(job.experienceLevel)}
                 </p>

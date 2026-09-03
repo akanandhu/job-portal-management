@@ -24,7 +24,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import type { AdminJobI } from "@/features/dashboard/data/dashboard-data";
-import { useCreateJobMutation } from "@/features/dashboard/store/jobs-api";
+import { useCreateJobMutation } from "@/features/jobs/store/jobs-api";
 import { cn, formatOptionLabel } from "@/lib/utils";
 import { getApiErrorMessage } from "@/services/api-error";
 import type { JobFormPropsI, JobSelectPropsI } from "@/types/jobs";
