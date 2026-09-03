@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { InfiniteScrollTrigger } from "@/components/ui/infinite-scroll-trigger";
 import { ApplicationStatusSelect } from "@/features/applications/components/application-status-select";
 import { useApplicationList } from "@/features/applications/hooks/useApplicationList";
-import { ListingShimmer } from "@/features/dashboard/components/listing-shimmer";
+import { ListingShimmer } from "@/components/ui/shimmer";
 import { useInfiniteScroll } from "@/hooks/use-infinite-scroll";
 import { formatOptionLabel } from "@/lib/utils";
 

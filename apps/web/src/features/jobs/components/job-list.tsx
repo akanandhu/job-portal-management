@@ -2,7 +2,7 @@ import { BriefcaseBusiness, Pencil, Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import ErrorBox from "@/components/ui/error-box";
 import { InfiniteScrollTrigger } from "@/components/ui/infinite-scroll-trigger";
-import { ListingShimmer } from "@/features/dashboard/components/listing-shimmer";
+import { ListingShimmer } from "@/components/ui/shimmer";
 import { useJobList } from "@/features/jobs/hooks/useJobList";
 import { useInfiniteScroll } from "@/hooks/use-infinite-scroll";
 import { formatOptionLabel } from "@/lib/utils";

@@ -1,4 +1,4 @@
-import type { AdminApplicationI, AdminJobI } from "@/features/dashboard/data/dashboard-data";
+import type { AdminJobI } from "@/features/dashboard/data/dashboard-data";
 import type { CandidateProfileInputI, candidateProfileSchema } from "@job-portal/contracts";
 import type z from "zod";
 
@@ -15,7 +15,6 @@ export type CandidateProfileFormPropsI = {
 };
 
 export type CandidateProfileEditorPropsI = {
-  application?: AdminApplicationI;
   job?: AdminJobI;
   onBack?: () => void;
 };

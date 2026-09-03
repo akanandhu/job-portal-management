@@ -42,9 +42,7 @@ export function UserDashboardContent({
       );
 
     case "candidate-profile.form":
-      return (
-        <CandidateProfileEditor application={view.application} onBack={() => onNavChange("jobs")} />
-      );
+      return <CandidateProfileEditor onBack={() => onNavChange("jobs")} />;
 
     case "applications.list":
       return (

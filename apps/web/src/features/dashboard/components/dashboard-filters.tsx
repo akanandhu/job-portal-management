@@ -1,53 +1,14 @@
 import { useState } from "react";
-
 import { Button } from "@/components/ui/button";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { experienceLevels, jobCategories, jobStatuses } from "@job-portal/contracts/jobs";
-import { formatOptionLabel } from "@/lib/utils";
-
-type FilterSelectPropsI = {
-  label: string;
-  onValueChange: (value: string) => void;
-  options: readonly string[];
-  placeholder: string;
-  value: string;
-};
+import FilterSelect from "./filter-select";
 
 type DashboardFiltersPropsI = {
   section: string;
 };
 
-const emptyValue = "all";
+export const emptyValue = "all";
 const applicationExperienceOptions = ["0", "1", "2", "3", "4", "5+"] as const;
-
-function FilterSelect({ label, onValueChange, options, placeholder, value }: FilterSelectPropsI) {
-  return (
-    <div className="grid gap-2 text-sm font-semibold">
-      {label}
-      <Select value={value} onValueChange={(nextValue) => onValueChange(String(nextValue))}>
-        <SelectTrigger className="h-10 w-full">
-          <SelectValue placeholder={placeholder} />
-        </SelectTrigger>
-        <SelectContent>
-          <SelectItem value={emptyValue} displayValue="All">
-            {emptyValue}
-          </SelectItem>
-          {options.map((option) => (
-            <SelectItem key={option} value={option} displayValue={formatOptionLabel(option)}>
-              {option}
-            </SelectItem>
-          ))}
-        </SelectContent>
-      </Select>
-    </div>
-  );
-}
 
 export function DashboardFilters({ section }: DashboardFiltersPropsI) {
   const [category, setCategory] = useState(emptyValue);

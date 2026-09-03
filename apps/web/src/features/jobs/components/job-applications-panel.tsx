@@ -3,7 +3,7 @@ import type { ApplicationStatusI } from "@job-portal/contracts";
 
 import { Button } from "@/components/ui/button";
 import { ApplicationStatusSelect } from "@/features/applications/components/application-status-select";
-import { ListingShimmer } from "@/features/dashboard/components/listing-shimmer";
+import { ListingShimmer } from "@/components/ui/shimmer";
 import type { AdminApplicationI } from "@/features/dashboard/data/dashboard-data";
 import { useJobDetail } from "@/features/jobs/hooks/useJobDetail";
 
