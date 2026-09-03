@@ -8,16 +8,25 @@ const defaultValues: CandidateProfileFormValuesI = {
   phone: "",
   education: "",
   yearsOfExperience: 0,
-  currentCompany: null,
-  currentRole: null,
+  currentCompany: "",
+  currentRole: "",
   expectedSalary: 0,
   noticePeriodDays: 0,
   skills: [],
 };
 
-const emptyToNull = (value: unknown) => {
-  const trimmedValue = String(value).trim();
-  return trimmedValue ? trimmedValue : null;
+const getFormValues = (
+  initialValues: CandidateProfileFormValuesI | undefined,
+): CandidateProfileFormValuesI => {
+  if (!initialValues) {
+    return defaultValues;
+  }
+
+  return {
+    ...initialValues,
+    currentCompany: initialValues.currentCompany ?? "",
+    currentRole: initialValues.currentRole ?? "",
+  };
 };
 
 const useCandidateProfileForm = ({
@@ -35,7 +44,7 @@ const useCandidateProfileForm = ({
     handleSubmit,
     formState: { errors },
   } = useForm<CandidateProfileFormValuesI, unknown, CandidateProfileInputI>({
-    defaultValues: initialValues ?? defaultValues,
+    defaultValues: getFormValues(initialValues),
     resolver: zodResolver(candidateProfileSchema),
   });
 
@@ -61,7 +70,6 @@ const useCandidateProfileForm = ({
     errors,
     handleProfileSubmit,
     onBack,
-    emptyToNull,
   };
 };
 

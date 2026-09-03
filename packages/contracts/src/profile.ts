@@ -1,5 +1,18 @@
 import { z } from "zod";
 
+const nullableTextSchema = (message: string) =>
+  z.preprocess((value) => {
+    if (value === null || value === undefined) {
+      return null;
+    }
+
+    if (typeof value === "string" && value.trim() === "") {
+      return null;
+    }
+
+    return value;
+  }, z.string().trim().min(1, message).nullable());
+
 export const candidateProfileSchema = z.object({
   phone: z.string().trim().min(1, "Phone number is required"),
   education: z.string().trim().min(1, "Highest education is required"),
@@ -7,8 +20,8 @@ export const candidateProfileSchema = z.object({
     .number("Enter your years of experience")
     .int("Enter a whole number like 3 instead of 3.5")
     .min(0, "Years of experience cannot be negative"),
-  currentCompany: z.string().trim().min(1, "Current company cannot be empty").nullable(),
-  currentRole: z.string().trim().min(1, "Current role cannot be empty").nullable(),
+  currentCompany: nullableTextSchema("Current company cannot be empty"),
+  currentRole: nullableTextSchema("Current role cannot be empty"),
   expectedSalary: z.coerce
     .number("Enter your expected salary")
     .int("Enter a whole number amount without decimals")

@@ -15,7 +15,7 @@ export function CandidateProfileForm({
   onSubmit,
   submitError,
 }: CandidateProfileFormPropsI) {
-  const { control, errors, register, handleSubmit, handleProfileSubmit, onBack, emptyToNull } =
+  const { control, errors, register, handleSubmit, handleProfileSubmit, onBack } =
     useCandidateProfileForm({
       initialValues,
       onCancel,
@@ -96,7 +96,7 @@ export function CandidateProfileForm({
                 id="currentCompany"
                 placeholder="Acme Labs"
                 aria-invalid={Boolean(errors.currentCompany)}
-                {...register("currentCompany", { setValueAs: emptyToNull })}
+                {...register("currentCompany")}
               />
               <ErrorBox message={errors.currentCompany?.message} />
             </label>
@@ -107,7 +107,7 @@ export function CandidateProfileForm({
                 id="currentRole"
                 placeholder="Frontend Developer"
                 aria-invalid={Boolean(errors.currentRole)}
-                {...register("currentRole", { setValueAs: emptyToNull })}
+                {...register("currentRole")}
               />
               <ErrorBox message={errors.currentRole?.message} />
             </label>
